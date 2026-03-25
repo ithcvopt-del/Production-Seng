@@ -7,346 +7,328 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
- 
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: #0d1117;
-      color: #e6edf3;
-      min-height: 100vh;
-      padding: 20px;
+      background: #0d1117; color: #e6edf3;
+      min-height: 100vh; padding: 20px;
     }
- 
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
- 
-    .header h1 {
-      font-size: 20px;
-      font-weight: 700;
-      color: #58a6ff;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
- 
-    .header p {
-      font-size: 13px;
-      color: #8b949e;
-      margin-top: 4px;
-    }
- 
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
- 
-    .controls label {
-      font-size: 13px;
-      color: #8b949e;
-    }
- 
+    .header { text-align: center; margin-bottom: 20px; }
+    .header h1 { font-size: 20px; font-weight: 700; color: #58a6ff; letter-spacing: 1px; text-transform: uppercase; }
+    .header p { font-size: 13px; color: #8b949e; margin-top: 4px; }
+    .controls { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .controls label { font-size: 13px; color: #8b949e; }
     .controls select {
-      background: #161b22;
-      border: 1px solid #30363d;
-      color: #e6edf3;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      cursor: pointer;
+      background: #161b22; border: 1px solid #30363d;
+      color: #e6edf3; padding: 7px 14px;
+      border-radius: 6px; font-size: 13px; cursor: pointer; min-width: 160px;
     }
- 
-    .controls select:focus {
-      outline: none;
-      border-color: #58a6ff;
-    }
- 
-    #status {
-      font-size: 12px;
-      color: #8b949e;
-      margin-left: auto;
-    }
- 
+    .controls select:focus { outline: none; border-color: #58a6ff; }
+    #status { font-size: 12px; color: #8b949e; margin-left: auto; }
     .chart-container {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 12px;
-      padding: 20px;
+      background: #161b22; border: 1px solid #30363d;
+      border-radius: 12px; padding: 20px; margin-bottom: 16px;
     }
- 
-    .chart-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #58a6ff;
-      margin-bottom: 16px;
-      text-align: center;
-      letter-spacing: 0.5px;
+    .chart-title { font-size: 14px; font-weight: 600; color: #58a6ff; margin-bottom: 16px; text-align: center; }
+    .legend { display: flex; justify-content: center; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #8b949e; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+    #debugPanel {
+      background: #161b22; border: 1px solid #f0bc40;
+      border-radius: 8px; padding: 14px; margin-bottom: 16px;
+      font-size: 12px; color: #f0bc40; display: none;
     }
- 
-    canvas { width: 100% !important; }
- 
-    .legend {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 14px;
-      flex-wrap: wrap;
+    #debugPanel h3 { margin-bottom: 8px; font-size: 13px; }
+    #debugContent { white-space: pre-wrap; word-break: break-all; line-height: 1.6; }
+    .debug-btn {
+      background: #21262d; border: 1px solid #30363d;
+      color: #8b949e; padding: 5px 10px;
+      border-radius: 5px; cursor: pointer; font-size: 12px;
     }
- 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #8b949e;
-    }
- 
-    .legend-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-    }
+    .debug-btn:hover { border-color: #58a6ff; color: #58a6ff; }
   </style>
 </head>
 <body>
- 
+
   <div class="header">
     <h1>DASHBOARD : Daily Report Production of WL 1</h1>
     <p>Machine Production Per Hour</p>
   </div>
- 
+
   <div class="controls">
     <label>วันที่:</label>
     <select id="dateSelect" onchange="filterByDate()">
-      <option value="">-- โหลดข้อมูล... --</option>
+      <option value="">-- กำลังโหลด... --</option>
     </select>
+    <button class="debug-btn" onclick="toggleDebug()">Debug</button>
     <span id="status">กำลังโหลด...</span>
   </div>
- 
+
+  <div id="debugPanel">
+    <h3>Debug Info</h3>
+    <div id="debugContent"></div>
+  </div>
+
   <div class="chart-container">
-    <div class="chart-title">Machine Production Per Hour (BCm)</div>
-    <canvas id="productionChart" height="90"></canvas>
+    <div class="chart-title" id="chartTitle">Machine Production Per Hour (BCm)</div>
+    <canvas id="productionChart" height="85"></canvas>
     <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#259b22"></div> CR</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#9c27b0"></div> BWE 1</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f06292"></div> BWE 2</div>
       <div class="legend-item">
-        <div class="legend-dot" style="background:#259b22"></div> CR
-      </div>
-      <div class="legend-item">
-        <div class="legend-dot" style="background:#9c27b0"></div> BWE 1
-      </div>
-      <div class="legend-item">
-        <div class="legend-dot" style="background:#f06292"></div> BWE 2
+        <div class="legend-dot" style="background:#58a6ff;border-radius:50%"></div>
+        Actual BCM/HR
       </div>
     </div>
   </div>
- 
+
   <script>
-    // ===== แก้ URL ตรงนี้ =====
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub?output=csv";
-    // ==========================
- 
-    let allData = [];
+
+    let allRows = [];
+    let headers = [];
     let chartInstance = null;
- 
+
     function parseCSV(text) {
       const lines = text.trim().split("\n");
-      const headers = lines[0].split(",").map(h => h.trim().replace(/"/g, ""));
+      headers = lines[0].split(",").map(h => h.trim().replace(/\r/g,"").replace(/"/g,""));
       return lines.slice(1).map(line => {
-        const cols = line.split(",").map(c => c.trim().replace(/"/g, ""));
+        const cols = line.split(",").map(c => c.trim().replace(/\r/g,"").replace(/"/g,""));
         const obj = {};
-        headers.forEach((h, i) => obj[h] = cols[i] || "");
+        headers.forEach((h,i) => obj[h] = cols[i] || "");
         return obj;
-      });
+      }).filter(r => Object.values(r).some(v => v !== ""));
     }
- 
-    function getUniqueDates(data) {
+
+    // หาชื่อ header ที่ตรงกับ keyword
+    function findCol(keyword) {
+      return headers.find(h => h.toLowerCase().replace(/[^a-z0-9]/g,"").includes(
+        keyword.toLowerCase().replace(/[^a-z0-9]/g,"")
+      )) || "";
+    }
+
+    // ดึง time จาก "Date Time" column เช่น "2026-02-25 8:00" → "08:00"
+    function extractTime(dateTimeStr) {
+      if (!dateTimeStr) return "";
+      const parts = dateTimeStr.trim().split(" ");
+      if (parts.length < 2) return "";
+      const tp = parts[1].split(":");
+      return tp[0].padStart(2,"0") + ":" + (tp[1] || "00").padStart(2,"0");
+    }
+
+    // ดึง date จาก "Date Time" column
+    function extractDate(dateTimeStr) {
+      if (!dateTimeStr) return "";
+      return dateTimeStr.trim().split(" ")[0] || "";
+    }
+
+    // วันผลิต: 08:00-07:00 = วันเดียวกับ Working Date
+    // ถ้า time 00:00-07:59 → เป็นกะกลางคืนของ Working Date ก่อนหน้า 1 วัน
+    function getProductionDate(row, colWorkingDate, colTime) {
+      // ลองหา Working Date โดยตรง
+      let wd = row[colWorkingDate] || "";
+      let tm = row[colTime] || "";
+
+      // ถ้าไม่มี Working Date ลองดึงจาก Date Time
+      if (!wd) {
+        const dtCol = findCol("Date Time") || headers[0];
+        wd = extractDate(row[dtCol]);
+      }
+      // ถ้าไม่มี Time ลองดึงจาก Date Time
+      if (!tm) {
+        const dtCol = findCol("Date Time") || headers[0];
+        tm = extractTime(row[dtCol]);
+      }
+      if (!wd) return "";
+
+      // กะกลางคืน 00:00-07:59 → วันผลิต = wd - 1
+      if (tm && tm < "08:00") {
+        const d = new Date(wd + "T00:00:00");
+        d.setDate(d.getDate() - 1);
+        return d.toISOString().split("T")[0];
+      }
+      return wd;
+    }
+
+    function buildDropdown(rows, colWorkingDate, colTime) {
       const seen = new Set();
-      return data
-        .map(r => r["Working Date"])
-        .filter(d => { if (d && !seen.has(d)) { seen.add(d); return true; } return false; })
-        .sort();
+      rows.forEach(r => {
+        const pd = getProductionDate(r, colWorkingDate, colTime);
+        if (pd) seen.add(pd);
+      });
+      const dates = [...seen].sort();
+
+      const sel = document.getElementById("dateSelect");
+      sel.innerHTML = "";
+      dates.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d;
+        const p = d.split("-");
+        opt.textContent = p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : d;
+        sel.appendChild(opt);
+      });
+      if (dates.length > 0) sel.value = dates[dates.length - 1];
     }
- 
+
     function filterByDate() {
       const selectedDate = document.getElementById("dateSelect").value;
-      const filtered = selectedDate
-        ? allData.filter(r => r["Working Date"] === selectedDate)
-        : allData;
-      renderChart(filtered);
+      if (!selectedDate || allRows.length === 0) return;
+
+      const colDateTime    = findCol("DateTime") || findCol("Date Time") || headers[0];
+      const colWorkingDate = findCol("WorkingDate") || findCol("Working Date") || headers[6];
+      const colTime        = findCol("Time") || headers[22];
+      const colBCMCR       = findCol("BCMCR") || findCol("BCM CR") || headers[1];
+      const colBWE1        = findCol("BWE1") || findCol("BWE 1") || headers[7];
+      const colBWE2        = findCol("BWE2") || findCol("BWE 2") || headers[8];
+      const colAccBCM      = findCol("AccBCM") || findCol("Acc.BCM") || findCol("AccBcm") || headers[17];
+
+      // กรองเฉพาะวันผลิตที่เลือก
+      const rows = allRows.filter(r =>
+        getProductionDate(r, colWorkingDate, colTime) === selectedDate
+      );
+
+      // เรียงตาม time (08:00 ก่อน, 00:00 หลังสุด)
+      rows.sort((a, b) => {
+        let ta = a[colTime] || extractTime(a[headers[0]]);
+        let tb = b[colTime] || extractTime(b[headers[0]]);
+        const ka = ta >= "08:00" ? "0"+ta : "1"+ta;
+        const kb = tb >= "08:00" ? "0"+tb : "1"+tb;
+        return ka.localeCompare(kb);
+      });
+
+      const getTime = r => r[colTime] || extractTime(r[headers[0]]);
+
+      const labels   = rows.map(r => getTime(r));
+      const crData   = rows.map(r => parseFloat(r[colBCMCR])  || 0);
+      const bwe1Data = rows.map(r => parseFloat(r[colBWE1])   || 0);
+      const bwe2Data = rows.map(r => parseFloat(r[colBWE2])   || 0);
+      const accData  = rows.map(r => parseFloat(r[colAccBCM]) || 0);
+
+      const p = selectedDate.split("-");
+      const displayDate = p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : selectedDate;
+      document.getElementById("chartTitle").textContent =
+        `Machine Production Per Hour (BCm) — ${displayDate}`;
+
+      renderChart(labels, crData, bwe1Data, bwe2Data, accData);
     }
- 
-    function renderChart(data) {
-      // กรองแถวที่มีข้อมูล Time
-      const rows = data.filter(r => r["Time"] && r["Time"].trim() !== "");
- 
-      const labels   = rows.map(r => r["Time"]);
-      const crData   = rows.map(r => parseFloat(r["BCM CR"])  || 0);
-      const bwe1Data = rows.map(r => parseFloat(r["BWE 1"])   || 0);
-      const bwe2Data = rows.map(r => parseFloat(r["BWE 2"])   || 0);
-      const accData  = rows.map(r => parseFloat(r["Acc.BCM"]) || 0);
- 
-      if (chartInstance) chartInstance.destroy();
- 
+
+    function renderChart(labels, crData, bwe1Data, bwe2Data, accData) {
+      if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
       const ctx = document.getElementById("productionChart").getContext("2d");
- 
+
       chartInstance = new Chart(ctx, {
         type: "bar",
         data: {
           labels,
           datasets: [
-            {
-              label: "CR",
-              data: crData,
-              backgroundColor: "#259b22",
-              stack: "production",
-              borderWidth: 0,
-              borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 3, bottomRight: 3 }
-            },
-            {
-              label: "BWE 1",
-              data: bwe1Data,
-              backgroundColor: "#9c27b0",
-              stack: "production",
-              borderWidth: 0
-            },
-            {
-              label: "BWE 2",
-              data: bwe2Data,
-              backgroundColor: "#f06292",
-              stack: "production",
-              borderWidth: 0,
-              borderRadius: { topLeft: 3, topRight: 3, bottomLeft: 0, bottomRight: 0 }
-            }
+            { label: "CR",    data: crData,   backgroundColor: "#259b22", stack: "prod", borderWidth: 0 },
+            { label: "BWE 1", data: bwe1Data, backgroundColor: "#9c27b0", stack: "prod", borderWidth: 0 },
+            { label: "BWE 2", data: bwe2Data, backgroundColor: "#f06292", stack: "prod", borderWidth: 0 }
           ]
         },
         options: {
           responsive: true,
-          animation: { duration: 600 },
+          animation: { duration: 500 },
           interaction: { mode: "index" },
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: "#1c2128",
-              borderColor: "#30363d",
-              borderWidth: 1,
-              titleColor: "#58a6ff",
-              bodyColor: "#e6edf3",
-              padding: 10,
+              backgroundColor: "#1c2128", borderColor: "#30363d", borderWidth: 1,
+              titleColor: "#58a6ff", bodyColor: "#e6edf3", padding: 10,
               callbacks: {
-                afterBody: function(items) {
-                  const idx = items[0].dataIndex;
-                  const total = crData[idx] + bwe1Data[idx] + bwe2Data[idx];
-                  const acc   = accData[idx];
-                  return [
-                    `─────────────`,
+                afterBody(items) {
+                  const i = items[0].dataIndex;
+                  const total = crData[i]+bwe1Data[i]+bwe2Data[i];
+                  return ["─────────────",
                     `Total: ${total.toLocaleString()} BCm`,
-                    `Actual BCM/HR: ${acc.toLocaleString()} BCm`
-                  ];
+                    `Actual BCM/HR: ${accData[i].toLocaleString()} BCm`];
                 }
               }
-            },
-            // Label ผลรวมด้านบน bar
-            datalabels: { display: false }
+            }
           },
           scales: {
             x: {
               stacked: true,
               grid: { color: "#21262d" },
-              ticks: {
-                color: "#8b949e",
-                font: { size: 11 },
-                maxRotation: 45
-              }
+              ticks: { color: "#8b949e", font: { size: 11 }, maxRotation: 45 }
             },
             y: {
               stacked: true,
               grid: { color: "#21262d" },
-              ticks: {
-                color: "#8b949e",
-                font: { size: 11 },
-                callback: v => v.toLocaleString()
-              },
-              title: {
-                display: true,
-                text: "BCm",
-                color: "#8b949e",
-                font: { size: 12 }
-              }
+              ticks: { color: "#8b949e", font: { size: 11 }, callback: v => v.toLocaleString() },
+              title: { display: true, text: "BCm", color: "#8b949e", font: { size: 12 } }
             }
           }
         },
         plugins: [{
-          // Plugin วาด label ผลรวม + Actual BCM/HR บนแต่ละ bar
           id: "topLabels",
           afterDatasetsDraw(chart) {
-            const { ctx, data, scales: { x, y } } = chart;
-            const meta2 = chart.getDatasetMeta(2); // BWE 2 = top stack
- 
-            ctx.save();
-            ctx.font = "bold 10px Segoe UI, sans-serif";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "bottom";
- 
+            const { ctx: c, scales: { y } } = chart;
+            const meta2 = chart.getDatasetMeta(2);
+            c.save(); c.textAlign = "center"; c.textBaseline = "bottom";
             meta2.data.forEach((bar, i) => {
-              const total = crData[i] + bwe1Data[i] + bwe2Data[i];
-              const acc   = accData[i];
+              const total = crData[i]+bwe1Data[i]+bwe2Data[i];
               if (total === 0) return;
- 
-              const bx = bar.x;
               const by = y.getPixelForValue(total) - 4;
- 
-              // Total (สีขาว)
-              ctx.fillStyle = "#e6edf3";
-              ctx.fillText(total.toLocaleString(), bx, by);
- 
-              // Actual BCM/HR (สีฟ้า) — ถัดขึ้นไป
-              if (acc > 0) {
-                ctx.fillStyle = "#58a6ff";
-                ctx.font = "10px Segoe UI, sans-serif";
-                ctx.fillText(acc.toLocaleString(), bx, by - 13);
-                ctx.font = "bold 10px Segoe UI, sans-serif";
+              if (accData[i] > 0) {
+                c.fillStyle = "#58a6ff";
+                c.font = "9px Segoe UI,sans-serif";
+                c.fillText(accData[i].toLocaleString(), bar.x, by - 13);
               }
+              c.fillStyle = "#e6edf3";
+              c.font = "bold 10px Segoe UI,sans-serif";
+              c.fillText(total.toLocaleString(), bar.x, by);
             });
-            ctx.restore();
+            c.restore();
           }
         }]
       });
     }
- 
+
+    function toggleDebug() {
+      const p = document.getElementById("debugPanel");
+      p.style.display = p.style.display === "none" ? "block" : "none";
+    }
+
     async function loadData() {
       try {
         const res = await fetch(SHEET_URL);
         const text = await res.text();
-        allData = parseCSV(text).filter(r => r["Working Date"] && r["Time"]);
- 
-        // สร้าง dropdown วันที่
-        const dates = getUniqueDates(allData);
-        const sel = document.getElementById("dateSelect");
-        sel.innerHTML = '<option value="">ทั้งหมด</option>';
-        dates.forEach(d => {
-          const opt = document.createElement("option");
-          opt.value = d;
-          opt.textContent = d;
-          sel.appendChild(opt);
-        });
- 
-        // Default: แสดงวันล่าสุด
-        if (dates.length > 0) {
-          sel.value = dates[dates.length - 1];
-        }
- 
+        allRows = parseCSV(text);
+
+        const colWorkingDate = findCol("WorkingDate") || findCol("Working Date") || headers[6];
+        const colTime        = findCol("Time") || headers[22];
+        const colBCMCR       = findCol("BCMCR") || findCol("BCM CR") || headers[1];
+        const colBWE1        = findCol("BWE1") || findCol("BWE 1") || headers[7];
+        const colBWE2        = findCol("BWE2") || findCol("BWE 2") || headers[8];
+        const colAccBCM      = findCol("AccBCM") || findCol("Acc.BCM") || headers[17];
+
+        document.getElementById("debugContent").textContent =
+          "Headers ทั้งหมด:\n" + headers.map((h,i)=>`  [${i}] "${h}"`).join("\n") +
+          "\n\nคอลัมน์ที่ใช้:" +
+          `\n  Working Date → "${colWorkingDate}"` +
+          `\n  Time         → "${colTime}"` +
+          `\n  BCM CR       → "${colBCMCR}"` +
+          `\n  BWE 1        → "${colBWE1}"` +
+          `\n  BWE 2        → "${colBWE2}"` +
+          `\n  Acc.BCM      → "${colAccBCM}"` +
+          "\n\nตัวอย่าง 2 rows แรก:\n" +
+          JSON.stringify(allRows.slice(0,2), null, 2);
+
+        buildDropdown(allRows, colWorkingDate, colTime);
         filterByDate();
         document.getElementById("status").textContent =
           "อัปเดต: " + new Date().toLocaleString("th-TH");
- 
+
       } catch(e) {
         document.getElementById("status").textContent = "โหลดไม่ได้: " + e.message;
+        document.getElementById("debugContent").textContent = "Error: " + e.message;
+        document.getElementById("debugPanel").style.display = "block";
       }
     }
- 
+
     loadData();
-    setInterval(loadData, 5 * 60 * 1000);
+    setInterval(loadData, 5*60*1000);
   </script>
 </body>
 </html>
