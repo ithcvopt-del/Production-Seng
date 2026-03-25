@@ -2,52 +2,351 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>Production Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Report Production Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-    canvas { max-width: 900px; background: white; border-radius: 8px; padding: 16px; }
-    h1 { color: #333; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      padding: 20px;
+    }
+ 
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+ 
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #58a6ff;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+ 
+    .header p {
+      font-size: 13px;
+      color: #8b949e;
+      margin-top: 4px;
+    }
+ 
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+ 
+    .controls label {
+      font-size: 13px;
+      color: #8b949e;
+    }
+ 
+    .controls select {
+      background: #161b22;
+      border: 1px solid #30363d;
+      color: #e6edf3;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+ 
+    .controls select:focus {
+      outline: none;
+      border-color: #58a6ff;
+    }
+ 
+    #status {
+      font-size: 12px;
+      color: #8b949e;
+      margin-left: auto;
+    }
+ 
+    .chart-container {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 20px;
+    }
+ 
+    .chart-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #58a6ff;
+      margin-bottom: 16px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+ 
+    canvas { width: 100% !important; }
+ 
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+ 
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #8b949e;
+    }
+ 
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
   </style>
 </head>
 <body>
-  <h1>Production BCm/Hr Dashboard</h1>
-  <canvas id="myChart"></canvas>
-
+ 
+  <div class="header">
+    <h1>DASHBOARD : Daily Report Production of WL 1</h1>
+    <p>Machine Production Per Hour</p>
+  </div>
+ 
+  <div class="controls">
+    <label>วันที่:</label>
+    <select id="dateSelect" onchange="filterByDate()">
+      <option value="">-- โหลดข้อมูล... --</option>
+    </select>
+    <span id="status">กำลังโหลด...</span>
+  </div>
+ 
+  <div class="chart-container">
+    <div class="chart-title">Machine Production Per Hour (BCm)</div>
+    <canvas id="productionChart" height="90"></canvas>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#259b22"></div> CR
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#9c27b0"></div> BWE 1
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#f06292"></div> BWE 2
+      </div>
+    </div>
+  </div>
+ 
   <script>
+    // ===== แก้ URL ตรงนี้ =====
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub?output=csv";
-
-    async function loadData() {
-      const res = await fetch(SHEET_URL);
-      const text = await res.text();
-      const rows = text.trim().split("\n").map(r => r.split(","));
-      
-      const headers = rows[0];
-      const data = rows.slice(1);
-
-      // ปรับ index ตามคอลัมน์จริงในชีตของคุณ
-      const labels = data.map(r => r[0]);       // Date Time
-      const bcmCR  = data.map(r => +r[1] || 0); // BCM CR
-
-      const ctx = document.getElementById("myChart").getContext("2d");
-      new Chart(ctx, {
+    // ==========================
+ 
+    let allData = [];
+    let chartInstance = null;
+ 
+    function parseCSV(text) {
+      const lines = text.trim().split("\n");
+      const headers = lines[0].split(",").map(h => h.trim().replace(/"/g, ""));
+      return lines.slice(1).map(line => {
+        const cols = line.split(",").map(c => c.trim().replace(/"/g, ""));
+        const obj = {};
+        headers.forEach((h, i) => obj[h] = cols[i] || "");
+        return obj;
+      });
+    }
+ 
+    function getUniqueDates(data) {
+      const seen = new Set();
+      return data
+        .map(r => r["Working Date"])
+        .filter(d => { if (d && !seen.has(d)) { seen.add(d); return true; } return false; })
+        .sort();
+    }
+ 
+    function filterByDate() {
+      const selectedDate = document.getElementById("dateSelect").value;
+      const filtered = selectedDate
+        ? allData.filter(r => r["Working Date"] === selectedDate)
+        : allData;
+      renderChart(filtered);
+    }
+ 
+    function renderChart(data) {
+      // กรองแถวที่มีข้อมูล Time
+      const rows = data.filter(r => r["Time"] && r["Time"].trim() !== "");
+ 
+      const labels   = rows.map(r => r["Time"]);
+      const crData   = rows.map(r => parseFloat(r["BCM CR"])  || 0);
+      const bwe1Data = rows.map(r => parseFloat(r["BWE 1"])   || 0);
+      const bwe2Data = rows.map(r => parseFloat(r["BWE 2"])   || 0);
+      const accData  = rows.map(r => parseFloat(r["Acc.BCM"]) || 0);
+ 
+      if (chartInstance) chartInstance.destroy();
+ 
+      const ctx = document.getElementById("productionChart").getContext("2d");
+ 
+      chartInstance = new Chart(ctx, {
         type: "bar",
         data: {
-          labels: labels,
-          datasets: [{
-            label: "BCM CR",
-            data: bcmCR,
-            backgroundColor: "rgba(54, 162, 235, 0.6)"
-          }]
+          labels,
+          datasets: [
+            {
+              label: "CR",
+              data: crData,
+              backgroundColor: "#259b22",
+              stack: "production",
+              borderWidth: 0,
+              borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 3, bottomRight: 3 }
+            },
+            {
+              label: "BWE 1",
+              data: bwe1Data,
+              backgroundColor: "#9c27b0",
+              stack: "production",
+              borderWidth: 0
+            },
+            {
+              label: "BWE 2",
+              data: bwe2Data,
+              backgroundColor: "#f06292",
+              stack: "production",
+              borderWidth: 0,
+              borderRadius: { topLeft: 3, topRight: 3, bottomLeft: 0, bottomRight: 0 }
+            }
+          ]
         },
         options: {
           responsive: true,
-          plugins: { legend: { position: "top" } }
-        }
+          animation: { duration: 600 },
+          interaction: { mode: "index" },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "#1c2128",
+              borderColor: "#30363d",
+              borderWidth: 1,
+              titleColor: "#58a6ff",
+              bodyColor: "#e6edf3",
+              padding: 10,
+              callbacks: {
+                afterBody: function(items) {
+                  const idx = items[0].dataIndex;
+                  const total = crData[idx] + bwe1Data[idx] + bwe2Data[idx];
+                  const acc   = accData[idx];
+                  return [
+                    `─────────────`,
+                    `Total: ${total.toLocaleString()} BCm`,
+                    `Actual BCM/HR: ${acc.toLocaleString()} BCm`
+                  ];
+                }
+              }
+            },
+            // Label ผลรวมด้านบน bar
+            datalabels: { display: false }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              grid: { color: "#21262d" },
+              ticks: {
+                color: "#8b949e",
+                font: { size: 11 },
+                maxRotation: 45
+              }
+            },
+            y: {
+              stacked: true,
+              grid: { color: "#21262d" },
+              ticks: {
+                color: "#8b949e",
+                font: { size: 11 },
+                callback: v => v.toLocaleString()
+              },
+              title: {
+                display: true,
+                text: "BCm",
+                color: "#8b949e",
+                font: { size: 12 }
+              }
+            }
+          }
+        },
+        plugins: [{
+          // Plugin วาด label ผลรวม + Actual BCM/HR บนแต่ละ bar
+          id: "topLabels",
+          afterDatasetsDraw(chart) {
+            const { ctx, data, scales: { x, y } } = chart;
+            const meta2 = chart.getDatasetMeta(2); // BWE 2 = top stack
+ 
+            ctx.save();
+            ctx.font = "bold 10px Segoe UI, sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+ 
+            meta2.data.forEach((bar, i) => {
+              const total = crData[i] + bwe1Data[i] + bwe2Data[i];
+              const acc   = accData[i];
+              if (total === 0) return;
+ 
+              const bx = bar.x;
+              const by = y.getPixelForValue(total) - 4;
+ 
+              // Total (สีขาว)
+              ctx.fillStyle = "#e6edf3";
+              ctx.fillText(total.toLocaleString(), bx, by);
+ 
+              // Actual BCM/HR (สีฟ้า) — ถัดขึ้นไป
+              if (acc > 0) {
+                ctx.fillStyle = "#58a6ff";
+                ctx.font = "10px Segoe UI, sans-serif";
+                ctx.fillText(acc.toLocaleString(), bx, by - 13);
+                ctx.font = "bold 10px Segoe UI, sans-serif";
+              }
+            });
+            ctx.restore();
+          }
+        }]
       });
     }
-
+ 
+    async function loadData() {
+      try {
+        const res = await fetch(SHEET_URL);
+        const text = await res.text();
+        allData = parseCSV(text).filter(r => r["Working Date"] && r["Time"]);
+ 
+        // สร้าง dropdown วันที่
+        const dates = getUniqueDates(allData);
+        const sel = document.getElementById("dateSelect");
+        sel.innerHTML = '<option value="">ทั้งหมด</option>';
+        dates.forEach(d => {
+          const opt = document.createElement("option");
+          opt.value = d;
+          opt.textContent = d;
+          sel.appendChild(opt);
+        });
+ 
+        // Default: แสดงวันล่าสุด
+        if (dates.length > 0) {
+          sel.value = dates[dates.length - 1];
+        }
+ 
+        filterByDate();
+        document.getElementById("status").textContent =
+          "อัปเดต: " + new Date().toLocaleString("th-TH");
+ 
+      } catch(e) {
+        document.getElementById("status").textContent = "โหลดไม่ได้: " + e.message;
+      }
+    }
+ 
     loadData();
+    setInterval(loadData, 5 * 60 * 1000);
   </script>
 </body>
 </html>
