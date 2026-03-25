@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Production Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
+    canvas { max-width: 900px; background: white; border-radius: 8px; padding: 16px; }
+    h1 { color: #333; }
+  </style>
+</head>
+<body>
+  <h1>Production BCm/Hr Dashboard</h1>
+  <canvas id="myChart"></canvas>
+
+  <script>
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/export?format=csv&gid=0";
+
+    async function loadData() {
+      const res = await fetch(SHEET_URL);
+      const text = await res.text();
+      const rows = text.trim().split("\n").map(r => r.split(","));
+      
+      const headers = rows[0];
+      const data = rows.slice(1);
+
+      // ปรับ index ตามคอลัมน์จริงในชีตของคุณ
+      const labels = data.map(r => r[0]);       // Date Time
+      const bcmCR  = data.map(r => +r[1] || 0); // BCM CR
+
+      const ctx = document.getElementById("myChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "BCM CR",
+            data: bcmCR,
+            backgroundColor: "rgba(54, 162, 235, 0.6)"
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: "top" } }
+        }
+      });
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
