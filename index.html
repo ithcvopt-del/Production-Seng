@@ -292,32 +292,37 @@ function processCSV(text, usedUrl){
   const parsed=Papa.parse(text,{skipEmptyLines:true});
   const rows=parsed.data;
 
-  // Row 0 = header
-  // Detect if header matches expected (col G = "Working Date")
   const header=rows[0]||[];
-  console.log('Header row:', header);
-  console.log('Sample data row:', rows[1]);
+  console.log('Header:', header);
+  console.log('Row 1:', rows[1]);
 
   allRows=rows.slice(1).filter(r=>r.length>COL.WDATE);
 
-  // Collect unique Working Dates from Col G
+  /*
+    Col G = Working Date ที่ผู้ใช้จัดไว้แล้วว่า 08:00-07:00
+    ดึง unique values จาก Col G มาทำ dropdown
+    แล้ว filter rows ด้วย Col G ตรงๆ (ไม่ต้องคำนวณ window เอง)
+  */
   const dateSet=new Set();
   allRows.forEach(r=>{
     const wd=(r[COL.WDATE]||'').trim();
-    if(wd&&wd!=='Working Date')dateSet.add(wd);
+    if(wd && wd.toLowerCase()!=='working date' && wd!=='')
+      dateSet.add(wd);
   });
 
+  // Sort ascending — Col G อาจเป็น YYYY-MM-DD หรือ DD/MM/YYYY ก็ได้
   availableDates=[...dateSet].sort((a,b)=>parseFlexDate(a)-parseFlexDate(b));
 
   if(availableDates.length===0){
-    showOverlay('ไม่พบข้อมูลใน Column G (Working Date)');
-    showError(`พบ ${allRows.length} แถว แต่ไม่มีข้อมูลใน Column G<br>
-      Header ที่พบ: <code>${header.slice(0,10).join(' | ')}</code><br>
+    showOverlay('ไม่พบข้อมูลใน Column G');
+    showError(`พบ ${allRows.length} แถว แต่ Column G ว่างทั้งหมด<br>
+      Header: <code>${header.slice(0,10).join(' | ')}</code><br>
       แถวแรก: <code>${(allRows[0]||[]).slice(0,10).join(' | ')}</code>`);
     return;
   }
 
   buildPicker();
+  // Default = วันล่าสุด
   renderForDate(availableDates[availableDates.length-1]);
 
   const now=new Date();
@@ -376,9 +381,18 @@ function buildPicker(){
 
 /* ── Render chart ───────────────────────────────────────── */
 function renderForDate(wd){
+  /*
+    Filter: Col G === wd  (Working Date ที่เลือก)
+    Sort  : Col A (Date Time) น้อย→มาก → ได้ 08:00…23:00, 0:00…07:00 อัตโนมัติ
+            เพราะ Col G ถูก assign ให้ครอบช่วง 08:00(วันนี้)–07:00(วันถัดไป) แล้ว
+  */
   const rows=allRows
     .filter(r=>(r[COL.WDATE]||'').trim()===wd)
-    .sort((a,b)=>parseDT(a[COL.DT])-parseDT(b[COL.DT]));
+    .sort((a,b)=>{
+      const ta=parseDT(a[COL.DT]), tb=parseDT(b[COL.DT]);
+      // เรียงตามเวลาจริง: 08:00 ก่อน, ข้ามวัน 00:00 ตามหลัง 23:00
+      return ta-tb;
+    });
 
   const labels=rows.map(r=>fmtTime(r[COL.DT]||''));
   const dataB =rows.map(r=>parseFloat(r[COL.BCM_CR]||0)||0);
@@ -399,6 +413,10 @@ function renderForDate(wd){
   document.getElementById('subB').textContent=`Column B · ${disp}`;
   document.getElementById('subH').textContent=`Column H · ${disp}`;
   document.getElementById('subI').textContent=`Column I · ${disp}`;
+
+  // แสดง debug info ใน row count
+  document.getElementById('rowCount').textContent=
+    `${rows.length} rows · ${availableDates.length} dates · showing: ${disp}`;
 
   hideOverlay(); syncNav();
 }
