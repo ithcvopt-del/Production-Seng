@@ -296,33 +296,49 @@ function processCSV(text, usedUrl){
   console.log('Header:', header);
   console.log('Row 1:', rows[1]);
 
-  allRows=rows.slice(1).filter(r=>r.length>COL.WDATE);
+  allRows=rows.slice(1).filter(r=>r.length>COL.DT && (r[COL.DT]||'').trim()!=='');
 
   /*
-    Col G = Working Date ที่ผู้ใช้จัดไว้แล้วว่า 08:00-07:00
-    ดึง unique values จาก Col G มาทำ dropdown
-    แล้ว filter rows ด้วย Col G ตรงๆ (ไม่ต้องคำนวณ window เอง)
+    คำนวณ Working Date จาก Col A (Date Time) โดยตรง:
+      ชั่วโมง >= 8  →  Working Date = วันนั้น
+      ชั่วโมง 0–7  →  Working Date = วันก่อนหน้า 1 วัน
+    เช่น 2026-03-05 00:00 → Working Date = 2026-03-04
+         2026-03-05 08:00 → Working Date = 2026-03-05
   */
-  const dateSet=new Set();
-  allRows.forEach(r=>{
-    const wd=(r[COL.WDATE]||'').trim();
-    if(wd && wd.toLowerCase()!=='working date' && wd!=='')
-      dateSet.add(wd);
-  });
+  function getWorkingDate(dtStr){
+    const d=parseDT(dtStr);
+    if(!d||isNaN(d))return null;
+    const h=d.getHours();
+    if(h<8){
+      // ย้อนไปวันก่อนหน้า
+      const prev=new Date(d);
+      prev.setDate(prev.getDate()-1);
+      return toYMD(prev);
+    }
+    return toYMD(d);
+  }
 
-  // Sort ascending — Col G อาจเป็น YYYY-MM-DD หรือ DD/MM/YYYY ก็ได้
-  availableDates=[...dateSet].sort((a,b)=>parseFlexDate(a)-parseFlexDate(b));
+  function toYMD(d){
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  // ติด working date ให้แต่ละ row
+  allRows.forEach(r=>{ r._wd=getWorkingDate(r[COL.DT]||''); });
+  allRows=allRows.filter(r=>r._wd);
+
+  // Unique working dates
+  const dateSet=new Set(allRows.map(r=>r._wd));
+  availableDates=[...dateSet].sort();
 
   if(availableDates.length===0){
-    showOverlay('ไม่พบข้อมูลใน Column G');
-    showError(`พบ ${allRows.length} แถว แต่ Column G ว่างทั้งหมด<br>
-      Header: <code>${header.slice(0,10).join(' | ')}</code><br>
-      แถวแรก: <code>${(allRows[0]||[]).slice(0,10).join(' | ')}</code>`);
+    showOverlay('ไม่พบข้อมูลใน Column A');
+    showError(`พบ ${allRows.length} แถว แต่ไม่สามารถอ่านวันที่จาก Column A ได้<br>
+      Header: <code>${header.slice(0,5).join(' | ')}</code><br>
+      แถวแรก: <code>${(rows[1]||[]).slice(0,5).join(' | ')}</code>`);
     return;
   }
 
   buildPicker();
-  // Default = วันล่าสุด
   renderForDate(availableDates[availableDates.length-1]);
 
   const now=new Date();
@@ -372,7 +388,10 @@ function buildPicker(){
   sel.innerHTML='';
   availableDates.forEach(d=>{
     const o=document.createElement('option');
-    o.value=d; o.textContent=toDisplay(d);
+    o.value=d;
+    // d = YYYY-MM-DD → แสดง DD-MM-YYYY
+    const parts=d.split('-');
+    o.textContent=parts.length===3?`${parts[2]}-${parts[1]}-${parts[0]}`:d;
     sel.appendChild(o);
   });
   sel.value=availableDates[availableDates.length-1];
@@ -382,24 +401,16 @@ function buildPicker(){
 /* ── Render chart ───────────────────────────────────────── */
 function renderForDate(wd){
   /*
-    Filter: Col G === wd  (Working Date ที่เลือก)
-    Sort  : Col A (Date Time) น้อย→มาก → ได้ 08:00…23:00, 0:00…07:00 อัตโนมัติ
-            เพราะ Col G ถูก assign ให้ครอบช่วง 08:00(วันนี้)–07:00(วันถัดไป) แล้ว
-  */
-  /*
-    Sort rule: ภายใน Working Date เดียวกัน
-      - ชั่วโมง 8–23  → เป็นวันแรก (sort key = hour)
-      - ชั่วโมง 0–7   → เป็นวันถัดไป (sort key = hour + 24)
-    ผลลัพธ์: 8,9,...,23, 0,1,...,7
+    Filter ด้วย _wd ที่คำนวณจาก Col A
+    Sort: ชั่วโมง 8–23 ก่อน, 0–7 หลัง
   */
   function shiftHour(r){
-    const d=parseDT(r[COL.DT]);
-    const h=d.getHours();
+    const h=parseDT(r[COL.DT]).getHours();
     return h<8 ? h+24 : h;
   }
 
   const rows=allRows
-    .filter(r=>(r[COL.WDATE]||'').trim()===wd)
+    .filter(r=>r._wd===wd)
     .sort((a,b)=>shiftHour(a)-shiftHour(b));
 
   const labels=rows.map(r=>fmtTime(r[COL.DT]||''));
@@ -422,9 +433,8 @@ function renderForDate(wd){
   document.getElementById('subH').textContent=`Column H · ${disp}`;
   document.getElementById('subI').textContent=`Column I · ${disp}`;
 
-  // แสดง debug info ใน row count
   document.getElementById('rowCount').textContent=
-    `${rows.length} rows · ${availableDates.length} dates · showing: ${disp}`;
+    `${rows.length} rows · ${availableDates.length} dates · ${disp}`;
 
   hideOverlay(); syncNav();
 }
