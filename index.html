@@ -386,13 +386,21 @@ function renderForDate(wd){
     Sort  : Col A (Date Time) น้อย→มาก → ได้ 08:00…23:00, 0:00…07:00 อัตโนมัติ
             เพราะ Col G ถูก assign ให้ครอบช่วง 08:00(วันนี้)–07:00(วันถัดไป) แล้ว
   */
+  /*
+    Sort rule: ภายใน Working Date เดียวกัน
+      - ชั่วโมง 8–23  → เป็นวันแรก (sort key = hour)
+      - ชั่วโมง 0–7   → เป็นวันถัดไป (sort key = hour + 24)
+    ผลลัพธ์: 8,9,...,23, 0,1,...,7
+  */
+  function shiftHour(r){
+    const d=parseDT(r[COL.DT]);
+    const h=d.getHours();
+    return h<8 ? h+24 : h;
+  }
+
   const rows=allRows
     .filter(r=>(r[COL.WDATE]||'').trim()===wd)
-    .sort((a,b)=>{
-      const ta=parseDT(a[COL.DT]), tb=parseDT(b[COL.DT]);
-      // เรียงตามเวลาจริง: 08:00 ก่อน, ข้ามวัน 00:00 ตามหลัง 23:00
-      return ta-tb;
-    });
+    .sort((a,b)=>shiftHour(a)-shiftHour(b));
 
   const labels=rows.map(r=>fmtTime(r[COL.DT]||''));
   const dataB =rows.map(r=>parseFloat(r[COL.BCM_CR]||0)||0);
