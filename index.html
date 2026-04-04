@@ -298,6 +298,12 @@ function processCSV(text, usedUrl){
 
   allRows=rows.slice(1).filter(r=>r.length>COL.DT && (r[COL.DT]||'').trim()!=='');
 
+  // Debug: แสดง format จริงของ Col A 3 แถวแรก
+  const sample3=allRows.slice(0,3).map(r=>r[COL.DT]||'(empty)');
+  console.log('Col A samples:', sample3);
+  // แสดงใน UI ชั่วคราว
+  document.getElementById('rowCount').textContent='Col A format: '+sample3.join(' | ');
+
   /*
     คำนวณ Working Date จาก Col A (Date Time) โดยตรง:
       ชั่วโมง >= 8  →  Working Date = วันนั้น
@@ -365,20 +371,47 @@ function toDisplay(s){
   return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
 }
 
-/* Parse datetime from Col A — "2026-03-04 8:00" or "3/4/2026 8:00" */
+/* ── Parse datetime from Col A ──────────────────────────────
+   Handles formats Google Sheets exports via CSV:
+   "2026-03-04 8:00"      YYYY-MM-DD H:MM
+   "2026-03-04 08:00:00"  YYYY-MM-DD HH:MM:SS
+   "3/4/2026 8:00"        M/D/YYYY H:MM   (US locale sheet)
+   "4/3/2026 8:00"        D/M/YYYY H:MM   (TH locale sheet)
+   ─────────────────────────────────────────────────────────── */
 function parseDT(s){
   s=(s||'').trim();
-  // Already ISO-ish: "2026-03-04 8:00"
-  let d=new Date(s.replace(' ','T'));
-  if(!isNaN(d))return d;
-  d=new Date(s);
-  if(!isNaN(d))return d;
-  return new Date(0);
+  if(!s)return new Date(NaN);
+
+  // ① YYYY-MM-DD H:MM or YYYY-MM-DD HH:MM:SS
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
+  if(m){
+    return new Date(
+      +m[1], +m[2]-1, +m[3], +m[4], +m[5]
+    );
+  }
+
+  // ② M/D/YYYY H:MM  or  D/M/YYYY H:MM
+  // Google Sheets (Thai locale) exports as DD/MM/YYYY
+  // We'll try to detect by checking if "month" part > 12 → must be day
+  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[,\s]+(\d{1,2}):(\d{2})/);
+  if(m){
+    let p1=+m[1], p2=+m[2], yr=+m[3], hr=+m[4], mn=+m[5];
+    // if p1 > 12 → p1 is day, p2 is month (DD/MM/YYYY)
+    // if p2 > 12 → p2 is day, p1 is month (MM/DD/YYYY) — unlikely for TH
+    let day, mon;
+    if(p1>12){day=p1;mon=p2;}
+    else{day=p2;mon=p1;} // assume DD/MM/YYYY (Thai default)
+    return new Date(yr, mon-1, day, hr, mn);
+  }
+
+  // ③ Fallback
+  const fb=new Date(s);
+  return fb;
 }
 
 function fmtTime(s){
   const d=parseDT(s);
-  if(isNaN(d)||d.getTime()===0)return s;
+  if(!d||isNaN(d))return s;
   return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
 }
 
