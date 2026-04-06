@@ -183,9 +183,9 @@
    ═══════════════════════════════════════════════════════ */
 const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 const CSV_URLS = [
-  BASE + '?gid=0&single=true&output=csv',          // sheet แรก
-  BASE + '?gid=1625694744&single=true&output=csv', // ลองค่า gid อื่น
-  BASE + '?output=csv',                             // default (no gid)
+  BASE + '?gid=1971585139&single=true&output=csv',  // Data 1 tab
+  BASE + '?gid=0&single=true&output=csv',
+  BASE + '?output=csv',
 ];
 
 /*
@@ -298,12 +298,6 @@ function processCSV(text, usedUrl){
 
   allRows=rows.slice(1).filter(r=>r.length>COL.DT && (r[COL.DT]||'').trim()!=='');
 
-  // Debug: แสดง format จริงของ Col A 3 แถวแรก
-  const sample3=allRows.slice(0,3).map(r=>r[COL.DT]||'(empty)');
-  console.log('Col A samples:', sample3);
-  // แสดงใน UI ชั่วคราว
-  document.getElementById('rowCount').textContent='Col A format: '+sample3.join(' | ');
-
   /*
     คำนวณ Working Date จาก Col A (Date Time) โดยตรง:
       ชั่วโมง >= 8  →  Working Date = วันนั้น
@@ -372,27 +366,19 @@ function toDisplay(s){
 }
 
 /* ── Parse datetime จาก Col A ─────────────────────────────
-   Format จริงจาก Google Sheets (Thai locale):
-   "22/3/2026, 17:00:00"   →  DD/MM/YYYY, HH:MM:SS
-   "2026-03-04 8:00"       →  YYYY-MM-DD H:MM  (fallback)
+   Format จริง: "2026-03-06 8:00"  (YYYY-MM-DD H:MM)
    ─────────────────────────────────────────────────────── */
 function parseDT(s){
   s=(s||'').trim();
   if(!s) return new Date(NaN);
 
-  // ① "22/3/2026, 17:00:00"  or  "22/3/2026 17:00:00"
-  // D/M/YYYY[,] H:MM[:SS]
-  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[,\s]+(\d{1,2}):(\d{2})(?::(\d{2}))?/);
-  if(m){
-    const day=+m[1], mon=+m[2], yr=+m[3], hr=+m[4], mn=+m[5];
-    return new Date(yr, mon-1, day, hr, mn, 0);
-  }
+  // ① "2026-03-06 8:00"  or  "2026-03-06 08:00:00"
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
+  if(m) return new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5], 0);
 
-  // ② "2026-03-04 8:00"  YYYY-MM-DD H:MM
-  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
-  if(m){
-    return new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5], 0);
-  }
+  // ② "22/3/2026, 17:00:00"  DD/MM/YYYY, H:MM:SS
+  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[,\s]+(\d{1,2}):(\d{2})/);
+  if(m) return new Date(+m[3], +m[2]-1, +m[1], +m[4], +m[5], 0);
 
   return new Date(NaN);
 }
