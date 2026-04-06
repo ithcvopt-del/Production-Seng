@@ -296,9 +296,13 @@ function processCSV(text, usedUrl){
   console.log('Header:', header);
   console.log('Row 1:', rows[1]);
 
-  allRows=rows.slice(1).filter(r=>r.length>COL.DT && (r[COL.DT]||'').trim()!=='');
-
-  /*
+  // กรองเอาเฉพาะ row ที่ Col A มีวันที่+เวลาจริง (ไม่ใช่ header ซ้ำหรือแถวว่าง)
+  allRows=rows.slice(1).filter(r=>{
+    const dt=(r[COL.DT]||'').trim();
+    if(!dt||dt.toLowerCase().includes('date')||dt.toLowerCase().includes('time')) return false;
+    const parsed=parseDT(dt);
+    return parsed && !isNaN(parsed);
+  });  /*
     คำนวณ Working Date จาก Col A (Date Time) โดยตรง:
       ชั่วโมง >= 8  →  Working Date = วันนั้น
       ชั่วโมง 0–7  →  Working Date = วันก่อนหน้า 1 วัน
@@ -420,10 +424,13 @@ function renderForDate(wd){
     .filter(r=>r._wd===wd)
     .sort((a,b)=>shiftHour(a)-shiftHour(b));
 
+  // parse ตัวเลขที่อาจมี comma คั่นหลักพัน เช่น "2,385" → 2385
+  function parseNum(v){ return parseFloat((v||'0').replace(/,/g,''))||0; }
+
   const labels=rows.map(r=>fmtTime(r[COL.DT]||''));
-  const dataB =rows.map(r=>parseFloat(r[COL.BCM_CR]||0)||0);
-  const dataH =rows.map(r=>parseFloat(r[COL.BWE1]||0)||0);
-  const dataI =rows.map(r=>parseFloat(r[COL.BWE2]||0)||0);
+  const dataB =rows.map(r=>parseNum(r[COL.BCM_CR]));
+  const dataH =rows.map(r=>parseNum(r[COL.BWE1]));
+  const dataI =rows.map(r=>parseNum(r[COL.BWE2]));
 
   bcmChart.data.labels           =labels;
   bcmChart.data.datasets[0].data =dataB;
