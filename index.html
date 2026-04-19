@@ -4,126 +4,344 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BCM Production Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
   :root {
-    --bg:#0d0f14; --panel:#13161e; --border:#1e2330;
-    --accent:#259b24; --purple:#673ab7; --pink:#f48fb1;
-    --text:#e8eaf0; --muted:#5a6070;
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{
-    background:var(--bg);color:var(--text);
-    font-family:'Barlow',sans-serif;min-height:100vh;padding:22px 28px;
-    background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(37,155,36,.07) 0%,transparent 70%);
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --border: #dde1e8;
+    --shadow: 0 2px 12px rgba(0,0,0,.07);
+
+    --green:  #2e7d32;
+    --green2: #43a047;
+    --green3: #81c784;
+    --pink:   #e91e8c;
+    --pink2:  #f48fb1;
+    --purple: #7b1fa2;
+    --blue:   #1565c0;
+
+    --text:   #1a1f2e;
+    --muted:  #6b7280;
+    --label:  #374151;
+
+    --header-bg: #1a237e;
+    --header-accent: #42a5f5;
   }
 
-  /* ── Header ─────────────────────────────── */
-  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
-  .header-left h1{font-size:1.75rem;font-weight:900;letter-spacing:-.5px;color:#fff;line-height:1}
-  .header-left h1 span{color:var(--accent)}
-  .header-left p{font-family:'Share Tech Mono',monospace;font-size:.67rem;color:var(--muted);margin-top:5px;letter-spacing:1.5px;text-transform:uppercase}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ── Controls ────────────────────────────── */
-  .controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .ctrl-label{font-family:'Share Tech Mono',monospace;font-size:.67rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
-  .date-select{
-    background:var(--panel);border:1px solid var(--border);border-radius:8px;
-    color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:.82rem;
-    padding:8px 13px;cursor:pointer;outline:none;min-width:145px;letter-spacing:.5px;
-    transition:border-color .2s;
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    min-height: 100vh;
+    padding: 0;
   }
-  .date-select:hover,.date-select:focus{border-color:var(--accent)}
-  .date-select option{background:#1a1f2b;color:var(--text)}
-  .btn-nav{
-    background:var(--panel);border:1px solid var(--border);border-radius:8px;
-    color:var(--muted);font-size:1.1rem;width:34px;height:34px;
-    cursor:pointer;display:flex;align-items:center;justify-content:center;
-    transition:border-color .2s,color .2s;
-  }
-  .btn-nav:hover{border-color:var(--accent);color:var(--accent)}
-  .btn-nav:disabled{opacity:.22;cursor:not-allowed}
-  .btn-refresh{
-    background:var(--panel);border:1px solid var(--border);border-radius:8px;
-    color:var(--muted);font-size:.73rem;font-family:'Share Tech Mono',monospace;
-    padding:7px 12px;cursor:pointer;letter-spacing:.5px;
-    transition:border-color .2s,color .2s;white-space:nowrap;
-  }
-  .btn-refresh:hover{border-color:var(--accent);color:var(--accent)}
 
-  /* ── Error banner ────────────────────────── */
-  #errorBanner{
-    display:none;background:rgba(220,50,50,.12);border:1px solid rgba(220,50,50,.35);
-    border-radius:9px;padding:11px 16px;margin-bottom:14px;
-    font-size:.78rem;color:#ffb3b3;line-height:1.6;
+  /* ── Top Header Bar ── */
+  .top-bar {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #1565c0 100%);
+    padding: 12px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    box-shadow: 0 3px 16px rgba(21,35,126,.35);
   }
-  #errorBanner code{background:rgba(255,255,255,.08);border-radius:4px;padding:1px 6px;font-family:'Share Tech Mono',monospace;font-size:.74rem;color:#f48fb1}
 
-  /* ── Legend ──────────────────────────────── */
-  .legend{display:flex;gap:18px;margin-bottom:13px;flex-wrap:wrap}
-  .legend-item{display:flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600}
-  .legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+  .top-bar-left { display: flex; align-items: center; gap: 16px; }
 
-  /* ── Chart ───────────────────────────────── */
-  .chart-wrapper{
-    background:var(--panel);border:1px solid var(--border);border-radius:14px;
-    padding:26px 18px 18px;position:relative;overflow:hidden;
+  .logo-box {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
   }
-  .chart-wrapper::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:linear-gradient(90deg,var(--accent),var(--purple),var(--pink));
-    border-radius:14px 14px 0 0;
+  .logo-box span { color: var(--header-accent); }
+
+  .top-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .95rem;
+    font-weight: 600;
+    color: rgba(255,255,255,.85);
+    letter-spacing: .5px;
   }
-  canvas{display:block;width:100%!important}
-
-  /* ── Overlay ─────────────────────────────── */
-  .overlay{
-    position:absolute;inset:0;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    background:rgba(13,15,20,.88);border-radius:14px;gap:11px;z-index:10;
+  .top-title small {
+    display: block;
+    font-family: 'Sarabun', sans-serif;
+    font-size: .72rem;
+    color: rgba(255,255,255,.5);
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 1px;
   }
-  .overlay.hidden{display:none}
-  .spinner{
-    width:32px;height:32px;border:3px solid var(--border);
-    border-top-color:var(--accent);border-radius:50%;
-    animation:spin .75s linear infinite;
+
+  /* ── Controls ── */
+  .controls {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   }
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .overlay-msg{font-family:'Share Tech Mono',monospace;font-size:.71rem;color:var(--muted);letter-spacing:1px;text-align:center;padding:0 16px}
+  .ctrl-label {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .68rem; color: rgba(255,255,255,.6);
+    letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap;
+  }
+  .date-select {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 7px;
+    color: #fff;
+    font-family: 'Chakra Petch', monospace;
+    font-size: .82rem;
+    padding: 7px 13px;
+    cursor: pointer; outline: none;
+    min-width: 145px; letter-spacing: .5px;
+    transition: background .2s, border-color .2s;
+    -webkit-appearance: none;
+  }
+  .date-select:hover, .date-select:focus {
+    background: rgba(255,255,255,.18);
+    border-color: var(--header-accent);
+  }
+  .date-select option { background: #1a237e; color: #fff; }
 
-  /* ── Stats ───────────────────────────────── */
-  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
-  .stat-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:15px 17px;position:relative;overflow:hidden}
-  .stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
-  .stat-card.green::after{background:var(--accent)}
-  .stat-card.purple::after{background:var(--purple)}
-  .stat-card.pink::after{background:var(--pink)}
-  .stat-label{font-family:'Share Tech Mono',monospace;font-size:.61rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
-  .stat-value{font-size:1.55rem;font-weight:900;letter-spacing:-1px;line-height:1}
-  .stat-card.green  .stat-value{color:var(--accent)}
-  .stat-card.purple .stat-value{color:var(--purple)}
-  .stat-card.pink   .stat-value{color:var(--pink)}
-  .stat-sub{font-size:.68rem;color:var(--muted);margin-top:3px}
+  .btn-nav {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 7px;
+    color: rgba(255,255,255,.8);
+    font-size: 1rem; width: 32px; height: 32px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background .2s, border-color .2s;
+  }
+  .btn-nav:hover { background: rgba(255,255,255,.22); border-color: var(--header-accent); color: #fff; }
+  .btn-nav:disabled { opacity: .25; cursor: not-allowed; }
 
-  .footer-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px}
-  .last-update{font-family:'Share Tech Mono',monospace;font-size:.61rem;color:var(--muted);letter-spacing:.4px}
-  .row-count{font-family:'Share Tech Mono',monospace;font-size:.61rem;color:var(--muted);letter-spacing:.4px}
+  .btn-refresh {
+    background: rgba(66,165,245,.18);
+    border: 1px solid rgba(66,165,245,.4);
+    border-radius: 7px;
+    color: var(--header-accent);
+    font-family: 'Chakra Petch', monospace;
+    font-size: .72rem; padding: 6px 12px;
+    cursor: pointer; letter-spacing: .5px;
+    transition: background .2s; white-space: nowrap;
+  }
+  .btn-refresh:hover { background: rgba(66,165,245,.32); }
 
-  @media(max-width:640px){
-    body{padding:12px}
-    .stats-row{grid-template-columns:1fr}
-    .header-left h1{font-size:1.3rem}
+  /* ── Main content ── */
+  .main { padding: 18px 24px; }
+
+  /* ── Section title ── */
+  .section-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: .3px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e3e8f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::before {
+    content: '';
+    width: 4px; height: 18px;
+    background: linear-gradient(180deg, var(--blue), var(--header-accent));
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── Charts row ── */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 16px;
+    align-items: start;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--header-accent));
+    border-radius: 12px 12px 0 0;
+  }
+
+  /* ── Bar chart ── */
+  .bar-chart-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .88rem; font-weight: 700;
+    color: var(--text); text-align: center;
+    margin-bottom: 4px; letter-spacing: .3px;
+  }
+
+  canvas { display: block; width: 100% !important; }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    margin-top: 10px; justify-content: center;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: .75rem; color: var(--label); font-weight: 600; }
+  .legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Overlay ── */
+  .overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: rgba(255,255,255,.88); border-radius: 12px;
+    gap: 10px; z-index: 10;
+  }
+  .overlay.hidden { display: none; }
+  .spinner {
+    width: 30px; height: 30px;
+    border: 3px solid #e3e8f0;
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin .75s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .overlay-msg {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .7rem; color: var(--muted);
+    letter-spacing: 1px; text-align: center;
+  }
+
+  /* ── Pie card ── */
+  .pie-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .88rem; font-weight: 700;
+    color: var(--text); text-align: center;
+    margin-bottom: 10px;
+  }
+  .pie-wrap {
+    position: relative; width: 180px; height: 180px;
+    margin: 0 auto 12px;
+  }
+  #pieChart { width: 100% !important; height: 100% !important; }
+
+  .total-box {
+    text-align: center;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+  .total-label {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .68rem; color: var(--muted);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .total-value {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--blue); letter-spacing: -1px;
+  }
+
+  .pie-legend {
+    display: flex; flex-direction: column; gap: 5px;
+    margin-top: 12px;
+  }
+  .pie-legend-item {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: .73rem; color: var(--label);
+    padding: 3px 0;
+    border-bottom: 1px solid #f0f2f5;
+  }
+  .pie-legend-left { display: flex; align-items: center; gap: 7px; font-weight: 600; }
+  .pie-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .pie-legend-val { font-family: 'Chakra Petch', sans-serif; font-weight: 700; color: var(--text); font-size: .75rem; }
+
+  /* ── Stats row ── */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin-top: 14px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    position: relative; overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .stat-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    border-radius: 0 0 10px 10px;
+  }
+  .stat-card.green::after  { background: linear-gradient(90deg, var(--green), var(--green3)); }
+  .stat-card.pink::after   { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+  .stat-card.pink2::after  { background: linear-gradient(90deg, var(--pink), var(--pink2)); }
+
+  .stat-label {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .6rem; letter-spacing: 2px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 5px;
+  }
+  .stat-value { font-family: 'Chakra Petch', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+  .stat-card.green  .stat-value { color: var(--green); }
+  .stat-card.pink   .stat-value { color: var(--purple); }
+  .stat-card.pink2  .stat-value { color: var(--pink); }
+  .stat-sub { font-size: .67rem; color: var(--muted); margin-top: 3px; }
+
+  /* ── Footer ── */
+  .footer-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 8px; flex-wrap: wrap; gap: 6px;
+  }
+  .footer-txt {
+    font-family: 'Chakra Petch', monospace;
+    font-size: .6rem; color: var(--muted); letter-spacing: .3px;
+  }
+
+  /* ── Error ── */
+  #errorBanner {
+    display: none;
+    background: #fff3f3; border: 1px solid #ffcdd2;
+    border-radius: 8px; padding: 10px 16px; margin-bottom: 12px;
+    font-size: .78rem; color: #c62828; line-height: 1.6;
+  }
+  #errorBanner code { background: #fce4ec; border-radius: 3px; padding: 1px 5px; font-size: .74rem; }
+
+  @media (max-width: 900px) {
+    .charts-row { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr; }
+    .top-bar { padding: 10px 16px; }
+    .main { padding: 12px 14px; }
   }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <h1>BCM <span>Production</span> Dashboard</h1>
-    <p>Data 1 · Machine Production Per Hour</p>
+<!-- ── Top Bar ── -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <div class="logo-box">BCM<span>·</span>HR</div>
+    <div class="top-title">
+      Production Dashboard
+      <small>Data 1 · Machine Production Per Hour</small>
+    </div>
   </div>
   <div class="controls">
     <span class="ctrl-label">Working Date</span>
@@ -132,360 +350,413 @@
     <button class="btn-nav" id="btnNext" disabled>&#8250;</button>
     <button class="btn-refresh" id="btnRefresh">⟳ Refresh</button>
   </div>
-</header>
-
-<div id="errorBanner"></div>
-
-<div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#259b24"></div>CR</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#673ab7"></div>BWE 1</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#f48fb1"></div>BWE 2</div>
 </div>
 
-<div class="chart-wrapper">
-  <div class="overlay" id="overlay">
-    <div class="spinner"></div>
-    <div class="overlay-msg" id="overlayMsg">LOADING DATA…</div>
-  </div>
-  <canvas id="bcmChart" height="370"></canvas>
-</div>
+<!-- ── Main ── -->
+<div class="main">
 
-<div class="stats-row">
-  <div class="stat-card green">
-    <div class="stat-label">BCM CR — Total</div>
-    <div class="stat-value" id="totalB">—</div>
-    <div class="stat-sub"  id="subB">Column B</div>
-  </div>
-  <div class="stat-card purple">
-    <div class="stat-label">BWE 1 — Total</div>
-    <div class="stat-value" id="totalH">—</div>
-    <div class="stat-sub"  id="subH">Column H</div>
-  </div>
-  <div class="stat-card pink">
-    <div class="stat-label">BWE 2 — Total</div>
-    <div class="stat-value" id="totalI">—</div>
-    <div class="stat-sub"  id="subI">Column I</div>
-  </div>
-</div>
+  <div id="errorBanner"></div>
 
-<div class="footer-row">
-  <div class="row-count"  id="rowCount"></div>
-  <div class="last-update" id="lastUpdate"></div>
+  <div class="section-title">Machine Production Per Hour</div>
+
+  <!-- Charts row: bar + pie -->
+  <div class="charts-row">
+
+    <!-- Bar chart card -->
+    <div class="card">
+      <div class="overlay" id="overlay">
+        <div class="spinner"></div>
+        <div class="overlay-msg" id="overlayMsg">LOADING DATA…</div>
+      </div>
+      <canvas id="bcmChart" height="300"></canvas>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#259b24"></div>CR (BCM)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7b1fa2"></div>BWE 1</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f48fb1"></div>BWE 2</div>
+      </div>
+    </div>
+
+    <!-- Pie chart card -->
+    <div class="card">
+      <div class="pie-title">Total Production of Each Machine</div>
+      <div class="pie-wrap">
+        <canvas id="pieChart"></canvas>
+      </div>
+      <div class="pie-legend" id="pieLegend"></div>
+      <div class="total-box">
+        <div class="total-label">Total Production</div>
+        <div class="total-value" id="grandTotal">—</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Stats cards -->
+  <div class="stats-row">
+    <div class="stat-card green">
+      <div class="stat-label">BCM CR — Total</div>
+      <div class="stat-value" id="totalB">—</div>
+      <div class="stat-sub" id="subB">Column B</div>
+    </div>
+    <div class="stat-card pink">
+      <div class="stat-label">BWE 1 — Total</div>
+      <div class="stat-value" id="totalH">—</div>
+      <div class="stat-sub" id="subH">Column H</div>
+    </div>
+    <div class="stat-card pink2">
+      <div class="stat-label">BWE 2 — Total</div>
+      <div class="stat-value" id="totalI">—</div>
+      <div class="stat-sub" id="subI">Column I</div>
+    </div>
+  </div>
+
+  <div class="footer-row">
+    <div class="footer-txt" id="rowCount"></div>
+    <div class="footer-txt" id="lastUpdate"></div>
+  </div>
+
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════
+/* ══════════════════════════════════════════
    CONFIG
-   ═══════════════════════════════════════════════════════
-   CSV_URLS: ลองทีละ URL ถ้า URL แรก error ก็ลอง URL ถัดไป
-   gid=0   → sheet แรก (ถ้า Data 1 เป็น sheet แรก)
-   gid=ตัวเลขอื่น → ดูจาก URL ของ Google Sheet เมื่อเปิด tab Data 1
-   ═══════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════ */
 const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 const CSV_URLS = [
-  BASE + '?gid=1971585139&single=true&output=csv',  // Data 1 tab
+  BASE + '?gid=1971585139&single=true&output=csv',
   BASE + '?gid=0&single=true&output=csv',
   BASE + '?output=csv',
 ];
-
-/*
-  Column index (0-based) — ตรงกับภาพ:
-  A=0  Date Time
-  B=1  BCM CR
-  C=2  Crusher 30
-  D=3  Crusher 31
-  E=4  Crusher 32
-  F=5  Shift
-  G=6  Working Date   ← ใช้ filter วันที่
-  H=7  BWE 1
-  I=8  BWE 2
-*/
 const COL = { DT:0, BCM_CR:1, WDATE:6, BWE1:7, BWE2:8 };
 
-/* ═══════════════════════════════════════════════════════ */
+/* ── Colours ── */
+const C = {
+  cr:   '#2e7d32',
+  bwe1: '#7b1fa2',
+  bwe2: '#f48fb1',
+};
 
-let allRows=[], availableDates=[], bcmChart=null;
+let allRows=[], availableDates=[], bcmChart=null, pieChart=null;
 
-/* ── Chart.js ──────────────────────────────────────────── */
-Chart.defaults.color='#5a6070';
-Chart.defaults.font.family="'Barlow',sans-serif";
+/* ══════════════════════════════════════════
+   CHART INIT
+   ══════════════════════════════════════════ */
+Chart.defaults.font.family = "'Sarabun', sans-serif";
 
-const totalLabelPlugin={
-  id:'totalLabel',
-  afterDatasetsDraw(chart){
-    const{ctx,scales:{x,y}}=chart;
-    const ds=chart.data.datasets;
+/* ── Bar chart total-label plugin ── */
+const totalLabelPlugin = {
+  id: 'totalLabel',
+  afterDatasetsDraw(chart) {
+    const { ctx, scales:{ x, y } } = chart;
+    const ds = chart.data.datasets;
     ctx.save();
-    chart.data.labels.forEach((_,i)=>{
-      const total=ds.reduce((s,d)=>s+(Number(d.data[i])||0),0);
-      if(!total)return;
-      const xp=x.getPixelForValue(i), yp=y.getPixelForValue(total);
-      const lbl=total.toLocaleString();
-      ctx.font="bold 11px 'Share Tech Mono',monospace";
-      const tw=ctx.measureText(lbl).width;
-      const pw=tw+10,ph=16,px=xp-pw/2,py=yp-ph-4;
-      ctx.fillStyle='rgba(18,22,34,.92)';
-      ctx.beginPath();ctx.roundRect(px,py,pw,ph,4);ctx.fill();
-      ctx.fillStyle='#e8eaf0';ctx.textAlign='center';ctx.textBaseline='bottom';
-      ctx.fillText(lbl,xp,yp-5);
+    chart.data.labels.forEach((_, i) => {
+      const total = ds.reduce((s, d) => s + (Number(d.data[i])||0), 0);
+      if (!total) return;
+      const xp = x.getPixelForValue(i);
+      const yp = y.getPixelForValue(total);
+      const lbl = total.toLocaleString();
+      ctx.font = "bold 10px 'Chakra Petch', monospace";
+      const tw = ctx.measureText(lbl).width;
+      const pw = tw+8, ph=14, pr=3;
+      const px = xp-pw/2, py = yp-ph-3;
+      ctx.fillStyle = 'rgba(26,35,126,.82)';
+      ctx.beginPath(); ctx.roundRect(px,py,pw,ph,pr); ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText(lbl, xp, yp-3);
     });
     ctx.restore();
   }
 };
 
-function initChart(){
-  const ctx=document.getElementById('bcmChart').getContext('2d');
-  bcmChart=new Chart(ctx,{
-    type:'bar',plugins:[totalLabelPlugin],
-    data:{labels:[],datasets:[
-      {label:'BCM CR (Col B)',data:[],backgroundColor:'rgba(37,155,36,.88)', stack:'s'},
-      {label:'BWE 1 (Col H)', data:[],backgroundColor:'rgba(103,58,183,.88)',stack:'s'},
-      {label:'BWE 2 (Col I)', data:[],backgroundColor:'rgba(244,143,177,.88)',stack:'s'},
+function initBarChart() {
+  const ctx = document.getElementById('bcmChart').getContext('2d');
+  bcmChart = new Chart(ctx, {
+    type: 'bar',
+    plugins: [totalLabelPlugin],
+    data: { labels: [], datasets: [
+      { label:'CR (BCM)',  data:[], backgroundColor:'rgba(46,125,50,.85)',  stack:'s', borderRadius:2 },
+      { label:'BWE 1',    data:[], backgroundColor:'rgba(123,31,162,.85)', stack:'s', borderRadius:2 },
+      { label:'BWE 2',    data:[], backgroundColor:'rgba(244,143,177,.9)', stack:'s', borderRadius:2 },
     ]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      layout:{padding:{top:34}},
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#1a1f2b',borderColor:'#2a3040',borderWidth:1,
-          titleFont:{family:"'Share Tech Mono',monospace",size:11},
-          bodyFont:{family:"'Barlow',sans-serif",size:12},padding:12,
-          callbacks:{
-            label:c=>` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}`,
-            footer:items=>`  Total: ${items.reduce((s,i)=>s+i.parsed.y,0).toLocaleString()}`
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      layout: { padding:{ top:30 } },
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          backgroundColor: '#fff',
+          borderColor: '#dde1e8', borderWidth: 1,
+          titleColor: '#1a1f2e', bodyColor: '#374151',
+          titleFont: { family:"'Chakra Petch',monospace", size:11, weight:'700' },
+          bodyFont: { family:"'Sarabun',sans-serif", size:12 },
+          padding: 10,
+          callbacks: {
+            label: c => ` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}`,
+            footer: items => `  Total: ${items.reduce((s,i)=>s+i.parsed.y,0).toLocaleString()}`
           }
         }
       },
-      scales:{
-        x:{stacked:true,grid:{color:'#1a1f2b'},
-           ticks:{font:{family:"'Share Tech Mono',monospace",size:10},color:'#5a6070',maxRotation:45,minRotation:30}},
-        y:{stacked:true,grid:{color:'#1a1f2b'},
-           ticks:{font:{family:"'Share Tech Mono',monospace",size:10},color:'#5a6070',callback:v=>v.toLocaleString()},
-           beginAtZero:true}
+      scales: {
+        x: {
+          stacked: true,
+          grid: { color:'#f0f2f5' },
+          ticks: { font:{family:"'Chakra Petch',monospace",size:10}, color:'#6b7280', maxRotation:45, minRotation:30 }
+        },
+        y: {
+          stacked: true,
+          grid: { color:'#f0f2f5' },
+          ticks: { font:{family:"'Chakra Petch',monospace",size:10}, color:'#6b7280', callback:v=>v.toLocaleString() },
+          beginAtZero: true
+        }
       }
     }
   });
 }
 
-/* ── Fetch CSV (try multiple URLs) ─────────────────────── */
-async function fetchData(){
-  showOverlay('LOADING DATA…');
-  hideError();
-  let lastErr='';
-  for(const url of CSV_URLS){
-    try{
-      const res=await fetch(url+'&_cb='+Date.now());
-      if(!res.ok){lastErr=`HTTP ${res.status}`;continue;}
-      const text=await res.text();
-      if(!text||text.trim().length<10){lastErr='Empty response';continue;}
-      processCSV(text,url);
-      return;
-    }catch(e){lastErr=e.message;}
-  }
-  showOverlay('โหลดข้อมูลไม่สำเร็จ');
-  showError(`ไม่สามารถดึงข้อมูลได้: ${lastErr}<br>ตรวจสอบว่า Google Sheet ถูก Publish เป็น CSV แล้ว`);
+function initPieChart() {
+  const ctx = document.getElementById('pieChart').getContext('2d');
+  pieChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['CR (BCM)', 'BWE 1', 'BWE 2'],
+      datasets: [{
+        data: [0, 0, 0],
+        backgroundColor: [C.cr, C.bwe1, C.bwe2],
+        borderColor: '#fff',
+        borderWidth: 2,
+        hoverOffset: 8,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      cutout: '62%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#fff',
+          borderColor: '#dde1e8', borderWidth: 1,
+          titleColor: '#1a1f2e', bodyColor: '#374151',
+          titleFont: { family:"'Chakra Petch',monospace", size:11, weight:'700' },
+          bodyFont: { family:"'Sarabun',sans-serif", size:12 },
+          callbacks: {
+            label: c => ` ${c.label}: ${c.parsed.toLocaleString()}`
+          }
+        }
+      }
+    }
+  });
 }
 
-function processCSV(text, usedUrl){
-  const parsed=Papa.parse(text,{skipEmptyLines:true});
-  const rows=parsed.data;
-
-  const header=rows[0]||[];
-  console.log('Header:', header);
-  console.log('Row 1:', rows[1]);
-
-  // กรองเอาเฉพาะ row ที่ Col A มีวันที่+เวลาจริง (ไม่ใช่ header ซ้ำหรือแถวว่าง)
-  allRows=rows.slice(1).filter(r=>{
-    const dt=(r[COL.DT]||'').trim();
-    if(!dt||dt.toLowerCase().includes('date')||dt.toLowerCase().includes('time')) return false;
-    const parsed=parseDT(dt);
-    return parsed && !isNaN(parsed);
-  });  /*
-    คำนวณ Working Date จาก Col A (Date Time) โดยตรง:
-      ชั่วโมง >= 8  →  Working Date = วันนั้น
-      ชั่วโมง 0–7  →  Working Date = วันก่อนหน้า 1 วัน
-    เช่น 2026-03-05 00:00 → Working Date = 2026-03-04
-         2026-03-05 08:00 → Working Date = 2026-03-05
-  */
-  function getWorkingDate(dtStr){
-    const d=parseDT(dtStr);
-    if(!d||isNaN(d))return null;
-    const h=d.getHours();
-    if(h<8){
-      // ย้อนไปวันก่อนหน้า
-      const prev=new Date(d);
-      prev.setDate(prev.getDate()-1);
-      return toYMD(prev);
-    }
-    return toYMD(d);
+/* ══════════════════════════════════════════
+   DATA FETCH & PARSE
+   ══════════════════════════════════════════ */
+async function fetchData() {
+  showOverlay('LOADING DATA…');
+  hideError();
+  let lastErr = '';
+  for (const url of CSV_URLS) {
+    try {
+      const res = await fetch(url + '&_cb=' + Date.now());
+      if (!res.ok) { lastErr = `HTTP ${res.status}`; continue; }
+      const text = await res.text();
+      if (!text || text.trim().length < 10) { lastErr = 'Empty'; continue; }
+      processCSV(text);
+      return;
+    } catch(e) { lastErr = e.message; }
   }
+  showOverlay('โหลดข้อมูลไม่สำเร็จ');
+  showError(`ดึงข้อมูลไม่ได้: ${lastErr}`);
+}
 
-  function toYMD(d){
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function parseNum(v) { return parseFloat((v||'0').replace(/,/g,'')) || 0; }
+
+function parseDT(s) {
+  s = (s||'').trim();
+  if (!s) return new Date(NaN);
+  // YYYY-MM-DD H:MM
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
+  if (m) return new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5], 0);
+  // DD/MM/YYYY, H:MM
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[,\s]+(\d{1,2}):(\d{2})/);
+  if (m) return new Date(+m[3], +m[2]-1, +m[1], +m[4], +m[5], 0);
+  return new Date(NaN);
+}
+
+function fmtTime(s) {
+  const d = parseDT(s);
+  if (!d || isNaN(d)) return s;
+  return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function toYMD(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getWorkingDate(dtStr) {
+  const d = parseDT(dtStr);
+  if (!d || isNaN(d)) return null;
+  if (d.getHours() < 8) {
+    const prev = new Date(d);
+    prev.setDate(prev.getDate() - 1);
+    return toYMD(prev);
   }
+  return toYMD(d);
+}
 
-  // ติด working date ให้แต่ละ row
-  allRows.forEach(r=>{ r._wd=getWorkingDate(r[COL.DT]||''); });
-  allRows=allRows.filter(r=>r._wd);
+function toDisplay(s) {
+  const parts = s.split('-');
+  return parts.length===3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : s;
+}
 
-  // Unique working dates
-  const dateSet=new Set(allRows.map(r=>r._wd));
-  availableDates=[...dateSet].sort();
+function processCSV(text) {
+  const rows = Papa.parse(text, { skipEmptyLines:true }).data;
+  const header = rows[0]||[];
 
-  if(availableDates.length===0){
-    showOverlay('ไม่พบข้อมูลใน Column A');
-    showError(`พบ ${allRows.length} แถว แต่ไม่สามารถอ่านวันที่จาก Column A ได้<br>
-      Header: <code>${header.slice(0,5).join(' | ')}</code><br>
-      แถวแรก: <code>${(rows[1]||[]).slice(0,5).join(' | ')}</code>`);
+  allRows = rows.slice(1).filter(r => {
+    const dt = (r[COL.DT]||'').trim();
+    if (!dt || /date|time/i.test(dt)) return false;
+    return !isNaN(parseDT(dt));
+  });
+
+  allRows.forEach(r => { r._wd = getWorkingDate(r[COL.DT]||''); });
+  allRows = allRows.filter(r => r._wd);
+
+  const dateSet = new Set(allRows.map(r => r._wd));
+  availableDates = [...dateSet].sort();
+
+  if (!availableDates.length) {
+    showOverlay('ไม่พบข้อมูล');
+    showError(`Header: <code>${header.slice(0,6).join(' | ')}</code>`);
     return;
   }
 
   buildPicker();
-  renderForDate(availableDates[availableDates.length-1]);
+  renderForDate(availableDates[availableDates.length - 1]);
 
-  const now=new Date();
-  document.getElementById('lastUpdate').textContent=
+  const now = new Date();
+  document.getElementById('lastUpdate').textContent =
     `Updated: ${now.toLocaleDateString('en-GB')} ${now.toLocaleTimeString('en-GB')}`;
-  document.getElementById('rowCount').textContent=
+  document.getElementById('rowCount').textContent =
     `${allRows.length} rows · ${availableDates.length} dates`;
 }
 
-/* ── Date parsing (handles YYYY-MM-DD, DD/MM/YYYY, M/D/YYYY etc.) ─ */
-function parseFlexDate(s){
-  s=(s||'').trim();
-  let d=new Date(s);
-  if(!isNaN(d))return d;
-  // DD/MM/YYYY or D/M/YYYY
-  const m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if(m)return new Date(`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`);
-  return new Date(0);
-}
-
-function toDisplay(s){
-  const d=parseFlexDate(s);
-  if(isNaN(d))return s;
-  return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
-}
-
-/* ── Parse datetime จาก Col A ─────────────────────────────
-   Format จริง: "2026-03-06 8:00"  (YYYY-MM-DD H:MM)
-   ─────────────────────────────────────────────────────── */
-function parseDT(s){
-  s=(s||'').trim();
-  if(!s) return new Date(NaN);
-
-  // ① "2026-03-06 8:00"  or  "2026-03-06 08:00:00"
-  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
-  if(m) return new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5], 0);
-
-  // ② "22/3/2026, 17:00:00"  DD/MM/YYYY, H:MM:SS
-  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[,\s]+(\d{1,2}):(\d{2})/);
-  if(m) return new Date(+m[3], +m[2]-1, +m[1], +m[4], +m[5], 0);
-
-  return new Date(NaN);
-}
-
-function fmtTime(s){
-  const d=parseDT(s);
-  if(!d||isNaN(d)) return s;
-  return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
-
-/* ── Build date picker ──────────────────────────────────── */
-function buildPicker(){
-  const sel=document.getElementById('datePicker');
-  sel.innerHTML='';
-  availableDates.forEach(d=>{
-    const o=document.createElement('option');
-    o.value=d;
-    // d = YYYY-MM-DD → แสดง DD-MM-YYYY
-    const parts=d.split('-');
-    o.textContent=parts.length===3?`${parts[2]}-${parts[1]}-${parts[0]}`:d;
-    sel.appendChild(o);
-  });
-  sel.value=availableDates[availableDates.length-1];
-  syncNav();
-}
-
-/* ── Render chart ───────────────────────────────────────── */
-function renderForDate(wd){
-  /*
-    Filter ด้วย _wd ที่คำนวณจาก Col A
-    Sort: ชั่วโมง 8–23 ก่อน, 0–7 หลัง
-  */
-  function shiftHour(r){
-    const h=parseDT(r[COL.DT]).getHours();
-    return h<8 ? h+24 : h;
+/* ══════════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════════ */
+function renderForDate(wd) {
+  function shiftHour(r) {
+    const h = parseDT(r[COL.DT]).getHours();
+    return h < 8 ? h + 24 : h;
   }
 
-  const rows=allRows
-    .filter(r=>r._wd===wd)
-    .sort((a,b)=>shiftHour(a)-shiftHour(b));
+  const rows = allRows
+    .filter(r => r._wd === wd)
+    .sort((a,b) => shiftHour(a) - shiftHour(b));
 
-  // parse ตัวเลขที่อาจมี comma คั่นหลักพัน เช่น "2,385" → 2385
-  function parseNum(v){ return parseFloat((v||'0').replace(/,/g,''))||0; }
+  const labels = rows.map(r => fmtTime(r[COL.DT]||''));
+  const dataB  = rows.map(r => parseNum(r[COL.BCM_CR]));
+  const dataH  = rows.map(r => parseNum(r[COL.BWE1]));
+  const dataI  = rows.map(r => parseNum(r[COL.BWE2]));
 
-  const labels=rows.map(r=>fmtTime(r[COL.DT]||''));
-  const dataB =rows.map(r=>parseNum(r[COL.BCM_CR]));
-  const dataH =rows.map(r=>parseNum(r[COL.BWE1]));
-  const dataI =rows.map(r=>parseNum(r[COL.BWE2]));
-
-  bcmChart.data.labels           =labels;
-  bcmChart.data.datasets[0].data =dataB;
-  bcmChart.data.datasets[1].data =dataH;
-  bcmChart.data.datasets[2].data =dataI;
+  // Update bar chart
+  bcmChart.data.labels           = labels;
+  bcmChart.data.datasets[0].data = dataB;
+  bcmChart.data.datasets[1].data = dataH;
+  bcmChart.data.datasets[2].data = dataI;
   bcmChart.update();
 
-  const sum=a=>a.reduce((s,v)=>s+v,0);
-  const disp=toDisplay(wd);
-  document.getElementById('totalB').textContent=sum(dataB).toLocaleString();
-  document.getElementById('totalH').textContent=sum(dataH).toLocaleString();
-  document.getElementById('totalI').textContent=sum(dataI).toLocaleString();
-  document.getElementById('subB').textContent=`Column B · ${disp}`;
-  document.getElementById('subH').textContent=`Column H · ${disp}`;
-  document.getElementById('subI').textContent=`Column I · ${disp}`;
+  const sum = a => a.reduce((s,v) => s+v, 0);
+  const sB = sum(dataB), sH = sum(dataH), sI = sum(dataI);
+  const grand = sB + sH + sI;
 
-  document.getElementById('rowCount').textContent=
+  // Update pie chart
+  pieChart.data.datasets[0].data = [sB, sH, sI];
+  pieChart.update();
+
+  // Pie legend
+  const colours = [C.cr, C.bwe1, C.bwe2];
+  const pieLabels = ['CR (BCM)', 'BWE 1', 'BWE 2'];
+  const pieVals   = [sB, sH, sI];
+  const legendEl  = document.getElementById('pieLegend');
+  legendEl.innerHTML = pieLabels.map((lbl,i) => `
+    <div class="pie-legend-item">
+      <div class="pie-legend-left">
+        <div class="pie-legend-dot" style="background:${colours[i]}"></div>
+        ${lbl}
+      </div>
+      <div class="pie-legend-val">${pieVals[i].toLocaleString()}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('grandTotal').textContent = grand.toLocaleString();
+
+  // Stats
+  const disp = toDisplay(wd);
+  document.getElementById('totalB').textContent = sB.toLocaleString();
+  document.getElementById('totalH').textContent = sH.toLocaleString();
+  document.getElementById('totalI').textContent = sI.toLocaleString();
+  document.getElementById('subB').textContent = `Column B · ${disp}`;
+  document.getElementById('subH').textContent = `Column H · ${disp}`;
+  document.getElementById('subI').textContent = `Column I · ${disp}`;
+  document.getElementById('rowCount').textContent =
     `${rows.length} rows · ${availableDates.length} dates · ${disp}`;
 
   hideOverlay(); syncNav();
 }
 
-/* ── Nav ────────────────────────────────────────────────── */
-function syncNav(){
-  const idx=availableDates.indexOf(document.getElementById('datePicker').value);
-  document.getElementById('btnPrev').disabled=idx<=0;
-  document.getElementById('btnNext').disabled=idx>=availableDates.length-1;
+/* ══════════════════════════════════════════
+   UI HELPERS
+   ══════════════════════════════════════════ */
+function buildPicker() {
+  const sel = document.getElementById('datePicker');
+  sel.innerHTML = '';
+  availableDates.forEach(d => {
+    const o = document.createElement('option');
+    o.value = d; o.textContent = toDisplay(d);
+    sel.appendChild(o);
+  });
+  sel.value = availableDates[availableDates.length - 1];
+  syncNav();
 }
-document.getElementById('datePicker').addEventListener('change',e=>renderForDate(e.target.value));
-document.getElementById('btnPrev').addEventListener('click',()=>{
-  const sel=document.getElementById('datePicker');
-  const idx=availableDates.indexOf(sel.value);
-  if(idx>0){sel.value=availableDates[idx-1];renderForDate(sel.value);}
-});
-document.getElementById('btnNext').addEventListener('click',()=>{
-  const sel=document.getElementById('datePicker');
-  const idx=availableDates.indexOf(sel.value);
-  if(idx<availableDates.length-1){sel.value=availableDates[idx+1];renderForDate(sel.value);}
-});
-document.getElementById('btnRefresh').addEventListener('click',fetchData);
 
-/* ── Overlay / Error helpers ────────────────────────────── */
-function showOverlay(msg){
-  document.getElementById('overlayMsg').textContent=msg;
+function syncNav() {
+  const idx = availableDates.indexOf(document.getElementById('datePicker').value);
+  document.getElementById('btnPrev').disabled = idx <= 0;
+  document.getElementById('btnNext').disabled = idx >= availableDates.length - 1;
+}
+
+document.getElementById('datePicker').addEventListener('change', e => renderForDate(e.target.value));
+document.getElementById('btnPrev').addEventListener('click', () => {
+  const sel = document.getElementById('datePicker');
+  const idx = availableDates.indexOf(sel.value);
+  if (idx > 0) { sel.value = availableDates[idx-1]; renderForDate(sel.value); }
+});
+document.getElementById('btnNext').addEventListener('click', () => {
+  const sel = document.getElementById('datePicker');
+  const idx = availableDates.indexOf(sel.value);
+  if (idx < availableDates.length-1) { sel.value = availableDates[idx+1]; renderForDate(sel.value); }
+});
+document.getElementById('btnRefresh').addEventListener('click', fetchData);
+
+function showOverlay(msg) {
+  document.getElementById('overlayMsg').textContent = msg;
   document.getElementById('overlay').classList.remove('hidden');
 }
-function hideOverlay(){document.getElementById('overlay').classList.add('hidden');}
-function showError(html){
-  const b=document.getElementById('errorBanner');
-  b.innerHTML='⚠️ '+html; b.style.display='block';
+function hideOverlay() { document.getElementById('overlay').classList.add('hidden'); }
+function showError(html) {
+  const b = document.getElementById('errorBanner');
+  b.innerHTML = '⚠️ ' + html; b.style.display = 'block';
 }
-function hideError(){document.getElementById('errorBanner').style.display='none';}
+function hideError() { document.getElementById('errorBanner').style.display = 'none'; }
 
-/* ── Boot ───────────────────────────────────────────────── */
-initChart();
+/* ══════════════════════════════════════════
+   BOOT
+   ══════════════════════════════════════════ */
+initBarChart();
+initPieChart();
 fetchData();
 </script>
 </body>
