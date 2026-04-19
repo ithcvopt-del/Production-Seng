@@ -165,9 +165,9 @@
   /* ── Charts row ── */
   .charts-row {
     display: grid;
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: 1fr 300px;
     gap: 16px;
-    align-items: start;
+    align-items: stretch;
   }
 
   /* ── Card ── */
@@ -179,6 +179,8 @@
     padding: 18px 20px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
   .card::before {
     content: '';
@@ -193,6 +195,12 @@
     font-size: .88rem; font-weight: 700;
     color: var(--text); text-align: center;
     margin-bottom: 4px; letter-spacing: .3px;
+  }
+
+  .bar-canvas-wrap {
+    flex: 1;
+    min-height: 0;
+    position: relative;
   }
 
   canvas { display: block; width: 100% !important; }
@@ -229,6 +237,11 @@
   }
 
   /* ── Pie card ── */
+  .pie-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
   .pie-title {
     font-family: 'Chakra Petch', sans-serif;
     font-size: .88rem; font-weight: 700;
@@ -236,8 +249,9 @@
     margin-bottom: 10px;
   }
   .pie-wrap {
-    position: relative; width: 180px; height: 180px;
+    position: relative; width: 160px; height: 160px;
     margin: 0 auto 12px;
+    flex-shrink: 0;
   }
   #pieChart { width: 100% !important; height: 100% !important; }
 
@@ -363,12 +377,14 @@
   <div class="charts-row">
 
     <!-- Bar chart card -->
-    <div class="card">
+    <div class="card" style="min-height:420px;">
       <div class="overlay" id="overlay">
         <div class="spinner"></div>
         <div class="overlay-msg" id="overlayMsg">LOADING DATA…</div>
       </div>
-      <canvas id="bcmChart" height="300"></canvas>
+      <div class="bar-canvas-wrap" style="height:360px;">
+        <canvas id="bcmChart"></canvas>
+      </div>
       <div class="legend">
         <div class="legend-item"><div class="legend-dot" style="background:#259b24"></div>CR (BCM)</div>
         <div class="legend-item"><div class="legend-dot" style="background:#7b1fa2"></div>BWE 1</div>
@@ -377,7 +393,7 @@
     </div>
 
     <!-- Pie chart card -->
-    <div class="card">
+    <div class="card pie-card" style="min-height:420px;">
       <div class="pie-title">Total Production of Each Machine</div>
       <div class="pie-wrap">
         <canvas id="pieChart"></canvas>
@@ -481,7 +497,8 @@ function initBarChart() {
       { label:'BWE 2',    data:[], backgroundColor:'rgba(244,143,177,.9)', stack:'s', borderRadius:2 },
     ]},
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true,
+      maintainAspectRatio: false,
       interaction: { mode:'index', intersect:false },
       layout: { padding:{ top:30 } },
       plugins: {
