@@ -395,9 +395,11 @@
         <canvas id="bcmChart"></canvas>
       </div>
       <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#259b24"></div>CR (BCM)</div>
         <div class="legend-item"><div class="legend-dot" style="background:#7b1fa2"></div>BWE 1</div>
         <div class="legend-item"><div class="legend-dot" style="background:#f48fb1"></div>BWE 2</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#66bb6a"></div>CR 1</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2e7d32"></div>CR 2</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c8e6c9;border:1px solid #aaa"></div>CR 3</div>
       </div>
     </div>
 
@@ -439,8 +441,6 @@
 const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 const CSV_URLS = [
   BASE + '?gid=1971585139&single=true&output=csv',
-  BASE + '?gid=0&single=true&output=csv',
-  BASE + '?output=csv',
 ];
 const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8 };
 
@@ -493,9 +493,11 @@ function initBarChart() {
     type: 'bar',
     plugins: [totalLabelPlugin],
     data: { labels: [], datasets: [
-      { label:'CR (BCM)',  data:[], backgroundColor:'rgba(46,125,50,.85)',  stack:'s', borderRadius:2 },
-      { label:'BWE 1',    data:[], backgroundColor:'rgba(123,31,162,.85)', stack:'s', borderRadius:2 },
-      { label:'BWE 2',    data:[], backgroundColor:'rgba(244,143,177,.9)', stack:'s', borderRadius:2 },
+      { label:'BWE 1', data:[], backgroundColor:'rgba(123,31,162,.85)',  stack:'s', borderRadius:2 },
+      { label:'BWE 2', data:[], backgroundColor:'rgba(244,143,177,.9)',  stack:'s', borderRadius:2 },
+      { label:'CR 1',  data:[], backgroundColor:'rgba(102,187,106,.9)',  stack:'s', borderRadius:2 },
+      { label:'CR 2',  data:[], backgroundColor:'rgba(46,125,50,.88)',   stack:'s', borderRadius:2 },
+      { label:'CR 3',  data:[], backgroundColor:'rgba(200,230,201,.95)', stack:'s', borderRadius:2 },
     ]},
     options: {
       responsive: true,
@@ -683,11 +685,13 @@ function renderForDate(wd) {
   const dataH   = rows.map(r => parseNum(r[COL.BWE1]));
   const dataI   = rows.map(r => parseNum(r[COL.BWE2]));
 
-  // Update bar chart (BCM CR stacked = CR1+CR2+CR3 combined as green, BWE1, BWE2)
+  // Update bar chart — 5 datasets
   bcmChart.data.labels           = labels;
-  bcmChart.data.datasets[0].data = dataB;
-  bcmChart.data.datasets[1].data = dataH;
-  bcmChart.data.datasets[2].data = dataI;
+  bcmChart.data.datasets[0].data = dataH;    // BWE 1
+  bcmChart.data.datasets[1].data = dataI;    // BWE 2
+  bcmChart.data.datasets[2].data = dataCR1;  // CR 1
+  bcmChart.data.datasets[3].data = dataCR2;  // CR 2
+  bcmChart.data.datasets[4].data = dataCR3;  // CR 3
   bcmChart.update();
 
   const sum = a => a.reduce((s,v) => s+v, 0);
