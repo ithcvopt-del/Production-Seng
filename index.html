@@ -412,7 +412,10 @@
         <div class="total-label">Total Production</div>
         <div class="total-value" id="grandTotal">—</div>
       </div>
-      <div class="clock-box" id="clockBox">0:00</div>
+      <div style="text-align:center;margin-top:10px;">
+        <div class="total-label" style="margin-bottom:4px;">Hour S3 — Total</div>
+        <div class="clock-box" id="clockBox">—</div>
+      </div>
     </div>
 
   </div>
@@ -440,7 +443,7 @@ const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-1
 const CSV_URLS = [
   BASE + '?gid=1971585139&single=true&output=csv',
 ];
-const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8 };
+const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11 };
 
 /* ── Colours ── */
 const C = {
@@ -720,6 +723,20 @@ function renderForDate(wd) {
 
   document.getElementById('grandTotal').textContent = grand.toLocaleString();
 
+  // ── คำนวณผลรวม Col L (Hour S3) format H:MM → แสดงเป็น [H]:MM ──
+  function parseHHMM(s) {
+    // รองรับ "1:00", "0:37", "21:10" ฯลฯ
+    s = (s||'').trim();
+    const m = s.match(/^(\d+):(\d{2})$/);
+    if (!m) return 0;
+    return parseInt(m[1]) * 60 + parseInt(m[2]);
+  }
+
+  const totalMinutes = rows.reduce((sum, r) => sum + parseHHMM(r[COL.HOUR_S3]), 0);
+  const th = Math.floor(totalMinutes / 60);
+  const tm = String(totalMinutes % 60).padStart(2, '0');
+  document.getElementById('clockBox').textContent = `${th}:${tm}`;
+
   // Stats (hidden elements — kept for compatibility)
   const disp = toDisplay(wd);
   document.getElementById('totalB').textContent = sCR1.toLocaleString();
@@ -785,16 +802,6 @@ function hideError() { document.getElementById('errorBanner').style.display = 'n
 initBarChart();
 initPieChart();
 fetchData();
-
-// Live clock
-function updateClock() {
-  const now = new Date();
-  const h = now.getHours();
-  const m = String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('clockBox').textContent = `${h}:${m}`;
-}
-updateClock();
-setInterval(updateClock, 1000);
 </script>
 </body>
 </html>
