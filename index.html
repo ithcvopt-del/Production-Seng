@@ -250,7 +250,7 @@
   }
   .pie-wrap {
     position: relative; width: 160px; height: 160px;
-    margin: 0 auto 12px;
+    margin: 0 auto 8px;
     flex-shrink: 0;
   }
   #pieChart { width: 100% !important; height: 100% !important; }
@@ -285,7 +285,16 @@
   }
   .pie-legend-left { display: flex; align-items: center; gap: 7px; font-weight: 600; }
   .pie-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .pie-legend-val { font-family: 'Chakra Petch', sans-serif; font-weight: 700; color: var(--text); font-size: .75rem; }
+  .clock-box {
+    text-align: center;
+    font-family: 'Chakra Petch', monospace;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: -1px;
+    margin-top: 8px;
+    line-height: 1;
+  }
 
   /* ── Stats row ── */
   .stats-row {
@@ -403,6 +412,7 @@
         <div class="total-label">Total Production</div>
         <div class="total-value" id="grandTotal">—</div>
       </div>
+      <div class="clock-box" id="clockBox">0:00</div>
     </div>
 
   </div>
@@ -432,13 +442,15 @@ const CSV_URLS = [
   BASE + '?gid=0&single=true&output=csv',
   BASE + '?output=csv',
 ];
-const COL = { DT:0, BCM_CR:1, WDATE:6, BWE1:7, BWE2:8 };
+const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8 };
 
 /* ── Colours ── */
 const C = {
-  cr:   '#2e7d32',
-  bwe1: '#7b1fa2',
-  bwe2: '#f48fb1',
+  bwe1: '#7b1fa2',   // purple
+  bwe2: '#f48fb1',   // pink
+  cr1:  '#66bb6a',   // light green
+  cr2:  '#2e7d32',   // dark green
+  cr3:  '#c8e6c9',   // pale green
 };
 
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null;
@@ -525,20 +537,19 @@ function initBarChart() {
 function initPieChart() {
   const ctx = document.getElementById('pieChart').getContext('2d');
   pieChart = new Chart(ctx, {
-    type: 'doughnut',
+    type: 'pie',
     data: {
-      labels: ['CR (BCM)', 'BWE 1', 'BWE 2'],
+      labels: ['BWE 1', 'BWE 2', 'CR 1', 'CR 2', 'CR 3'],
       datasets: [{
-        data: [0, 0, 0],
-        backgroundColor: [C.cr, C.bwe1, C.bwe2],
+        data: [0, 0, 0, 0, 0],
+        backgroundColor: [C.bwe1, C.bwe2, C.cr1, C.cr2, C.cr3],
         borderColor: '#fff',
         borderWidth: 2,
-        hoverOffset: 8,
+        hoverOffset: 10,
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: true,
-      cutout: '62%',
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -550,7 +561,9 @@ function initPieChart() {
           callbacks: {
             label: c => ` ${c.label}: ${c.parsed.toLocaleString()}`
           }
-        }
+        },
+        // Show values inside slices
+        datalabels: { display: false }
       }
     }
   });
@@ -662,12 +675,15 @@ function renderForDate(wd) {
     .filter(r => r._wd === wd)
     .sort((a,b) => shiftHour(a) - shiftHour(b));
 
-  const labels = rows.map(r => fmtTime(r[COL.DT]||''));
-  const dataB  = rows.map(r => parseNum(r[COL.BCM_CR]));
-  const dataH  = rows.map(r => parseNum(r[COL.BWE1]));
-  const dataI  = rows.map(r => parseNum(r[COL.BWE2]));
+  const labels  = rows.map(r => fmtTime(r[COL.DT]||''));
+  const dataB   = rows.map(r => parseNum(r[COL.BCM_CR]));
+  const dataCR1 = rows.map(r => parseNum(r[COL.CR1]));
+  const dataCR2 = rows.map(r => parseNum(r[COL.CR2]));
+  const dataCR3 = rows.map(r => parseNum(r[COL.CR3]));
+  const dataH   = rows.map(r => parseNum(r[COL.BWE1]));
+  const dataI   = rows.map(r => parseNum(r[COL.BWE2]));
 
-  // Update bar chart
+  // Update bar chart (BCM CR stacked = CR1+CR2+CR3 combined as green, BWE1, BWE2)
   bcmChart.data.labels           = labels;
   bcmChart.data.datasets[0].data = dataB;
   bcmChart.data.datasets[1].data = dataH;
@@ -675,25 +691,32 @@ function renderForDate(wd) {
   bcmChart.update();
 
   const sum = a => a.reduce((s,v) => s+v, 0);
-  const sB = sum(dataB), sH = sum(dataH), sI = sum(dataI);
-  const grand = sB + sH + sI;
+  const sBWE1 = sum(dataH);
+  const sBWE2 = sum(dataI);
+  const sCR1  = sum(dataCR1);
+  const sCR2  = sum(dataCR2);
+  const sCR3  = sum(dataCR3);
+  const grand = sBWE1 + sBWE2 + sCR1 + sCR2 + sCR3;
 
-  // Update pie chart
-  pieChart.data.datasets[0].data = [sB, sH, sI];
+  // Update pie chart — 5 segments
+  pieChart.data.datasets[0].data = [sBWE1, sBWE2, sCR1, sCR2, sCR3];
   pieChart.update();
 
   // Pie legend
-  const colours = [C.cr, C.bwe1, C.bwe2];
-  const pieLabels = ['CR (BCM)', 'BWE 1', 'BWE 2'];
-  const pieVals   = [sB, sH, sI];
-  const legendEl  = document.getElementById('pieLegend');
-  legendEl.innerHTML = pieLabels.map((lbl,i) => `
+  const pieItems = [
+    { label:'BWE 1', val:sBWE1, color:C.bwe1 },
+    { label:'BWE 2', val:sBWE2, color:C.bwe2 },
+    { label:'CR 1',  val:sCR1,  color:C.cr1  },
+    { label:'CR 2',  val:sCR2,  color:C.cr2  },
+    { label:'CR 3',  val:sCR3,  color:C.cr3  },
+  ];
+  document.getElementById('pieLegend').innerHTML = pieItems.map(p => `
     <div class="pie-legend-item">
       <div class="pie-legend-left">
-        <div class="pie-legend-dot" style="background:${colours[i]}"></div>
-        ${lbl}
+        <div class="pie-legend-dot" style="background:${p.color};border:1px solid #ccc"></div>
+        ${p.label}
       </div>
-      <div class="pie-legend-val">${pieVals[i].toLocaleString()}</div>
+      <div class="pie-legend-val">${p.val.toLocaleString()}</div>
     </div>
   `).join('');
 
@@ -764,6 +787,16 @@ function hideError() { document.getElementById('errorBanner').style.display = 'n
 initBarChart();
 initPieChart();
 fetchData();
+
+// Live clock
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clockBox').textContent = `${h}:${m}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
 </script>
 </body>
 </html>
