@@ -726,14 +726,14 @@ function renderForDate(wd) {
 
   document.getElementById('grandTotal').textContent = grand.toLocaleString();
 
-  // Stats
+  // Stats (hidden elements — kept for compatibility)
   const disp = toDisplay(wd);
-  document.getElementById('totalB').textContent = sB.toLocaleString();
-  document.getElementById('totalH').textContent = sH.toLocaleString();
-  document.getElementById('totalI').textContent = sI.toLocaleString();
-  document.getElementById('subB').textContent = `Column B · ${disp}`;
-  document.getElementById('subH').textContent = `Column H · ${disp}`;
-  document.getElementById('subI').textContent = `Column I · ${disp}`;
+  document.getElementById('totalB').textContent = sCR1.toLocaleString();
+  document.getElementById('totalH').textContent = sBWE1.toLocaleString();
+  document.getElementById('totalI').textContent = sBWE2.toLocaleString();
+  document.getElementById('subB').textContent = `CR 1 · ${disp}`;
+  document.getElementById('subH').textContent = `BWE 1 · ${disp}`;
+  document.getElementById('subI').textContent = `BWE 2 · ${disp}`;
   document.getElementById('rowCount').textContent =
     `${rows.length} rows · ${availableDates.length} dates · ${disp}`;
 
