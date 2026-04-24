@@ -13,422 +13,331 @@
     --card: #ffffff;
     --border: #dde1e8;
     --shadow: 0 2px 12px rgba(0,0,0,.07);
-    --green:  #2e7d32;
-    --green2: #43a047;
-    --green3: #81c784;
-    --pink:   #e91e8c;
-    --pink2:  #f48fb1;
-    --purple: #7b1fa2;
     --blue:   #1565c0;
     --text:   #1a1f2e;
     --muted:  #6b7280;
     --label:  #374151;
     --header-bg: #1a237e;
     --header-accent: #42a5f5;
+    --topbar-h: 52px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
+
+  html, body {
+    height: 100%;
+    overflow: hidden; /* NO scroll on body */
     background: var(--bg);
     color: var(--text);
     font-family: 'Sarabun', sans-serif;
-    min-height: 100vh;
-    padding: 0;
   }
 
-  /* ── Top Header Bar ── */
+  /* ── Top Bar ── */
   .top-bar {
+    height: var(--topbar-h);
     background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #1565c0 100%);
-    padding: 12px 28px;
+    padding: 0 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-wrap: nowrap;
+    gap: 8px;
     box-shadow: 0 3px 16px rgba(21,35,126,.35);
+    flex-shrink: 0;
   }
-  .top-bar-left { display: flex; align-items: center; gap: 16px; }
+  .top-bar-left { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
   .logo-box {
     background: rgba(255,255,255,.12);
     border: 1px solid rgba(255,255,255,.2);
-    border-radius: 8px;
-    padding: 6px 14px;
+    border-radius: 7px;
+    padding: 4px 10px;
     font-family: 'Chakra Petch', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #fff;
     letter-spacing: 1px;
+    white-space: nowrap;
   }
   .logo-box span { color: var(--header-accent); }
   .top-title {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: .95rem;
+    font-size: .82rem;
     font-weight: 600;
     color: rgba(255,255,255,.85);
-    letter-spacing: .5px;
+    letter-spacing: .4px;
+    white-space: nowrap;
   }
   .top-title small {
     display: block;
     font-family: 'Sarabun', sans-serif;
-    font-size: .72rem;
-    color: rgba(255,255,255,.5);
+    font-size: .65rem;
+    color: rgba(255,255,255,.45);
     font-weight: 400;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    margin-top: 1px;
   }
-
-  /* ── Controls ── */
   .controls {
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; flex-shrink: 1; min-width: 0;
   }
   .ctrl-label {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: .68rem; color: rgba(255,255,255,.6);
-    letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap;
+    font-size: .62rem; color: rgba(255,255,255,.55);
+    letter-spacing: 1.2px; text-transform: uppercase; white-space: nowrap;
   }
   .date-select {
     background: rgba(255,255,255,.1);
-    border: 1px solid rgba(255,255,255,.25);
-    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 6px;
     color: #fff;
     font-family: 'Chakra Petch', monospace;
-    font-size: .82rem;
-    padding: 7px 13px;
+    font-size: .76rem;
+    padding: 5px 10px;
     cursor: pointer; outline: none;
-    min-width: 145px; letter-spacing: .5px;
-    transition: background .2s, border-color .2s;
+    min-width: 120px;
     -webkit-appearance: none;
+    transition: background .2s;
   }
-  .date-select:hover, .date-select:focus {
-    background: rgba(255,255,255,.18);
-    border-color: var(--header-accent);
-  }
+  .date-select:hover { background: rgba(255,255,255,.18); border-color: var(--header-accent); }
   .date-select option { background: #1a237e; color: #fff; }
-
   .btn-nav {
     background: rgba(255,255,255,.1);
-    border: 1px solid rgba(255,255,255,.22);
-    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 6px;
     color: rgba(255,255,255,.8);
-    font-size: 1rem; width: 32px; height: 32px;
+    font-size: .9rem; width: 28px; height: 28px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: background .2s, border-color .2s;
+    flex-shrink: 0;
   }
-  .btn-nav:hover { background: rgba(255,255,255,.22); border-color: var(--header-accent); color: #fff; }
+  .btn-nav:hover { background: rgba(255,255,255,.22); }
   .btn-nav:disabled { opacity: .25; cursor: not-allowed; }
-
   .btn-refresh {
     background: rgba(66,165,245,.18);
-    border: 1px solid rgba(66,165,245,.4);
-    border-radius: 7px;
+    border: 1px solid rgba(66,165,245,.38);
+    border-radius: 6px;
     color: var(--header-accent);
     font-family: 'Chakra Petch', monospace;
-    font-size: .72rem; padding: 6px 12px;
-    cursor: pointer; letter-spacing: .5px;
-    transition: background .2s; white-space: nowrap;
+    font-size: .66rem; padding: 5px 10px;
+    cursor: pointer; white-space: nowrap;
   }
-  .btn-refresh:hover { background: rgba(66,165,245,.32); }
-
-  /* ── Shift Toggle ── */
+  .btn-refresh:hover { background: rgba(66,165,245,.30); }
   .shift-group {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    display: flex; align-items: center; gap: 3px;
     background: rgba(0,0,0,.2);
-    border: 1px solid rgba(255,255,255,.15);
-    border-radius: 8px;
-    padding: 3px;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 7px; padding: 2px;
+    flex-shrink: 0;
   }
   .btn-shift {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: .72rem;
-    font-weight: 600;
-    letter-spacing: .5px;
-    padding: 5px 11px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: all .2s;
-    white-space: nowrap;
-    color: rgba(255,255,255,.6);
-    background: transparent;
+    font-size: .65rem; font-weight: 600; letter-spacing: .4px;
+    padding: 4px 9px; border-radius: 5px; border: none;
+    cursor: pointer; white-space: nowrap;
+    color: rgba(255,255,255,.55); background: transparent;
+    transition: all .18s;
   }
-  .btn-shift:hover { color: #fff; background: rgba(255,255,255,.12); }
-  .btn-shift.active-all {
-    background: linear-gradient(135deg, #1565c0, #42a5f5);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(21,101,192,.5);
-  }
-  .btn-shift.active-day {
-    background: linear-gradient(135deg, #f57f17, #ffca28);
-    color: #1a1f2e;
-    box-shadow: 0 2px 8px rgba(245,127,23,.45);
-  }
-  .btn-shift.active-night {
-    background: linear-gradient(135deg, #311b92, #7b1fa2);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(49,27,146,.5);
-  }
+  .btn-shift:hover { color: #fff; background: rgba(255,255,255,.1); }
+  .btn-shift.active-all   { background: linear-gradient(135deg,#1565c0,#42a5f5); color:#fff; }
+  .btn-shift.active-day   { background: linear-gradient(135deg,#f57f17,#ffca28); color:#1a1f2e; }
+  .btn-shift.active-night { background: linear-gradient(135deg,#311b92,#7b1fa2); color:#fff; }
 
-  /* Shift indicator badge */
-  .shift-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .73rem;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-left: 8px;
-    letter-spacing: .5px;
-  }
-  .shift-badge.all   { background: rgba(21,101,192,.12); color: #1565c0; border: 1px solid rgba(21,101,192,.25); }
-  .shift-badge.day   { background: rgba(245,127,23,.12); color: #e65100; border: 1px solid rgba(245,127,23,.3); }
-  .shift-badge.night { background: rgba(123,31,162,.12); color: #6a1b9a; border: 1px solid rgba(123,31,162,.25); }
-  .shift-badge .dot  { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .shift-badge.all   .dot { background: #1565c0; }
-  .shift-badge.day   .dot { background: #fb8c00; }
-  .shift-badge.night .dot { background: #7b1fa2; }
-
-  /* ── Main content ── */
-  .main { padding: 18px 24px; }
-
-  /* ── Section title ── */
-  .section-title {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .95rem;
-    font-weight: 700;
-    color: var(--blue);
-    letter-spacing: .3px;
-    margin-bottom: 12px;
-    padding-bottom: 6px;
-    border-bottom: 2px solid #e3e8f0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-title::before {
-    content: '';
-    width: 4px; height: 18px;
-    background: linear-gradient(180deg, var(--blue), var(--header-accent));
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-
-  /* ── Charts row ── */
-  .charts-row {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 16px;
-    align-items: stretch;
-  }
-
-  /* Left column: bar chart + performance line stacked */
-  .charts-left {
+  /* ── Page wrapper: fills height below topbar ── */
+  .page {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    height: calc(100vh - var(--topbar-h));
+    padding: 8px 14px 6px;
+    gap: 6px;
+    overflow: hidden;
+  }
+
+  /* ── Strip (shift info) ── */
+  .strip {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 7px; padding: 4px 12px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .strip-label {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .6rem; color: var(--muted);
+    letter-spacing: 1.2px; text-transform: uppercase;
+  }
+  .strip-val {
+    font-family: 'Chakra Petch', monospace;
+    font-size: .72rem; font-weight: 700; color: var(--text);
+  }
+  .strip-sep { color: #d1d5db; font-size: .75rem; }
+  .shift-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .66rem; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px; letter-spacing: .4px;
+  }
+  .shift-badge.all   { background:rgba(21,101,192,.1); color:#1565c0; border:1px solid rgba(21,101,192,.22); }
+  .shift-badge.day   { background:rgba(245,127,23,.1); color:#e65100; border:1px solid rgba(245,127,23,.28); }
+  .shift-badge.night { background:rgba(123,31,162,.1); color:#6a1b9a; border:1px solid rgba(123,31,162,.22); }
+  .shift-badge .dot  { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .shift-badge.all   .dot { background:#1565c0; }
+  .shift-badge.day   .dot { background:#fb8c00; }
+  .shift-badge.night .dot { background:#7b1fa2; }
+
+  /* ── Main body: 2 columns ── */
+  .body-row {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 8px;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Left column: two charts stacked */
+  .left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+    overflow: hidden;
   }
 
   /* ── Card ── */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     box-shadow: var(--shadow);
-    padding: 18px 20px;
+    padding: 8px 12px 8px;
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
   .card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
     background: linear-gradient(90deg, var(--blue), var(--header-accent));
-    border-radius: 12px 12px 0 0;
+    border-radius: 10px 10px 0 0;
   }
-  /* Shift-colored top bar */
-  .card.shift-day::before    { background: linear-gradient(90deg, #f57f17, #ffca28); }
-  .card.shift-night::before  { background: linear-gradient(90deg, #311b92, #7b1fa2); }
+  .card.shift-day::before    { background: linear-gradient(90deg,#f57f17,#ffca28); }
+  .card.shift-night::before  { background: linear-gradient(90deg,#311b92,#7b1fa2); }
+  .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
 
-  /* Performance line card - red accent */
-  .card.perf-card::before {
-    background: linear-gradient(90deg, #c62828, #ef5350);
-  }
-  .card.perf-card.shift-day::before    { background: linear-gradient(90deg, #c62828, #ef5350); }
-  .card.perf-card.shift-night::before  { background: linear-gradient(90deg, #c62828, #ef5350); }
+  /* Bar card takes ~65% of left col, perf card ~35% */
+  .bar-card  { flex: 65; min-height: 0; }
+  .perf-card { flex: 35; min-height: 0; }
 
-  /* ── Bar chart ── */
-  .bar-canvas-wrap {
+  /* Canvas wrappers fill remaining space */
+  .canvas-wrap {
     flex: 1;
     min-height: 0;
     position: relative;
   }
-  canvas { display: block; width: 100% !important; }
+  canvas { display:block; width:100% !important; height:100% !important; }
 
-  /* ── Legend ── */
-  .legend {
-    display: flex; gap: 14px; flex-wrap: wrap;
-    margin-top: 10px; justify-content: center;
+  /* Card sub-header */
+  .card-head {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .72rem; font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 4px;
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
   }
-  .legend-item { display: flex; align-items: center; gap: 5px; font-size: .75rem; color: var(--label); font-weight: 600; }
-  .legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+  .card-head.red { color: #c62828; }
+  .card-head::before {
+    content:''; width:3px; height:13px;
+    background: linear-gradient(180deg, var(--blue), var(--header-accent));
+    border-radius: 2px; flex-shrink:0;
+  }
+  .card-head.red::before { background: linear-gradient(180deg,#c62828,#ef5350); }
+
+  .legend {
+    display:flex; gap:10px; flex-wrap:wrap;
+    margin-top:4px; justify-content:center; flex-shrink:0;
+  }
+  .legend-item { display:flex; align-items:center; gap:4px; font-size:.68rem; color:var(--label); font-weight:600; }
+  .legend-dot  { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
 
   /* ── Overlay ── */
   .overlay {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    background: rgba(255,255,255,.88); border-radius: 12px;
-    gap: 10px; z-index: 10;
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.88); border-radius:10px;
+    gap:8px; z-index:10;
   }
-  .overlay.hidden { display: none; }
+  .overlay.hidden { display:none; }
   .spinner {
-    width: 30px; height: 30px;
-    border: 3px solid #e3e8f0;
-    border-top-color: var(--blue);
-    border-radius: 50%;
-    animation: spin .75s linear infinite;
+    width:26px; height:26px;
+    border:3px solid #e3e8f0; border-top-color:var(--blue);
+    border-radius:50%; animation:spin .75s linear infinite;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .overlay-msg {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .7rem; color: var(--muted);
-    letter-spacing: 1px; text-align: center;
-  }
+  @keyframes spin { to{ transform:rotate(360deg); } }
+  .overlay-msg { font-family:'Chakra Petch',sans-serif; font-size:.65rem; color:var(--muted); letter-spacing:1px; }
 
-  /* ── Pie card ── */
+  /* ── Right column: pie card ── */
   .pie-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display:flex; flex-direction:column;
+    min-height:0; overflow:hidden;
   }
   .pie-title {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .88rem; font-weight: 700;
-    color: var(--text); text-align: center;
-    margin-bottom: 10px;
+    font-family:'Chakra Petch',sans-serif;
+    font-size:.75rem; font-weight:700;
+    color:var(--text); text-align:center;
+    margin-bottom:6px; flex-shrink:0;
   }
   .pie-wrap {
-    position: relative; width: 160px; height: 160px;
-    margin: 0 auto 8px;
-    flex-shrink: 0;
+    width:140px; height:140px;
+    margin:0 auto; flex-shrink:0;
   }
-  #pieChart { width: 100% !important; height: 100% !important; }
-
-  .total-box {
-    text-align: center;
-    border-top: 1px solid var(--border);
-    padding-top: 12px;
-    margin-top: 4px;
-  }
-  .total-label {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .68rem; color: var(--muted);
-    letter-spacing: 1.5px; text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .total-value {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: 1.6rem; font-weight: 700;
-    color: var(--blue); letter-spacing: -1px;
-  }
+  #pieChart { width:100% !important; height:100% !important; }
 
   .pie-legend {
-    display: flex; flex-direction: column; gap: 5px;
-    margin-top: 12px;
+    display:flex; flex-direction:column; gap:3px;
+    margin-top:8px; flex: 1; min-height:0; overflow:hidden;
   }
   .pie-legend-item {
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: .73rem; color: var(--label);
-    padding: 3px 0;
-    border-bottom: 1px solid #f0f2f5;
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:.68rem; color:var(--label);
+    padding:2px 0; border-bottom:1px solid #f0f2f5;
   }
-  .pie-legend-left { display: flex; align-items: center; gap: 7px; font-weight: 600; }
-  .pie-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .clock-box {
-    text-align: center;
-    font-family: 'Chakra Petch', monospace;
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: var(--blue);
-    letter-spacing: -1px;
-    margin-top: 8px;
-    line-height: 1;
-  }
+  .pie-legend-left { display:flex; align-items:center; gap:5px; font-weight:600; }
+  .pie-legend-dot  { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
 
-  /* ── Performance card title ── */
-  .perf-card-title {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .88rem;
-    font-weight: 700;
-    color: #c62828;
-    letter-spacing: .3px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .total-box {
+    text-align:center; border-top:1px solid var(--border);
+    padding-top:8px; margin-top:6px; flex-shrink:0;
   }
-  .perf-card-title::before {
-    content: '';
-    width: 12px; height: 3px;
-    background: #ef5350;
-    border-radius: 2px;
+  .total-label {
+    font-family:'Chakra Petch',sans-serif;
+    font-size:.6rem; color:var(--muted);
+    letter-spacing:1.3px; text-transform:uppercase; margin-bottom:2px;
+  }
+  .total-value {
+    font-family:'Chakra Petch',sans-serif;
+    font-size:1.5rem; font-weight:700; color:var(--blue); letter-spacing:-1px;
+  }
+  .clock-wrap { text-align:center; margin-top:6px; flex-shrink:0; }
+  .clock-box {
+    font-family:'Chakra Petch',monospace;
+    font-size:1.8rem; font-weight:700; color:var(--blue);
+    letter-spacing:-1px; line-height:1;
   }
 
   /* ── Footer ── */
-  .footer-row {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: 8px; flex-wrap: wrap; gap: 6px;
+  .footer {
+    display:flex; justify-content:space-between; align-items:center;
+    flex-shrink:0;
   }
   .footer-txt {
-    font-family: 'Chakra Petch', monospace;
-    font-size: .6rem; color: var(--muted); letter-spacing: .3px;
+    font-family:'Chakra Petch',monospace;
+    font-size:.56rem; color:var(--muted);
   }
 
   /* ── Error ── */
   #errorBanner {
-    display: none;
-    background: #fff3f3; border: 1px solid #ffcdd2;
-    border-radius: 8px; padding: 10px 16px; margin-bottom: 12px;
-    font-size: .78rem; color: #c62828; line-height: 1.6;
-  }
-  #errorBanner code { background: #fce4ec; border-radius: 3px; padding: 1px 5px; font-size: .74rem; }
-
-  /* ── Shift info strip ── */
-  .shift-info-strip {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 7px 14px;
-    margin-bottom: 12px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.05);
-    flex-wrap: wrap;
-  }
-  .shift-info-label {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .65rem;
-    color: var(--muted);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
-  .shift-info-val {
-    font-family: 'Chakra Petch', monospace;
-    font-size: .78rem;
-    font-weight: 700;
-    color: var(--text);
-  }
-  .shift-info-sep { color: #d1d5db; font-size: .8rem; }
-
-  @media (max-width: 900px) {
-    .charts-row { grid-template-columns: 1fr; }
-    .top-bar { padding: 10px 16px; }
-    .main { padding: 12px 14px; }
+    display:none;
+    background:#fff3f3; border:1px solid #ffcdd2;
+    border-radius:7px; padding:7px 12px; margin-bottom:6px;
+    font-size:.73rem; color:#c62828; line-height:1.5; flex-shrink:0;
   }
 </style>
 </head>
@@ -444,15 +353,13 @@
     </div>
   </div>
   <div class="controls">
-    <!-- Shift Toggle -->
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
       <button class="btn-shift active-all" id="btnAll"   data-shift="all">☀️🌙 All</button>
       <button class="btn-shift"            id="btnDay"   data-shift="day">☀️ Day</button>
       <button class="btn-shift"            id="btnNight" data-shift="night">🌙 Night</button>
     </div>
-
-    <span class="ctrl-label" style="margin-left:4px;">Working Date</span>
+    <span class="ctrl-label" style="margin-left:4px;">Date</span>
     <button class="btn-nav" id="btnPrev" disabled>&#8249;</button>
     <select class="date-select" id="datePicker"><option>Loading…</option></select>
     <button class="btn-nav" id="btnNext" disabled>&#8250;</button>
@@ -460,45 +367,40 @@
   </div>
 </div>
 
-<!-- ── Main ── -->
-<div class="main">
+<!-- ── Page (no scroll) ── -->
+<div class="page">
 
   <div id="errorBanner"></div>
 
-  <!-- Section title + shift badge -->
-  <div class="section-title">
-    Machine Production Per Hour
+  <!-- Shift strip -->
+  <div class="strip">
+    <span class="strip-label">Shift</span>
     <span class="shift-badge all" id="shiftBadge">
       <span class="dot"></span>
       <span id="shiftBadgeText">All Shift · 08:00 – 07:00</span>
     </span>
+    <span class="strip-sep">|</span>
+    <span class="strip-label">Period</span>
+    <span class="strip-val" id="shiftPeriodText">08:00 → 07:00</span>
+    <span class="strip-sep">|</span>
+    <span class="strip-label">Bars</span>
+    <span class="strip-val" id="shiftBarsCount">—</span>
   </div>
 
-  <!-- Shift info strip -->
-  <div class="shift-info-strip" id="shiftInfoStrip">
-    <span class="shift-info-label">Shift Period</span>
-    <span class="shift-info-val" id="shiftPeriodText">08:00 → 07:00 (+1 day)</span>
-    <span class="shift-info-sep">|</span>
-    <span class="shift-info-label">Hours Shown</span>
-    <span class="shift-info-val" id="shiftHoursCount">—</span>
-    <span class="shift-info-sep">|</span>
-    <span class="shift-info-label">Bars</span>
-    <span class="shift-info-val" id="shiftBarsCount">—</span>
-  </div>
+  <!-- Body: left charts + right pie -->
+  <div class="body-row">
 
-  <!-- Charts row: (bar + perf line) + pie -->
-  <div class="charts-row">
+    <!-- Left -->
+    <div class="left-col">
 
-    <!-- Left column -->
-    <div class="charts-left">
-
-      <!-- Bar chart card -->
-      <div class="card" id="barCard" style="min-height:360px;">
+      <!-- Production bar chart -->
+      <div class="card bar-card" id="barCard">
         <div class="overlay" id="overlay">
           <div class="spinner"></div>
           <div class="overlay-msg" id="overlayMsg">LOADING DATA…</div>
         </div>
-        <div class="bar-canvas-wrap" style="height:300px;">
+        <div class="card-head">Machine Production Per Hour</div>
+        <div class="canvas-wrap">
           <canvas id="bcmChart"></canvas>
         </div>
         <div class="legend">
@@ -508,24 +410,25 @@
         </div>
       </div>
 
-      <!-- Performance Main Line card -->
-      <div class="card perf-card" id="perfCard" style="min-height:200px;">
-        <div class="perf-card-title">Performance Main Line</div>
-        <div class="bar-canvas-wrap" style="height:160px;">
+      <!-- Performance line chart -->
+      <div class="card perf-card" id="perfCard">
+        <div class="card-head red">Performance Main Line</div>
+        <div class="canvas-wrap">
           <canvas id="perfChart"></canvas>
         </div>
-        <div class="legend" style="margin-top:8px;">
+        <div class="legend">
           <div class="legend-item">
             <div class="legend-dot" style="background:#ef5350"></div>
-            Performance (Col X · Value)
+            Performance (Col X)
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- Pie chart card -->
-    <div class="card pie-card" id="pieCard" style="min-height:420px;">
+    <!-- Right: Pie -->
+    <div class="card pie-card" id="pieCard">
+      <div class="card::before" style="background:linear-gradient(90deg,#1565c0,#42a5f5)"></div>
       <div class="pie-title">Total Production of Each Machine</div>
       <div class="pie-wrap">
         <canvas id="pieChart"></canvas>
@@ -535,508 +438,320 @@
         <div class="total-label">Total Production</div>
         <div class="total-value" id="grandTotal">—</div>
       </div>
-      <div style="text-align:center;margin-top:10px;">
-        <div class="total-label" style="margin-bottom:4px;">Hour S3 — Total</div>
+      <div class="clock-wrap">
+        <div class="total-label" style="margin-bottom:2px;">Hour S3 — Total</div>
         <div class="clock-box" id="clockBox">—</div>
       </div>
     </div>
 
   </div>
 
-  <div class="footer-row">
+  <!-- Footer -->
+  <div class="footer">
     <div class="footer-txt" id="rowCount"></div>
     <div class="footer-txt" id="lastUpdate"></div>
   </div>
 
-  <!-- hidden refs for JS -->
-  <span id="totalB" style="display:none"></span>
-  <span id="totalH" style="display:none"></span>
-  <span id="totalI" style="display:none"></span>
-  <span id="subB"   style="display:none"></span>
-  <span id="subH"   style="display:none"></span>
-  <span id="subI"   style="display:none"></span>
-
 </div>
 
 <script>
-/* ══════════════════════════════════════════
-   CONFIG
-   ══════════════════════════════════════════ */
+/* ══════════ CONFIG ══════════ */
 const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
-const CSV_URLS = [
-  BASE + '?gid=1971585139&single=true&output=csv',
-];
-// COL.VALUE = column X (index 23, zero-based)
+const CSV_URLS = [ BASE + '?gid=1971585139&single=true&output=csv' ];
 const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11, VALUE:23 };
 
-/* ── Colours ── */
-const C = {
-  bwe1: '#7b1fa2',
-  bwe2: '#f48fb1',
-  cr1:  '#66bb6a',
-  cr2:  '#2e7d32',
-  cr3:  '#c8e6c9',
-};
+const C = { bwe1:'#7b1fa2', bwe2:'#f48fb1', cr1:'#66bb6a', cr2:'#2e7d32', cr3:'#c8e6c9' };
 
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 
-/* ══════════════════════════════════════════
-   SHIFT STATE
-   ══════════════════════════════════════════ */
-let currentShift = 'all'; // 'all' | 'day' | 'night'
-
+/* ══════════ SHIFT ══════════ */
+let currentShift = 'all';
 const SHIFT_CONFIG = {
-  all:   { label:'All Shift',   period:'08:00 → 07:00 (+1 day)', minH: 8, maxH:31 },
-  day:   { label:'Shift Day',   period:'08:00 → 19:00',          minH: 8, maxH:19 },
+  all:   { label:'All Shift',   period:'08:00 → 07:00 (+1 day)', minH:8,  maxH:31 },
+  day:   { label:'Shift Day',   period:'08:00 → 19:00',          minH:8,  maxH:19 },
   night: { label:'Shift Night', period:'20:00 → 07:00 (+1 day)', minH:20, maxH:31 },
 };
-
-function shiftHour(r) {
-  const h = parseDT(r[COL.DT]).getHours();
-  return h < 8 ? h + 24 : h;
+function shiftHour(r) { const h=parseDT(r[COL.DT]).getHours(); return h<8?h+24:h; }
+function filterByShift(rows,shift) {
+  const {minH,maxH}=SHIFT_CONFIG[shift];
+  return rows.filter(r=>{const sh=shiftHour(r);return sh>=minH&&sh<=maxH;});
 }
-
-function filterByShift(rows, shift) {
-  const { minH, maxH } = SHIFT_CONFIG[shift];
-  return rows.filter(r => {
-    const sh = shiftHour(r);
-    return sh >= minH && sh <= maxH;
-  });
-}
-
 function applyShiftUI(shift) {
-  document.querySelectorAll('.btn-shift').forEach(btn => {
-    btn.className = 'btn-shift';
-    if (btn.dataset.shift === shift) {
-      if (shift==='all')   btn.classList.add('active-all');
-      if (shift==='day')   btn.classList.add('active-day');
-      if (shift==='night') btn.classList.add('active-night');
-    }
+  document.querySelectorAll('.btn-shift').forEach(btn=>{
+    btn.className='btn-shift';
+    if(btn.dataset.shift===shift) btn.classList.add('active-'+shift);
   });
-
-  const badge = document.getElementById('shiftBadge');
-  const badgeText = document.getElementById('shiftBadgeText');
-  badge.className = 'shift-badge ' + shift;
-  badgeText.textContent = SHIFT_CONFIG[shift].label + ' · ' + SHIFT_CONFIG[shift].period;
-
-  const barCard = document.getElementById('barCard');
-  const pieCard = document.getElementById('pieCard');
-  // perfCard keeps red accent always
-  barCard.className = 'card' + (shift==='all' ? '' : ' shift-'+shift);
-  pieCard.className = 'card pie-card' + (shift==='all' ? '' : ' shift-'+shift);
-
-  document.getElementById('shiftPeriodText').textContent = SHIFT_CONFIG[shift].period;
+  const badge=document.getElementById('shiftBadge');
+  badge.className='shift-badge '+shift;
+  document.getElementById('shiftBadgeText').textContent=SHIFT_CONFIG[shift].label+' · '+SHIFT_CONFIG[shift].period;
+  document.getElementById('shiftPeriodText').textContent=SHIFT_CONFIG[shift].period;
+  const bc=document.getElementById('barCard');
+  bc.className='card bar-card'+(shift==='all'?'':' shift-'+shift);
 }
-
-document.querySelectorAll('.btn-shift').forEach(btn => {
-  btn.addEventListener('click', () => {
-    currentShift = btn.dataset.shift;
-    applyShiftUI(currentShift);
-    const wd = document.getElementById('datePicker').value;
-    if (availableDates.length && wd) renderForDate(wd);
+document.querySelectorAll('.btn-shift').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    currentShift=btn.dataset.shift; applyShiftUI(currentShift);
+    const wd=document.getElementById('datePicker').value;
+    if(availableDates.length&&wd) renderForDate(wd);
   });
 });
 
-/* ══════════════════════════════════════════
-   CHART INIT
-   ══════════════════════════════════════════ */
-Chart.defaults.font.family = "'Sarabun', sans-serif";
+/* ══════════ CHART INIT ══════════ */
+Chart.defaults.font.family="'Sarabun',sans-serif";
 
-const totalLabelPlugin = {
-  id: 'totalLabel',
-  afterDatasetsDraw(chart) {
-    const { ctx, scales:{ x, y } } = chart;
-    const ds = chart.data.datasets;
+const totalLabelPlugin={
+  id:'totalLabel',
+  afterDatasetsDraw(chart){
+    const{ctx,scales:{x,y}}=chart;
+    const ds=chart.data.datasets;
     ctx.save();
-    chart.data.labels.forEach((_, i) => {
-      const total = ds.reduce((s, d) => s + (Number(d.data[i])||0), 0);
-      if (!total) return;
-      const xp = x.getPixelForValue(i);
-      const yp = y.getPixelForValue(total);
-      const lbl = total.toLocaleString();
-      ctx.font = "bold 10px 'Chakra Petch', monospace";
-      const tw = ctx.measureText(lbl).width;
-      const pw = tw+8, ph=14, pr=3;
-      const px = xp-pw/2, py = yp-ph-3;
-      ctx.fillStyle = 'rgba(26,35,126,.82)';
+    chart.data.labels.forEach((_,i)=>{
+      const total=ds.reduce((s,d)=>s+(Number(d.data[i])||0),0);
+      if(!total) return;
+      const xp=x.getPixelForValue(i), yp=y.getPixelForValue(total);
+      const lbl=total.toLocaleString();
+      ctx.font="bold 9px 'Chakra Petch',monospace";
+      const tw=ctx.measureText(lbl).width;
+      const pw=tw+6,ph=13,pr=3,px=xp-pw/2,py=yp-ph-2;
+      ctx.fillStyle='rgba(26,35,126,.82)';
       ctx.beginPath(); ctx.roundRect(px,py,pw,ph,pr); ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-      ctx.fillText(lbl, xp, yp-3);
+      ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+      ctx.fillText(lbl,xp,yp-2);
     });
     ctx.restore();
   }
 };
 
-function initBarChart() {
-  const ctx = document.getElementById('bcmChart').getContext('2d');
-  bcmChart = new Chart(ctx, {
-    type: 'bar',
-    plugins: [totalLabelPlugin],
-    data: { labels: [], datasets: [
-      { label:'BCM CR', data:[], backgroundColor:'rgba(46,125,50,.88)',   stack:'s', borderRadius:2 },
-      { label:'BWE 1',  data:[], backgroundColor:'rgba(123,31,162,.85)', stack:'s', borderRadius:2 },
-      { label:'BWE 2',  data:[], backgroundColor:'rgba(244,143,177,.9)', stack:'s', borderRadius:2 },
+function initBarChart(){
+  const ctx=document.getElementById('bcmChart').getContext('2d');
+  bcmChart=new Chart(ctx,{
+    type:'bar', plugins:[totalLabelPlugin],
+    data:{labels:[],datasets:[
+      {label:'BCM CR',data:[],backgroundColor:'rgba(46,125,50,.88)', stack:'s',borderRadius:2},
+      {label:'BWE 1', data:[],backgroundColor:'rgba(123,31,162,.85)',stack:'s',borderRadius:2},
+      {label:'BWE 2', data:[],backgroundColor:'rgba(244,143,177,.9)',stack:'s',borderRadius:2},
     ]},
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode:'index', intersect:false },
-      layout: { padding:{ top:30 } },
-      plugins: {
-        legend: { display:false },
-        tooltip: {
-          backgroundColor: '#fff',
-          borderColor: '#dde1e8', borderWidth: 1,
-          titleColor: '#1a1f2e', bodyColor: '#374151',
-          titleFont: { family:"'Chakra Petch',monospace", size:11, weight:'700' },
-          bodyFont: { family:"'Sarabun',sans-serif", size:12 },
-          padding: 10,
-          callbacks: {
-            label: c => ` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}`,
-            footer: items => `  Total: ${items.reduce((s,i)=>s+i.parsed.y,0).toLocaleString()}`
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      layout:{padding:{top:22}},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#fff',borderColor:'#dde1e8',borderWidth:1,
+          titleColor:'#1a1f2e',bodyColor:'#374151',
+          titleFont:{family:"'Chakra Petch',monospace",size:10,weight:'700'},
+          bodyFont:{family:"'Sarabun',sans-serif",size:11},padding:8,
+          callbacks:{
+            label:c=>` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}`,
+            footer:items=>`  Total: ${items.reduce((s,i)=>s+i.parsed.y,0).toLocaleString()}`
           }
         }
       },
-      scales: {
-        x: {
-          stacked: true,
-          grid: { color:'#f0f2f5' },
-          ticks: { font:{family:"'Chakra Petch',monospace",size:10}, color:'#1a1f2e', maxRotation:0, minRotation:0 }
-        },
-        y: {
-          stacked: true,
-          grid: { color:'#f0f2f5' },
-          ticks: { font:{family:"'Chakra Petch',monospace",size:10}, color:'#6b7280', callback:v=>v.toLocaleString() },
-          beginAtZero: true
+      scales:{
+        x:{stacked:true,grid:{color:'#f0f2f5'},ticks:{font:{family:"'Chakra Petch',monospace",size:9},color:'#1a1f2e',maxRotation:0,minRotation:0}},
+        y:{stacked:true,grid:{color:'#f0f2f5'},ticks:{font:{family:"'Chakra Petch',monospace",size:9},color:'#6b7280',callback:v=>v.toLocaleString()},beginAtZero:true}
+      }
+    }
+  });
+}
+
+function initPieChart(){
+  const ctx=document.getElementById('pieChart').getContext('2d');
+  pieChart=new Chart(ctx,{
+    type:'pie',
+    data:{
+      labels:['BWE 1','BWE 2','CR 1','CR 2','CR 3'],
+      datasets:[{data:[0,0,0,0,0],backgroundColor:[C.bwe1,C.bwe2,C.cr1,C.cr2,C.cr3],borderColor:'#fff',borderWidth:2,hoverOffset:8}]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#fff',borderColor:'#dde1e8',borderWidth:1,
+          titleColor:'#1a1f2e',bodyColor:'#374151',
+          titleFont:{family:"'Chakra Petch',monospace",size:10,weight:'700'},
+          callbacks:{label:c=>` ${c.label}: ${c.parsed.toLocaleString()}`}
         }
       }
     }
   });
 }
 
-function initPieChart() {
-  const ctx = document.getElementById('pieChart').getContext('2d');
-  pieChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: ['BWE 1', 'BWE 2', 'CR 1', 'CR 2', 'CR 3'],
-      datasets: [{
-        data: [0, 0, 0, 0, 0],
-        backgroundColor: [C.bwe1, C.bwe2, C.cr1, C.cr2, C.cr3],
-        borderColor: '#fff',
-        borderWidth: 2,
-        hoverOffset: 10,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#fff',
-          borderColor: '#dde1e8', borderWidth: 1,
-          titleColor: '#1a1f2e', bodyColor: '#374151',
-          titleFont: { family:"'Chakra Petch',monospace", size:11, weight:'700' },
-          bodyFont: { family:"'Sarabun',sans-serif", size:12 },
-          callbacks: { label: c => ` ${c.label}: ${c.parsed.toLocaleString()}` }
-        }
-      }
-    }
-  });
-}
-
-/* ── Performance Line Chart (Column X = index 23) ── */
-function initPerfChart() {
-  const ctx = document.getElementById('perfChart').getContext('2d');
-  perfChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Performance Main Line',
-        data: [],
-        borderColor: '#ef5350',
-        backgroundColor: 'rgba(239,83,80,.08)',
-        borderWidth: 2.5,
-        pointBackgroundColor: '#ef5350',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 1.5,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        tension: 0.3,
-        fill: true,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode:'index', intersect:false },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#fff',
-          borderColor: '#ffcdd2', borderWidth: 1,
-          titleColor: '#1a1f2e', bodyColor: '#c62828',
-          titleFont: { family:"'Chakra Petch',monospace", size:11, weight:'700' },
-          bodyFont: { family:"'Sarabun',sans-serif", size:12 },
-          padding: 10,
-          callbacks: {
-            label: c => ` Performance: ${c.parsed.y.toLocaleString()}`
-          }
+function initPerfChart(){
+  const ctx=document.getElementById('perfChart').getContext('2d');
+  perfChart=new Chart(ctx,{
+    type:'line',
+    data:{labels:[],datasets:[{
+      label:'Performance Main Line',data:[],
+      borderColor:'#ef5350',backgroundColor:'rgba(239,83,80,.08)',
+      borderWidth:2.5,
+      pointBackgroundColor:'#ef5350',pointBorderColor:'#fff',pointBorderWidth:1.5,
+      pointRadius:3,pointHoverRadius:5,
+      tension:0.3,fill:true,
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#fff',borderColor:'#ffcdd2',borderWidth:1,
+          titleColor:'#1a1f2e',bodyColor:'#c62828',
+          titleFont:{family:"'Chakra Petch',monospace",size:10,weight:'700'},
+          bodyFont:{family:"'Sarabun',sans-serif",size:11},padding:8,
+          callbacks:{label:c=>` Performance: ${c.parsed.y.toLocaleString()}`}
         }
       },
-      scales: {
-        x: {
-          grid: { color:'#fce4ec' },
-          ticks: { font:{family:"'Chakra Petch',monospace",size:10}, color:'#1a1f2e', maxRotation:0, minRotation:0 }
-        },
-        y: {
-          grid: { color:'#fce4ec' },
-          ticks: { font:{family:"'Chakra Petch',monospace",size:10}, color:'#c62828', callback:v=>v.toLocaleString() },
-          beginAtZero: true,
-        }
+      scales:{
+        x:{grid:{color:'#fce4ec'},ticks:{font:{family:"'Chakra Petch',monospace",size:9},color:'#1a1f2e',maxRotation:0,minRotation:0}},
+        y:{grid:{color:'#fce4ec'},ticks:{font:{family:"'Chakra Petch',monospace",size:9},color:'#c62828',callback:v=>v.toLocaleString()},beginAtZero:true}
       }
     }
   });
 }
 
-/* ══════════════════════════════════════════
-   DATA FETCH & PARSE
-   ══════════════════════════════════════════ */
-async function fetchData() {
-  showOverlay('LOADING DATA…');
-  hideError();
-  let lastErr = '';
-  for (const url of CSV_URLS) {
-    try {
-      const res = await fetch(url + '&_cb=' + Date.now());
-      if (!res.ok) { lastErr = `HTTP ${res.status}`; continue; }
-      const text = await res.text();
-      if (!text || text.trim().length < 10) { lastErr = 'Empty'; continue; }
-      processCSV(text);
-      return;
-    } catch(e) { lastErr = e.message; }
+/* ══════════ FETCH ══════════ */
+async function fetchData(){
+  showOverlay('LOADING DATA…'); hideError();
+  let lastErr='';
+  for(const url of CSV_URLS){
+    try{
+      const res=await fetch(url+'&_cb='+Date.now());
+      if(!res.ok){lastErr=`HTTP ${res.status}`;continue;}
+      const text=await res.text();
+      if(!text||text.trim().length<10){lastErr='Empty';continue;}
+      processCSV(text); return;
+    }catch(e){lastErr=e.message;}
   }
-  showOverlay('โหลดข้อมูลไม่สำเร็จ');
-  showError(`ดึงข้อมูลไม่ได้: ${lastErr}`);
+  showOverlay('โหลดข้อมูลไม่สำเร็จ'); showError(`ดึงข้อมูลไม่ได้: ${lastErr}`);
 }
 
-function parseNum(v) { return parseFloat((v||'0').replace(/,/g,'')) || 0; }
-
-function parseDT(s) {
-  s = (s||'').trim();
-  if (!s) return new Date(NaN);
-  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
-  if (m) return new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5], 0);
-  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[,\s]+(\d{1,2}):(\d{2})/);
-  if (m) return new Date(+m[3], +m[2]-1, +m[1], +m[4], +m[5], 0);
+function parseNum(v){return parseFloat((v||'0').replace(/,/g,''))||0;}
+function parseDT(s){
+  s=(s||'').trim(); if(!s)return new Date(NaN);
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
+  if(m)return new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],0);
+  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[,\s]+(\d{1,2}):(\d{2})/);
+  if(m)return new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5],0);
   return new Date(NaN);
 }
-
-function fmtTime(s) {
-  const d = parseDT(s);
-  if (!d || isNaN(d)) return s;
-  return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
-
-function toYMD(d) {
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-
-function getWorkingDate(dtStr) {
-  const d = parseDT(dtStr);
-  if (!d || isNaN(d)) return null;
-  if (d.getHours() < 8) {
-    const prev = new Date(d);
-    prev.setDate(prev.getDate() - 1);
-    return toYMD(prev);
-  }
+function fmtTime(s){const d=parseDT(s);if(!d||isNaN(d))return s;return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;}
+function toYMD(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function getWorkingDate(dtStr){
+  const d=parseDT(dtStr);if(!d||isNaN(d))return null;
+  if(d.getHours()<8){const p=new Date(d);p.setDate(p.getDate()-1);return toYMD(p);}
   return toYMD(d);
 }
+function toDisplay(s){const p=s.split('-');return p.length===3?`${p[2]}-${p[1]}-${p[0]}`:s;}
 
-function toDisplay(s) {
-  const parts = s.split('-');
-  return parts.length===3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : s;
-}
-
-function processCSV(text) {
-  const rows = Papa.parse(text, { skipEmptyLines:true }).data;
-  const header = rows[0]||[];
-
-  allRows = rows.slice(1).filter(r => {
-    const dt = (r[COL.DT]||'').trim();
-    if (!dt || /date|time/i.test(dt)) return false;
+function processCSV(text){
+  const rows=Papa.parse(text,{skipEmptyLines:true}).data;
+  const header=rows[0]||[];
+  allRows=rows.slice(1).filter(r=>{
+    const dt=(r[COL.DT]||'').trim();
+    if(!dt||/date|time/i.test(dt))return false;
     return !isNaN(parseDT(dt));
   });
-
-  allRows.forEach(r => { r._wd = getWorkingDate(r[COL.DT]||''); });
-  allRows = allRows.filter(r => r._wd);
-
-  const dateSet = new Set(allRows.map(r => r._wd));
-  availableDates = [...dateSet].sort();
-
-  if (!availableDates.length) {
-    showOverlay('ไม่พบข้อมูล');
-    showError(`Header: <code>${header.slice(0,6).join(' | ')}</code>`);
-    return;
-  }
-
+  allRows.forEach(r=>{r._wd=getWorkingDate(r[COL.DT]||'');});
+  allRows=allRows.filter(r=>r._wd);
+  const dateSet=new Set(allRows.map(r=>r._wd));
+  availableDates=[...dateSet].sort();
+  if(!availableDates.length){showOverlay('ไม่พบข้อมูล');showError(`Header: <code>${header.slice(0,6).join(' | ')}</code>`);return;}
   buildPicker();
-  renderForDate(availableDates[availableDates.length - 1]);
-
-  const now = new Date();
-  document.getElementById('lastUpdate').textContent =
-    `Updated: ${now.toLocaleDateString('en-GB')} ${now.toLocaleTimeString('en-GB')}`;
-  document.getElementById('rowCount').textContent =
-    `${allRows.length} rows · ${availableDates.length} dates`;
+  renderForDate(availableDates[availableDates.length-1]);
+  const now=new Date();
+  document.getElementById('lastUpdate').textContent=`Updated: ${now.toLocaleDateString('en-GB')} ${now.toLocaleTimeString('en-GB')}`;
+  document.getElementById('rowCount').textContent=`${allRows.length} rows · ${availableDates.length} dates`;
 }
 
-/* ══════════════════════════════════════════
-   RENDER
-   ══════════════════════════════════════════ */
-function renderForDate(wd) {
-  const allForDate = allRows
-    .filter(r => r._wd === wd)
-    .sort((a, b) => shiftHour(a) - shiftHour(b));
+/* ══════════ RENDER ══════════ */
+function renderForDate(wd){
+  const allForDate=allRows.filter(r=>r._wd===wd).sort((a,b)=>shiftHour(a)-shiftHour(b));
+  const rows=filterByShift(allForDate,currentShift);
+  const labels =rows.map(r=>fmtTime(r[COL.DT]||''));
+  const dataB  =rows.map(r=>parseNum(r[COL.BCM_CR]));
+  const dataCR1=rows.map(r=>parseNum(r[COL.CR1]));
+  const dataCR2=rows.map(r=>parseNum(r[COL.CR2]));
+  const dataCR3=rows.map(r=>parseNum(r[COL.CR3]));
+  const dataH  =rows.map(r=>parseNum(r[COL.BWE1]));
+  const dataI  =rows.map(r=>parseNum(r[COL.BWE2]));
+  const dataPerf=rows.map(r=>parseNum(r[COL.VALUE]));
 
-  const rows = filterByShift(allForDate, currentShift);
-
-  const labels  = rows.map(r => fmtTime(r[COL.DT]||''));
-  const dataB   = rows.map(r => parseNum(r[COL.BCM_CR]));
-  const dataCR1 = rows.map(r => parseNum(r[COL.CR1]));
-  const dataCR2 = rows.map(r => parseNum(r[COL.CR2]));
-  const dataCR3 = rows.map(r => parseNum(r[COL.CR3]));
-  const dataH   = rows.map(r => parseNum(r[COL.BWE1]));
-  const dataI   = rows.map(r => parseNum(r[COL.BWE2]));
-
-  // Column X (index 23) = Value / Performance Main Line
-  const dataPerf = rows.map(r => parseNum(r[COL.VALUE]));
-
-  // Update bar chart
-  bcmChart.data.labels           = labels;
-  bcmChart.data.datasets[0].data = dataB;
-  bcmChart.data.datasets[1].data = dataH;
-  bcmChart.data.datasets[2].data = dataI;
+  bcmChart.data.labels=labels;
+  bcmChart.data.datasets[0].data=dataB;
+  bcmChart.data.datasets[1].data=dataH;
+  bcmChart.data.datasets[2].data=dataI;
   bcmChart.update();
 
-  // Update performance line chart
-  perfChart.data.labels                = labels;
-  perfChart.data.datasets[0].data      = dataPerf;
+  perfChart.data.labels=labels;
+  perfChart.data.datasets[0].data=dataPerf;
   perfChart.update();
 
-  const sum = a => a.reduce((s,v) => s+v, 0);
-  const sBWE1 = sum(dataH);
-  const sBWE2 = sum(dataI);
-  const sCR1  = sum(dataCR1);
-  const sCR2  = sum(dataCR2);
-  const sCR3  = sum(dataCR3);
-  const grand = sBWE1 + sBWE2 + sCR1 + sCR2 + sCR3;
+  const sum=a=>a.reduce((s,v)=>s+v,0);
+  const sBWE1=sum(dataH),sBWE2=sum(dataI),sCR1=sum(dataCR1),sCR2=sum(dataCR2),sCR3=sum(dataCR3);
+  const grand=sBWE1+sBWE2+sCR1+sCR2+sCR3;
 
-  // Update pie chart
-  pieChart.data.datasets[0].data = [sBWE1, sBWE2, sCR1, sCR2, sCR3];
+  pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3];
   pieChart.update();
 
-  // Pie legend
-  const pieItems = [
-    { label:'BWE 1', val:sBWE1, color:C.bwe1 },
-    { label:'BWE 2', val:sBWE2, color:C.bwe2 },
-    { label:'CR 1',  val:sCR1,  color:C.cr1  },
-    { label:'CR 2',  val:sCR2,  color:C.cr2  },
-    { label:'CR 3',  val:sCR3,  color:C.cr3  },
+  const pieItems=[
+    {label:'BWE 1',val:sBWE1,color:C.bwe1},{label:'BWE 2',val:sBWE2,color:C.bwe2},
+    {label:'CR 1', val:sCR1, color:C.cr1}, {label:'CR 2', val:sCR2, color:C.cr2},
+    {label:'CR 3', val:sCR3, color:C.cr3},
   ];
-  document.getElementById('pieLegend').innerHTML = pieItems.map(p => `
+  document.getElementById('pieLegend').innerHTML=pieItems.map(p=>`
     <div class="pie-legend-item">
       <div class="pie-legend-left">
-        <div class="pie-legend-dot" style="background:${p.color};border:1px solid #ccc"></div>
-        ${p.label}
+        <div class="pie-legend-dot" style="background:${p.color}"></div>${p.label}
       </div>
-      <div class="pie-legend-val">${p.val.toLocaleString()}</div>
-    </div>
-  `).join('');
+      <div>${p.val.toLocaleString()}</div>
+    </div>`).join('');
 
-  document.getElementById('grandTotal').textContent = grand.toLocaleString();
+  document.getElementById('grandTotal').textContent=grand.toLocaleString();
 
-  // Hour S3 sum
-  function parseHHMM(s) {
-    s = (s||'').trim();
-    const m = s.match(/^(\d+):(\d{2})$/);
-    if (!m) return 0;
-    return parseInt(m[1]) * 60 + parseInt(m[2]);
-  }
-  const totalMinutes = rows.reduce((sum, r) => sum + parseHHMM(r[COL.HOUR_S3]), 0);
-  const th = Math.floor(totalMinutes / 60);
-  const tm = String(totalMinutes % 60).padStart(2, '0');
-  document.getElementById('clockBox').textContent = `${th}:${tm}`;
+  function parseHHMM(s){s=(s||'').trim();const m=s.match(/^(\d+):(\d{2})$/);if(!m)return 0;return parseInt(m[1])*60+parseInt(m[2]);}
+  const totalMinutes=rows.reduce((s,r)=>s+parseHHMM(r[COL.HOUR_S3]),0);
+  const th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
+  document.getElementById('clockBox').textContent=`${th}:${tm}`;
 
-  // Update shift info strip
-  document.getElementById('shiftHoursCount').textContent =
-    currentShift === 'all' ? '24 hrs' :
-    currentShift === 'day' ? '12 hrs (08–19)' : '12 hrs (20–07)';
-  document.getElementById('shiftBarsCount').textContent = `${rows.length} bars`;
-
-  // Footer
-  const disp = toDisplay(wd);
-  document.getElementById('totalB').textContent = sCR1.toLocaleString();
-  document.getElementById('totalH').textContent = sBWE1.toLocaleString();
-  document.getElementById('totalI').textContent = sBWE2.toLocaleString();
-  document.getElementById('subB').textContent = `CR 1 · ${disp}`;
-  document.getElementById('subH').textContent = `BWE 1 · ${disp}`;
-  document.getElementById('subI').textContent = `BWE 2 · ${disp}`;
-  document.getElementById('rowCount').textContent =
-    `${rows.length} rows shown · ${allRows.length} total · ${availableDates.length} dates · ${disp} · ${SHIFT_CONFIG[currentShift].label}`;
+  document.getElementById('shiftBarsCount').textContent=`${rows.length} bars`;
+  document.getElementById('rowCount').textContent=`${rows.length} rows · ${allRows.length} total · ${availableDates.length} dates · ${toDisplay(wd)} · ${SHIFT_CONFIG[currentShift].label}`;
 
   hideOverlay(); syncNav();
 }
 
-/* ══════════════════════════════════════════
-   UI HELPERS
-   ══════════════════════════════════════════ */
-function buildPicker() {
-  const sel = document.getElementById('datePicker');
-  sel.innerHTML = '';
-  availableDates.forEach(d => {
-    const o = document.createElement('option');
-    o.value = d; o.textContent = toDisplay(d);
-    sel.appendChild(o);
-  });
-  sel.value = availableDates[availableDates.length - 1];
+/* ══════════ UI HELPERS ══════════ */
+function buildPicker(){
+  const sel=document.getElementById('datePicker');
+  sel.innerHTML='';
+  availableDates.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=toDisplay(d);sel.appendChild(o);});
+  sel.value=availableDates[availableDates.length-1];
   syncNav();
 }
-
-function syncNav() {
-  const idx = availableDates.indexOf(document.getElementById('datePicker').value);
-  document.getElementById('btnPrev').disabled = idx <= 0;
-  document.getElementById('btnNext').disabled = idx >= availableDates.length - 1;
+function syncNav(){
+  const idx=availableDates.indexOf(document.getElementById('datePicker').value);
+  document.getElementById('btnPrev').disabled=idx<=0;
+  document.getElementById('btnNext').disabled=idx>=availableDates.length-1;
 }
-
-document.getElementById('datePicker').addEventListener('change', e => renderForDate(e.target.value));
-document.getElementById('btnPrev').addEventListener('click', () => {
-  const sel = document.getElementById('datePicker');
-  const idx = availableDates.indexOf(sel.value);
-  if (idx > 0) { sel.value = availableDates[idx-1]; renderForDate(sel.value); }
+document.getElementById('datePicker').addEventListener('change',e=>renderForDate(e.target.value));
+document.getElementById('btnPrev').addEventListener('click',()=>{
+  const sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value);
+  if(idx>0){sel.value=availableDates[idx-1];renderForDate(sel.value);}
 });
-document.getElementById('btnNext').addEventListener('click', () => {
-  const sel = document.getElementById('datePicker');
-  const idx = availableDates.indexOf(sel.value);
-  if (idx < availableDates.length-1) { sel.value = availableDates[idx+1]; renderForDate(sel.value); }
+document.getElementById('btnNext').addEventListener('click',()=>{
+  const sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value);
+  if(idx<availableDates.length-1){sel.value=availableDates[idx+1];renderForDate(sel.value);}
 });
-document.getElementById('btnRefresh').addEventListener('click', fetchData);
+document.getElementById('btnRefresh').addEventListener('click',fetchData);
 
-function showOverlay(msg) {
-  document.getElementById('overlayMsg').textContent = msg;
-  document.getElementById('overlay').classList.remove('hidden');
-}
-function hideOverlay() { document.getElementById('overlay').classList.add('hidden'); }
-function showError(html) {
-  const b = document.getElementById('errorBanner');
-  b.innerHTML = '⚠️ ' + html; b.style.display = 'block';
-}
-function hideError() { document.getElementById('errorBanner').style.display = 'none'; }
+function showOverlay(msg){document.getElementById('overlayMsg').textContent=msg;document.getElementById('overlay').classList.remove('hidden');}
+function hideOverlay(){document.getElementById('overlay').classList.add('hidden');}
+function showError(html){const b=document.getElementById('errorBanner');b.innerHTML='⚠️ '+html;b.style.display='block';}
+function hideError(){document.getElementById('errorBanner').style.display='none';}
 
-/* ══════════════════════════════════════════
-   BOOT
-   ══════════════════════════════════════════ */
+/* ══════════ BOOT ══════════ */
 applyShiftUI('all');
 initBarChart();
 initPieChart();
