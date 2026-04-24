@@ -224,6 +224,13 @@
     align-items: stretch;
   }
 
+  /* Left column: bar chart + performance line stacked */
+  .charts-left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
   /* ── Card ── */
   .card {
     background: var(--card);
@@ -245,6 +252,13 @@
   /* Shift-colored top bar */
   .card.shift-day::before    { background: linear-gradient(90deg, #f57f17, #ffca28); }
   .card.shift-night::before  { background: linear-gradient(90deg, #311b92, #7b1fa2); }
+
+  /* Performance line card - red accent */
+  .card.perf-card::before {
+    background: linear-gradient(90deg, #c62828, #ef5350);
+  }
+  .card.perf-card.shift-day::before    { background: linear-gradient(90deg, #c62828, #ef5350); }
+  .card.perf-card.shift-night::before  { background: linear-gradient(90deg, #c62828, #ef5350); }
 
   /* ── Bar chart ── */
   .bar-canvas-wrap {
@@ -343,6 +357,25 @@
     letter-spacing: -1px;
     margin-top: 8px;
     line-height: 1;
+  }
+
+  /* ── Performance card title ── */
+  .perf-card-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .88rem;
+    font-weight: 700;
+    color: #c62828;
+    letter-spacing: .3px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .perf-card-title::before {
+    content: '';
+    width: 12px; height: 3px;
+    background: #ef5350;
+    border-radius: 2px;
   }
 
   /* ── Footer ── */
@@ -453,23 +486,42 @@
     <span class="shift-info-val" id="shiftBarsCount">—</span>
   </div>
 
-  <!-- Charts row: bar + pie -->
+  <!-- Charts row: (bar + perf line) + pie -->
   <div class="charts-row">
 
-    <!-- Bar chart card -->
-    <div class="card" id="barCard" style="min-height:420px;">
-      <div class="overlay" id="overlay">
-        <div class="spinner"></div>
-        <div class="overlay-msg" id="overlayMsg">LOADING DATA…</div>
+    <!-- Left column -->
+    <div class="charts-left">
+
+      <!-- Bar chart card -->
+      <div class="card" id="barCard" style="min-height:360px;">
+        <div class="overlay" id="overlay">
+          <div class="spinner"></div>
+          <div class="overlay-msg" id="overlayMsg">LOADING DATA…</div>
+        </div>
+        <div class="bar-canvas-wrap" style="height:300px;">
+          <canvas id="bcmChart"></canvas>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#2e7d32"></div>BCM CR</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#7b1fa2"></div>BWE 1</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f48fb1"></div>BWE 2</div>
+        </div>
       </div>
-      <div class="bar-canvas-wrap" style="height:360px;">
-        <canvas id="bcmChart"></canvas>
+
+      <!-- Performance Main Line card -->
+      <div class="card perf-card" id="perfCard" style="min-height:200px;">
+        <div class="perf-card-title">Performance Main Line</div>
+        <div class="bar-canvas-wrap" style="height:160px;">
+          <canvas id="perfChart"></canvas>
+        </div>
+        <div class="legend" style="margin-top:8px;">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#ef5350"></div>
+            Performance (Col X · Value)
+          </div>
+        </div>
       </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#2e7d32"></div>BCM CR</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#7b1fa2"></div>BWE 1</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#f48fb1"></div>BWE 2</div>
-      </div>
+
     </div>
 
     <!-- Pie chart card -->
@@ -514,7 +566,8 @@ const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-1
 const CSV_URLS = [
   BASE + '?gid=1971585139&single=true&output=csv',
 ];
-const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11 };
+// COL.VALUE = column X (index 23, zero-based)
+const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11, VALUE:23 };
 
 /* ── Colours ── */
 const C = {
@@ -525,16 +578,11 @@ const C = {
   cr3:  '#c8e6c9',
 };
 
-let allRows=[], availableDates=[], bcmChart=null, pieChart=null;
+let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 
 /* ══════════════════════════════════════════
    SHIFT STATE
    ══════════════════════════════════════════ */
-// shiftHour: h < 8 → h+24  (so 0–7 → 24–31, 8–23 stay)
-// Day   = shiftHour  8–19
-// Night = shiftHour 20–31
-// All   = shiftHour  8–31
-
 let currentShift = 'all'; // 'all' | 'day' | 'night'
 
 const SHIFT_CONFIG = {
@@ -557,7 +605,6 @@ function filterByShift(rows, shift) {
 }
 
 function applyShiftUI(shift) {
-  // Update buttons
   document.querySelectorAll('.btn-shift').forEach(btn => {
     btn.className = 'btn-shift';
     if (btn.dataset.shift === shift) {
@@ -567,23 +614,20 @@ function applyShiftUI(shift) {
     }
   });
 
-  // Update badge
   const badge = document.getElementById('shiftBadge');
   const badgeText = document.getElementById('shiftBadgeText');
   badge.className = 'shift-badge ' + shift;
   badgeText.textContent = SHIFT_CONFIG[shift].label + ' · ' + SHIFT_CONFIG[shift].period;
 
-  // Update bar/pie card top bar color
   const barCard = document.getElementById('barCard');
   const pieCard = document.getElementById('pieCard');
+  // perfCard keeps red accent always
   barCard.className = 'card' + (shift==='all' ? '' : ' shift-'+shift);
   pieCard.className = 'card pie-card' + (shift==='all' ? '' : ' shift-'+shift);
 
-  // Update info strip
   document.getElementById('shiftPeriodText').textContent = SHIFT_CONFIG[shift].period;
 }
 
-// Shift button events
 document.querySelectorAll('.btn-shift').forEach(btn => {
   btn.addEventListener('click', () => {
     currentShift = btn.dataset.shift;
@@ -702,6 +746,61 @@ function initPieChart() {
   });
 }
 
+/* ── Performance Line Chart (Column X = index 23) ── */
+function initPerfChart() {
+  const ctx = document.getElementById('perfChart').getContext('2d');
+  perfChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Performance Main Line',
+        data: [],
+        borderColor: '#ef5350',
+        backgroundColor: 'rgba(239,83,80,.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#ef5350',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1.5,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        tension: 0.3,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#fff',
+          borderColor: '#ffcdd2', borderWidth: 1,
+          titleColor: '#1a1f2e', bodyColor: '#c62828',
+          titleFont: { family:"'Chakra Petch',monospace", size:11, weight:'700' },
+          bodyFont: { family:"'Sarabun',sans-serif", size:12 },
+          padding: 10,
+          callbacks: {
+            label: c => ` Performance: ${c.parsed.y.toLocaleString()}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color:'#fce4ec' },
+          ticks: { font:{family:"'Chakra Petch',monospace",size:10}, color:'#1a1f2e', maxRotation:0, minRotation:0 }
+        },
+        y: {
+          grid: { color:'#fce4ec' },
+          ticks: { font:{family:"'Chakra Petch',monospace",size:10}, color:'#c62828', callback:v=>v.toLocaleString() },
+          beginAtZero: true,
+        }
+      }
+    }
+  });
+}
+
 /* ══════════════════════════════════════════
    DATA FETCH & PARSE
    ══════════════════════════════════════════ */
@@ -797,12 +896,10 @@ function processCSV(text) {
    RENDER
    ══════════════════════════════════════════ */
 function renderForDate(wd) {
-  // Get all rows for this working date, sorted by shiftHour
   const allForDate = allRows
     .filter(r => r._wd === wd)
     .sort((a, b) => shiftHour(a) - shiftHour(b));
 
-  // Apply shift filter
   const rows = filterByShift(allForDate, currentShift);
 
   const labels  = rows.map(r => fmtTime(r[COL.DT]||''));
@@ -813,12 +910,20 @@ function renderForDate(wd) {
   const dataH   = rows.map(r => parseNum(r[COL.BWE1]));
   const dataI   = rows.map(r => parseNum(r[COL.BWE2]));
 
+  // Column X (index 23) = Value / Performance Main Line
+  const dataPerf = rows.map(r => parseNum(r[COL.VALUE]));
+
   // Update bar chart
   bcmChart.data.labels           = labels;
   bcmChart.data.datasets[0].data = dataB;
   bcmChart.data.datasets[1].data = dataH;
   bcmChart.data.datasets[2].data = dataI;
   bcmChart.update();
+
+  // Update performance line chart
+  perfChart.data.labels                = labels;
+  perfChart.data.datasets[0].data      = dataPerf;
+  perfChart.update();
 
   const sum = a => a.reduce((s,v) => s+v, 0);
   const sBWE1 = sum(dataH);
@@ -935,6 +1040,7 @@ function hideError() { document.getElementById('errorBanner').style.display = 'n
 applyShiftUI('all');
 initBarChart();
 initPieChart();
+initPerfChart();
 fetchData();
 </script>
 </body>
