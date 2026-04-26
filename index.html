@@ -710,7 +710,7 @@ const DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcv
 const DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
 // Col indices in MasterDowntime (0-based): A=0, G=6, J=9
-const DT_COL = { MACHINE:0, DATE:6, TYPE:9 };
+const DT_COL = { MACHINE:0, DATE:6, TYPE:11 };
 
 // Equipment: machine_name keywords to match (col A)
 const EQUIP_DEF = [
@@ -723,7 +723,7 @@ const EQUIP_DEF = [
   { label:'System',  key:'System',           color:'#546e7a' },
 ];
 
-// Type of Downtime: col J values
+// Type of Downtime: col l values
 const TYPE_DEF = [
   { label:'OPT',      key:'OPT',      color:'#1565c0' },
   { label:'EE',       key:'EE',       color:'#00897b' },
