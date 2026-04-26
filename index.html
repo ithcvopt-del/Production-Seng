@@ -25,7 +25,7 @@
 
   html, body {
     height: 100%;
-    overflow: hidden; /* NO scroll on body */
+    overflow: hidden;
     background: var(--bg);
     color: var(--text);
     font-family: 'Sarabun', sans-serif;
@@ -139,7 +139,7 @@
   .btn-shift.active-day   { background: linear-gradient(135deg,#f57f17,#ffca28); color:#1a1f2e; }
   .btn-shift.active-night { background: linear-gradient(135deg,#311b92,#7b1fa2); color:#fff; }
 
-  /* ── Page wrapper: fills height below topbar ── */
+  /* ── Page wrapper ── */
   .page {
     display: flex;
     flex-direction: column;
@@ -149,7 +149,7 @@
     overflow: hidden;
   }
 
-  /* ── Strip (shift info) ── */
+  /* ── Strip ── */
   .strip {
     display: flex; align-items: center; gap: 8px;
     background: #fff; border: 1px solid var(--border);
@@ -181,7 +181,7 @@
   .shift-badge.day   .dot { background:#fb8c00; }
   .shift-badge.night .dot { background:#7b1fa2; }
 
-  /* ── Main body: 2 columns ── */
+  /* ── Main body ── */
   .body-row {
     display: grid;
     grid-template-columns: 1fr 240px;
@@ -191,7 +191,6 @@
     overflow: hidden;
   }
 
-  /* Left column: two charts stacked */
   .left-col {
     display: flex;
     flex-direction: column;
@@ -221,11 +220,9 @@
   .card.shift-night::before  { background: linear-gradient(90deg,#311b92,#7b1fa2); }
   .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
 
-  /* Bar card takes ~65% of left col, perf card ~35% */
   .bar-card  { flex: 65; min-height: 0; }
   .perf-card { flex: 35; min-height: 0; }
 
-  /* Canvas wrappers fill remaining space */
   .canvas-wrap {
     flex: 1;
     min-height: 0;
@@ -233,7 +230,6 @@
   }
   canvas { display:block; width:100% !important; height:100% !important; }
 
-  /* Card sub-header */
   .card-head {
     font-family: 'Chakra Petch', sans-serif;
     font-size: .72rem; font-weight: 700;
@@ -273,10 +269,24 @@
   @keyframes spin { to{ transform:rotate(360deg); } }
   .overlay-msg { font-family:'Chakra Petch',sans-serif; font-size:.65rem; color:var(--muted); letter-spacing:1px; }
 
-  /* ── Right column: pie card ── */
+  /* ── Right column ── */
+  .right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #dde1e8 transparent;
+  }
+  .right-col::-webkit-scrollbar { width: 4px; }
+  .right-col::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 4px; }
+
   .pie-card {
     display:flex; flex-direction:column;
-    min-height:0; overflow:hidden;
+    flex-shrink: 0;
+    padding: 8px 12px;
   }
   .pie-title {
     font-family:'Chakra Petch',sans-serif;
@@ -292,7 +302,7 @@
 
   .pie-legend {
     display:flex; flex-direction:column; gap:3px;
-    margin-top:8px; flex: 1; min-height:0; overflow:hidden;
+    margin-top:8px;
   }
   .pie-legend-item {
     display:flex; align-items:center; justify-content:space-between;
@@ -320,6 +330,66 @@
     font-family:'Chakra Petch',monospace;
     font-size:1.8rem; font-weight:700; color:var(--blue);
     letter-spacing:-1px; line-height:1;
+  }
+
+  /* ── Radar Cards ── */
+  .radar-card {
+    flex-shrink: 0;
+    padding: 8px 10px 10px;
+  }
+  .radar-card::before {
+    background: linear-gradient(90deg,#1a237e,#42a5f5);
+  }
+  .radar-card:nth-child(3)::before {
+    background: linear-gradient(90deg,#37474f,#78909c);
+  }
+  .radar-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .7rem; font-weight: 700;
+    color: var(--text); text-align: center;
+    margin-bottom: 4px;
+  }
+  .radar-wrap {
+    width: 190px;
+    height: 175px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .radar-wrap canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .radar-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 6px;
+  }
+  .radar-legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: .63rem;
+    color: var(--label);
+    padding: 2px 0;
+    border-bottom: 1px solid #f0f2f5;
+  }
+  .radar-legend-left {
+    display: flex; align-items: center; gap: 5px; font-weight: 600;
+  }
+  .radar-legend-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .radar-legend-val {
+    font-family: 'Chakra Petch', monospace;
+    font-size: .68rem; font-weight: 700; color: var(--blue);
+    min-width: 18px; text-align: right;
+  }
+  .radar-total {
+    text-align: center;
+    font-family: 'Chakra Petch', monospace;
+    font-size: .6rem; color: var(--muted);
+    margin-top: 5px; letter-spacing: .5px;
   }
 
   /* ── Footer ── */
@@ -367,7 +437,7 @@
   </div>
 </div>
 
-<!-- ── Page (no scroll) ── -->
+<!-- ── Page ── -->
 <div class="page">
 
   <div id="errorBanner"></div>
@@ -387,12 +457,11 @@
     <span class="strip-val" id="shiftBarsCount">—</span>
   </div>
 
-  <!-- Body: left charts + right pie -->
+  <!-- Body -->
   <div class="body-row">
 
     <!-- Left -->
     <div class="left-col">
-
       <!-- Production bar chart -->
       <div class="card bar-card" id="barCard">
         <div class="overlay" id="overlay">
@@ -423,27 +492,49 @@
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- Right: Pie -->
-    <div class="card pie-card" id="pieCard">
-      <div class="card::before" style="background:linear-gradient(90deg,#1565c0,#42a5f5)"></div>
-      <div class="pie-title">Total Production of Each Machine</div>
-      <div class="pie-wrap">
-        <canvas id="pieChart"></canvas>
-      </div>
-      <div class="pie-legend" id="pieLegend"></div>
-      <div class="total-box">
-        <div class="total-label">Total Production</div>
-        <div class="total-value" id="grandTotal">—</div>
-      </div>
-      <div class="clock-wrap">
-        <div class="total-label" style="margin-bottom:2px;">Hour S3 — Total</div>
-        <div class="clock-box" id="clockBox">—</div>
-      </div>
-    </div>
+    <!-- Right column: scrollable -->
+    <div class="right-col">
 
+      <!-- Pie -->
+      <div class="card pie-card">
+        <div class="pie-title">Total Production of Each Machine</div>
+        <div class="pie-wrap">
+          <canvas id="pieChart"></canvas>
+        </div>
+        <div class="pie-legend" id="pieLegend"></div>
+        <div class="total-box">
+          <div class="total-label">Total Production</div>
+          <div class="total-value" id="grandTotal">—</div>
+        </div>
+        <div class="clock-wrap">
+          <div class="total-label" style="margin-bottom:2px;">Hour S3 — Total</div>
+          <div class="clock-box" id="clockBox">—</div>
+        </div>
+      </div>
+
+      <!-- Radar 1: Downtime of Equipment -->
+      <div class="card radar-card" id="radarEquipCard">
+        <div class="radar-title">Downtime of Equipment</div>
+        <div class="radar-wrap">
+          <canvas id="radarEquipChart"></canvas>
+        </div>
+        <div class="radar-legend" id="radarEquipLegend"></div>
+        <div class="radar-total" id="radarEquipTotal">Total: — events</div>
+      </div>
+
+      <!-- Radar 2: Type of Downtime -->
+      <div class="card radar-card" id="radarTypeCard">
+        <div class="radar-title">Type of Downtime</div>
+        <div class="radar-wrap">
+          <canvas id="radarTypeChart"></canvas>
+        </div>
+        <div class="radar-legend" id="radarTypeLegend"></div>
+        <div class="radar-total" id="radarTypeTotal">Total: — events</div>
+      </div>
+
+    </div>
   </div>
 
   <!-- Footer -->
@@ -463,6 +554,7 @@ const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR
 const C = { bwe1:'#7b1fa2', bwe2:'#f48fb1', cr1:'#66bb6a', cr2:'#2e7d32', cr3:'#c8e6c9' };
 
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
+let radarEquipChart=null, radarTypeChart=null;
 
 /* ══════════ SHIFT ══════════ */
 let currentShift = 'all';
@@ -612,6 +704,167 @@ function initPerfChart(){
   });
 }
 
+/* ══════════ RADAR CHARTS ══════════ */
+// MasterDowntime sheet GID
+const DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
+const DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
+
+// Col indices in MasterDowntime (0-based): A=0, G=6, J=9
+const DT_COL = { MACHINE:0, DATE:6, TYPE:9 };
+
+// Equipment: machine_name keywords to match (col A)
+const EQUIP_DEF = [
+  { label:'BW #1',   key:'Bucket Wheel #1', color:'#1565c0' },
+  { label:'BW #2',   key:'Bucket Wheel #2', color:'#7b1fa2' },
+  { label:'CR #1',   key:'Crusher #1',      color:'#2e7d32' },
+  { label:'CR #2',   key:'Crusher #2',      color:'#f57f17' },
+  { label:'CR #3',   key:'Crusher #3',      color:'#e53935' },
+  { label:'Spreader',key:'Spreader',         color:'#00897b' },
+  { label:'System',  key:'System',           color:'#546e7a' },
+];
+
+// Type of Downtime: col J values
+const TYPE_DEF = [
+  { label:'OPT',      key:'OPT',      color:'#1565c0' },
+  { label:'EE',       key:'EE',       color:'#00897b' },
+  { label:'ME',       key:'ME',       color:'#e53935' },
+  { label:'Plan',     key:'Plan',     color:'#fb8c00' },
+  { label:'Uncontrol',key:'Uncontrol',color:'#8d6e63' },
+];
+
+let dtAllRows = [];   // all MasterDowntime rows
+
+function radarOptions(size) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      r: {
+        beginAtZero: true,
+        ticks: {
+          font: { family: "'Chakra Petch',monospace", size: 8 },
+          color: '#9e9e9e',
+          backdropColor: 'transparent',
+          maxTicksLimit: 5,
+        },
+        pointLabels: {
+          font: { family: "'Chakra Petch',monospace", size: size || 8, weight: '600' },
+          color: '#374151',
+        },
+        grid: { color: 'rgba(0,0,0,.08)' },
+        angleLines: { color: 'rgba(0,0,0,.1)' },
+      }
+    }
+  };
+}
+
+function initRadarEquip() {
+  const ctx = document.getElementById('radarEquipChart').getContext('2d');
+  radarEquipChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: EQUIP_DEF.map(e => e.label),
+      datasets: [{
+        label: 'Downtime Count',
+        data: new Array(EQUIP_DEF.length).fill(0),
+        backgroundColor: 'rgba(21,101,192,.13)',
+        borderColor: '#1565c0',
+        borderWidth: 2,
+        pointBackgroundColor: EQUIP_DEF.map(e => e.color),
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1.5,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      }]
+    },
+    options: radarOptions(8)
+  });
+}
+
+function initRadarType() {
+  const ctx = document.getElementById('radarTypeChart').getContext('2d');
+  radarTypeChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: TYPE_DEF.map(t => t.label),
+      datasets: [{
+        label: 'Count',
+        data: new Array(TYPE_DEF.length).fill(0),
+        backgroundColor: 'rgba(55,71,79,.13)',
+        borderColor: '#546e7a',
+        borderWidth: 2,
+        pointBackgroundColor: TYPE_DEF.map(t => t.color),
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1.5,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      }]
+    },
+    options: radarOptions(9)
+  });
+}
+
+/* Fetch MasterDowntime CSV once */
+async function fetchDowntime() {
+  try {
+    const res = await fetch(DT_URL + '&_cb=' + Date.now());
+    if (!res.ok) return;
+    const text = await res.text();
+    const rows = Papa.parse(text, { skipEmptyLines: true }).data;
+    // skip header row(s): skip rows where col G is not a date-like string
+    dtAllRows = rows.slice(1).filter(r => {
+      const d = (r[DT_COL.DATE] || '').trim();
+      return /^\d{4}-\d{2}-\d{2}$/.test(d);
+    });
+  } catch(e) {
+    console.warn('MasterDowntime fetch failed:', e);
+  }
+}
+
+/* Called after date changes — update both radar charts */
+function renderRadarForDate(wd) {
+  // filter rows matching selected working date (col G)
+  const rows = dtAllRows.filter(r => (r[DT_COL.DATE] || '').trim() === wd);
+
+  // ── Equip radar ──
+  const equipCounts = EQUIP_DEF.map(def =>
+    rows.filter(r => (r[DT_COL.MACHINE] || '').trim() === def.key).length
+  );
+  radarEquipChart.data.datasets[0].data = equipCounts;
+  radarEquipChart.update();
+
+  // legend
+  document.getElementById('radarEquipLegend').innerHTML = EQUIP_DEF.map((def, i) => `
+    <div class="radar-legend-item">
+      <div class="radar-legend-left">
+        <div class="radar-legend-dot" style="background:${def.color}"></div>
+        <span>${def.label}</span>
+      </div>
+      <span class="radar-legend-val">${equipCounts[i]}</span>
+    </div>`).join('');
+
+  // ── Type radar ──
+  const typeCounts = TYPE_DEF.map(def =>
+    rows.filter(r => (r[DT_COL.TYPE] || '').trim() === def.key).length
+  );
+  radarTypeChart.data.datasets[0].data = typeCounts;
+  radarTypeChart.update();
+
+  document.getElementById('radarTypeLegend').innerHTML = TYPE_DEF.map((def, i) => `
+    <div class="radar-legend-item">
+      <div class="radar-legend-left">
+        <div class="radar-legend-dot" style="background:${def.color}"></div>
+        <span>${def.label}</span>
+      </div>
+      <span class="radar-legend-val">${typeCounts[i]}</span>
+    </div>`).join('');
+
+  // total downtime events badge
+  document.getElementById('radarEquipTotal').textContent = `Total: ${equipCounts.reduce((a,b)=>a+b,0)} events`;
+  document.getElementById('radarTypeTotal').textContent  = `Total: ${typeCounts.reduce((a,b)=>a+b,0)} events`;
+}
+
 /* ══════════ FETCH ══════════ */
 async function fetchData(){
   showOverlay('LOADING DATA…'); hideError();
@@ -622,10 +875,11 @@ async function fetchData(){
       if(!res.ok){lastErr=`HTTP ${res.status}`;continue;}
       const text=await res.text();
       if(!text||text.trim().length<10){lastErr='Empty';continue;}
-      processCSV(text); return;
+      processCSV(text); return true;
     }catch(e){lastErr=e.message;}
   }
   showOverlay('โหลดข้อมูลไม่สำเร็จ'); showError(`ดึงข้อมูลไม่ได้: ${lastErr}`);
+  return false;
 }
 
 function parseNum(v){return parseFloat((v||'0').replace(/,/g,''))||0;}
@@ -719,6 +973,9 @@ function renderForDate(wd){
   document.getElementById('shiftBarsCount').textContent=`${rows.length} bars`;
   document.getElementById('rowCount').textContent=`${rows.length} rows · ${allRows.length} total · ${availableDates.length} dates · ${toDisplay(wd)} · ${SHIFT_CONFIG[currentShift].label}`;
 
+  // Update radar charts from MasterDowntime data
+  renderRadarForDate(wd);
+
   hideOverlay(); syncNav();
 }
 
@@ -744,7 +1001,14 @@ document.getElementById('btnNext').addEventListener('click',()=>{
   const sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value);
   if(idx<availableDates.length-1){sel.value=availableDates[idx+1];renderForDate(sel.value);}
 });
-document.getElementById('btnRefresh').addEventListener('click',fetchData);
+document.getElementById('btnRefresh').addEventListener('click',()=>{
+  fetchData().then(()=>{
+    fetchDowntime().then(()=>{
+      const wd=document.getElementById('datePicker').value;
+      if(wd) renderRadarForDate(wd);
+    });
+  });
+});
 
 function showOverlay(msg){document.getElementById('overlayMsg').textContent=msg;document.getElementById('overlay').classList.remove('hidden');}
 function hideOverlay(){document.getElementById('overlay').classList.add('hidden');}
@@ -756,7 +1020,15 @@ applyShiftUI('all');
 initBarChart();
 initPieChart();
 initPerfChart();
-fetchData();
+initRadarEquip();
+initRadarType();
+// Fetch production data first, then MasterDowntime, then re-render radar
+fetchData().then(() => {
+  fetchDowntime().then(() => {
+    const wd = document.getElementById('datePicker').value;
+    if (wd) renderRadarForDate(wd);
+  });
+});
 </script>
 </body>
 </html>
