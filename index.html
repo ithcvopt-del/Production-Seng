@@ -219,11 +219,9 @@
   .card.shift-day::before    { background: linear-gradient(90deg,#f57f17,#ffca28); }
   .card.shift-night::before  { background: linear-gradient(90deg,#311b92,#7b1fa2); }
   .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
-  .card.dt-table-card::before { background: linear-gradient(90deg,#00695c,#26a69a); }
 
-  .bar-card  { flex: 55; min-height: 0; }
-  .perf-card { flex: 25; min-height: 0; }
-  .dt-table-card { flex: 20; min-height: 0; overflow: hidden; }
+  .bar-card  { flex: 65; min-height: 0; }
+  .perf-card { flex: 35; min-height: 0; }
 
   .canvas-wrap {
     flex: 1;
@@ -241,14 +239,12 @@
     flex-shrink: 0;
   }
   .card-head.red { color: #c62828; }
-  .card-head.teal { color: #00695c; }
   .card-head::before {
     content:''; width:3px; height:13px;
     background: linear-gradient(180deg, var(--blue), var(--header-accent));
     border-radius: 2px; flex-shrink:0;
   }
   .card-head.red::before { background: linear-gradient(180deg,#c62828,#ef5350); }
-  .card-head.teal::before { background: linear-gradient(180deg,#00695c,#26a69a); }
 
   .legend {
     display:flex; gap:10px; flex-wrap:wrap;
@@ -413,147 +409,10 @@
     border-radius:7px; padding:7px 12px; margin-bottom:6px;
     font-size:.73rem; color:#c62828; line-height:1.5; flex-shrink:0;
   }
-
-  /* ══════════ DOWNTIME TABLE ══════════ */
-  .dt-table-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 5px;
-    flex-shrink: 0;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .dt-count-badge {
-    font-family: 'Chakra Petch', monospace;
-    font-size: .62rem;
-    color: #00695c;
-    background: rgba(0,105,92,.08);
-    border: 1px solid rgba(0,105,92,.2);
-    border-radius: 20px;
-    padding: 2px 8px;
-    white-space: nowrap;
-  }
-  .dt-filter-wrap {
-    display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
-  }
-  .dt-filter-btn {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .58rem; font-weight: 600;
-    padding: 2px 7px; border-radius: 4px; border: 1px solid transparent;
-    cursor: pointer; background: #f0f2f5; color: var(--muted);
-    transition: all .15s;
-    white-space: nowrap;
-  }
-  .dt-filter-btn:hover { background: #e3f2fd; color: #1565c0; border-color: #90caf9; }
-  .dt-filter-btn.active { background: #1565c0; color: #fff; border-color: #1565c0; }
-  .dt-filter-btn.type-OPT.active     { background: #5677fc; border-color: #5677fc; }
-  .dt-filter-btn.type-EE.active      { background: #26a69a; border-color: #26a69a; }
-  .dt-filter-btn.type-ME.active      { background: #ff6f00; border-color: #ff6f00; }
-  .dt-filter-btn.type-Plan.active    { background: #00bcd4; border-color: #00bcd4; }
-  .dt-filter-btn.type-Uncontrol.active { background: #e91e63; border-color: #e91e63; }
-  .dt-filter-btn.type-STB.active     { background: #78909c; border-color: #78909c; }
-  .dt-filter-btn.type-Other.active   { background: #8d6e63; border-color: #8d6e63; }
-
-  .dt-table-wrap {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: auto;
-    min-height: 0;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    scrollbar-width: thin;
-    scrollbar-color: #dde1e8 transparent;
-  }
-  .dt-table-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
-  .dt-table-wrap::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 4px; }
-
-  .dt-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: .7rem;
-    min-width: 620px;
-  }
-  .dt-table thead th {
-    position: sticky; top: 0; z-index: 2;
-    background: #1a237e;
-    color: #fff;
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .62rem; font-weight: 700;
-    letter-spacing: .5px;
-    padding: 5px 8px;
-    text-align: left;
-    white-space: nowrap;
-    border-right: 1px solid rgba(255,255,255,.1);
-  }
-  .dt-table thead th:last-child { border-right: none; }
-  .dt-table tbody tr {
-    border-bottom: 1px solid #f0f2f5;
-    transition: background .12s;
-  }
-  .dt-table tbody tr:hover { background: #f0f7ff; }
-  .dt-table tbody tr:nth-child(even) { background: #fafbfc; }
-  .dt-table tbody tr:nth-child(even):hover { background: #f0f7ff; }
-  .dt-table tbody td {
-    padding: 4px 8px;
-    color: var(--text);
-    vertical-align: middle;
-    white-space: nowrap;
-    border-right: 1px solid #f0f2f5;
-  }
-  .dt-table tbody td:last-child { border-right: none; }
-  .dt-table tbody td.desc-cell {
-    white-space: normal;
-    max-width: 280px;
-    word-break: break-word;
-    line-height: 1.3;
-  }
-  .dt-table .machine-cell {
-    font-family: 'Chakra Petch', monospace;
-    font-size: .65rem; font-weight: 700;
-    color: #1a237e;
-  }
-  .dt-table .time-cell {
-    font-family: 'Chakra Petch', monospace;
-    font-size: .65rem; color: #374151;
-  }
-  .dt-table .dur-cell {
-    font-family: 'Chakra Petch', monospace;
-    font-size: .65rem; font-weight: 700;
-    color: #c62828; text-align: right;
-  }
-
-  /* Type badges */
-  .type-badge {
-    display: inline-block;
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .58rem; font-weight: 700;
-    padding: 1px 6px; border-radius: 3px;
-    letter-spacing: .4px;
-    white-space: nowrap;
-  }
-  .type-OPT      { background: rgba(86,119,252,.12); color: #5677fc; border: 1px solid rgba(86,119,252,.25); }
-  .type-EE       { background: rgba(38,166,154,.12); color: #00796b; border: 1px solid rgba(38,166,154,.25); }
-  .type-ME       { background: rgba(255,111,0,.12);  color: #e65100; border: 1px solid rgba(255,111,0,.25); }
-  .type-Plan     { background: rgba(0,188,212,.12);  color: #00838f; border: 1px solid rgba(0,188,212,.25); }
-  .type-Uncontrol{ background: rgba(233,30,99,.12);  color: #c2185b; border: 1px solid rgba(233,30,99,.25); }
-  .type-STB      { background: rgba(120,144,156,.12);color: #546e7a; border: 1px solid rgba(120,144,156,.25); }
-  .type-PM       { background: rgba(255,152,0,.12);  color: #e65100; border: 1px solid rgba(255,152,0,.25); }
-  .type-Other    { background: rgba(141,110,99,.12); color: #4e342e; border: 1px solid rgba(141,110,99,.25); }
-  .type-PLAN     { background: rgba(0,188,212,.12);  color: #00838f; border: 1px solid rgba(0,188,212,.25); }
-
-  .dt-empty {
-    text-align: center;
-    padding: 16px;
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .65rem;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
 </style>
 </head>
 <body>
-  
+
 <!-- ── Top Bar ── -->
 <div class="top-bar">
   <div class="top-bar-left">
@@ -562,6 +421,7 @@
       Production Dashboard
       <small>Data 1 · Machine Production Per Hour</small>
     </div>
+  </div>
   <div class="controls">
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
@@ -582,9 +442,11 @@
 
   <div id="errorBanner"></div>
 
+  <!-- Shift strip -->
   <div class="strip">
     <span class="strip-label">Shift</span>
     <span class="shift-badge all" id="shiftBadge">
+      <span class="dot"></span>
       <span id="shiftBadgeText">All Shift · 08:00 – 07:00</span>
     </span>
     <span class="strip-sep">|</span>
@@ -628,42 +490,6 @@
             <div class="legend-dot" style="background:#ef5350"></div>
             Performance
           </div>
-        </div>
-      </div>
-
-      <!-- ── Downtime Table ── -->
-      <div class="card dt-table-card">
-        <div class="card-head teal">Downtime Log</div>
-        <div class="dt-table-header">
-          <span class="dt-count-badge" id="dtCountBadge">0 records</span>
-          <div class="dt-filter-wrap" id="dtFilterWrap">
-            <button class="dt-filter-btn active" data-type="ALL">All</button>
-            <button class="dt-filter-btn type-OPT"       data-type="OPT">OPT</button>
-            <button class="dt-filter-btn type-EE"        data-type="EE">EE</button>
-            <button class="dt-filter-btn type-ME"        data-type="ME">ME</button>
-            <button class="dt-filter-btn type-Plan"      data-type="Plan">Plan</button>
-            <button class="dt-filter-btn type-Uncontrol" data-type="Uncontrol">Uncontrol</button>
-            <button class="dt-filter-btn type-STB"       data-type="STB">STB</button>
-            <button class="dt-filter-btn type-PM"        data-type="PM">PM</button>
-            <button class="dt-filter-btn type-Other"     data-type="Other">Other</button>
-          </div>
-        </div>
-        <div class="dt-table-wrap">
-          <table class="dt-table">
-            <thead>
-              <tr>
-                <th>Machine Name</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Description</th>
-                <th>Type</th>
-                <th style="text-align:right;">Duration</th>
-              </tr>
-            </thead>
-            <tbody id="dtTableBody">
-              <tr><td colspan="6" class="dt-empty">Select a date to load downtime data…</td></tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
@@ -794,8 +620,8 @@ function initBarChart(){
     type:'bar', plugins:[totalLabelPlugin],
     data:{labels:[],datasets:[
       {label:'BCM CR',data:[],backgroundColor:'#259B24', stack:'s',borderRadius:2},
-      {label:'BWE 1', data:[],backgroundColor:'#7b1fa2',stack:'s',borderRadius:2},
-      {label:'BWE 2', data:[],backgroundColor:'#f48fb1',stack:'s',borderRadius:2},
+      {label:'BWE 1', data:[],backgroundColor:'#F48FB1',stack:'s',borderRadius:2},
+      {label:'BWE 2', data:[],backgroundColor:'#259B24'',stack:'s',borderRadius:2},
     ]},
     options:{
       responsive:true, maintainAspectRatio:false,
@@ -879,13 +705,14 @@ function initPerfChart(){
 }
 
 /* ══════════ RADAR CHARTS ══════════ */
+// MasterDowntime sheet GID
 const DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 const DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
-// Col indices in MasterDowntime (0-based)
-// A=0 machine_name, B=1 start_time, C=2 end_time, D=3 duration, F=5 description, G=6 date, J=9 TypeMaster
-const DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, TYPE:9 };
+// Col indices in MasterDowntime (0-based): A=0, G=6, J=9
+const DT_COL = { MACHINE:0, DATE:6, TYPE:11 };
 
+// Equipment: machine_name keywords to match (col A)
 const EQUIP_DEF = [
   { label:'BW #1',   key:'Bucket Wheel #1', color:'#6B007B' },
   { label:'BW #2',   key:'Bucket Wheel #2', color:'#F48FB1' },
@@ -896,6 +723,7 @@ const EQUIP_DEF = [
   { label:'System',  key:'System',           color:'#03a9f4' },
 ];
 
+// Type of Downtime: col l values
 const TYPE_DEF = [
   { label:'OPT',      key:'OPT',      color:'#5677fc' },
   { label:'EE',       key:'EE',       color:'#26a69a' },
@@ -904,11 +732,7 @@ const TYPE_DEF = [
   { label:'Uncontrol',key:'Uncontrol',color:'#e91e63' },
 ];
 
-let dtAllRows = [];
-
-// ── Downtime Table state ──
-let dtCurrentRows = [];
-let dtActiveFilter = 'ALL';
+let dtAllRows = [];   // all MasterDowntime rows
 
 function radarOptions(size) {
   return {
@@ -988,104 +812,20 @@ async function fetchDowntime() {
     if (!res.ok) return;
     const text = await res.text();
     const rows = Papa.parse(text, { skipEmptyLines: true }).data;
+    // skip header row(s): skip rows where col G is not a date-like string
     dtAllRows = rows.slice(1).filter(r => {
       const d = (r[DT_COL.DATE] || '').trim();
-      return d.length >= 8; // accept various date formats
+      return /^\d{4}-\d{2}-\d{2}$/.test(d);
     });
   } catch(e) {
     console.warn('MasterDowntime fetch failed:', e);
   }
 }
 
-/* Format datetime to HH only */
-function fmtDTTime(s) {
-  s = (s || '').trim();
-  if (!s) return '—';
-  // Try ISO datetime: 2026-04-02 07:00:00 or 2026-04-02T07:00:00
-  let m = s.match(/(\d{4}-\d{2}-\d{2})[T ](\d{2}):\d{2}/);
-  if (m) return m[2] + ':00';
-  // Try M/D/YYYY HH:MM
-  m = s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):\d{2}/);
-  if (m) return m[1].padStart(2, '0') + ':00';
-  return s;
-}
-
-/* Normalize date from col G to YYYY-MM-DD */
-function normDateG(s) {
-  s = (s || '').trim();
-  if (!s) return '';
-  // Already YYYY-MM-DD
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  // M/D/YYYY or D/M/YYYY
-  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
-  return s;
-}
-
-/* Render downtime table */
-function renderDTTable(filterType) {
-  dtActiveFilter = filterType || dtActiveFilter;
-
-  // Update filter buttons
-  document.querySelectorAll('.dt-filter-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.type === dtActiveFilter);
-  });
-
-  let rows = dtCurrentRows;
-  if (dtActiveFilter !== 'ALL') {
-    rows = rows.filter(r => {
-      const t = (r[DT_COL.TYPE] || '').trim().toUpperCase();
-      return t === dtActiveFilter.toUpperCase();
-    });
-  }
-
-  document.getElementById('dtCountBadge').textContent = `${rows.length} records`;
-
-  const tbody = document.getElementById('dtTableBody');
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="dt-empty">No downtime records for this date${dtActiveFilter !== 'ALL' ? ' / type' : ''}</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = rows.map(r => {
-    const machine  = (r[DT_COL.MACHINE]  || '').trim();
-    const startT   = fmtDTTime(r[DT_COL.START]  || '');
-    const endT     = fmtDTTime(r[DT_COL.END]    || '');
-    const desc     = (r[DT_COL.DESC]     || '').trim() || '—';
-    const typeRaw  = (r[DT_COL.TYPE]     || '').trim();
-    const duration = (r[DT_COL.DURATION] || '').trim() || '—';
-    const typeClass = 'type-' + typeRaw;
-    return `<tr>
-      <td class="machine-cell">${escHtml(machine)}</td>
-      <td class="time-cell">${escHtml(startT)}</td>
-      <td class="time-cell">${escHtml(endT)}</td>
-      <td class="desc-cell">${escHtml(desc)}</td>
-      <td><span class="type-badge ${typeClass}">${escHtml(typeRaw) || '—'}</span></td>
-      <td class="dur-cell">${escHtml(duration)}</td>
-    </tr>`;
-  }).join('');
-}
-
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// Filter button click
-document.getElementById('dtFilterWrap').addEventListener('click', e => {
-  const btn = e.target.closest('.dt-filter-btn');
-  if (!btn) return;
-  renderDTTable(btn.dataset.type);
-});
-
-/* Called after date changes — update radar + downtime table */
+/* Called after date changes — update both radar charts */
 function renderRadarForDate(wd) {
-  // Filter rows by working date (col G)
-  const rows = dtAllRows.filter(r => normDateG(r[DT_COL.DATE] || '') === wd);
-  dtCurrentRows = rows;
-
-  // Reset filter to ALL when date changes
-  dtActiveFilter = 'ALL';
-  renderDTTable('ALL');
+  // filter rows matching selected working date (col G)
+  const rows = dtAllRows.filter(r => (r[DT_COL.DATE] || '').trim() === wd);
 
   // ── Equip radar ──
   const equipCounts = EQUIP_DEF.map(def =>
@@ -1094,6 +834,7 @@ function renderRadarForDate(wd) {
   radarEquipChart.data.datasets[0].data = equipCounts;
   radarEquipChart.update();
 
+  // legend
   document.getElementById('radarEquipLegend').innerHTML = EQUIP_DEF.map((def, i) => `
     <div class="radar-legend-item">
       <div class="radar-legend-left">
@@ -1119,6 +860,7 @@ function renderRadarForDate(wd) {
       <span class="radar-legend-val">${typeCounts[i]}</span>
     </div>`).join('');
 
+  // total downtime events badge
   document.getElementById('radarEquipTotal').textContent = `Total: ${equipCounts.reduce((a,b)=>a+b,0)} events`;
   document.getElementById('radarTypeTotal').textContent  = `Total: ${typeCounts.reduce((a,b)=>a+b,0)} events`;
 }
@@ -1231,7 +973,9 @@ function renderForDate(wd){
   document.getElementById('shiftBarsCount').textContent=`${rows.length} bars`;
   document.getElementById('rowCount').textContent=`${rows.length} rows · ${allRows.length} total · ${availableDates.length} dates · ${toDisplay(wd)} · ${SHIFT_CONFIG[currentShift].label}`;
 
+  // Update radar charts from MasterDowntime data
   renderRadarForDate(wd);
+
   hideOverlay(); syncNav();
 }
 
@@ -1278,6 +1022,7 @@ initPieChart();
 initPerfChart();
 initRadarEquip();
 initRadarType();
+// Fetch production data first, then MasterDowntime, then re-render radar
 fetchData().then(() => {
   fetchDowntime().then(() => {
     const wd = document.getElementById('datePicker').value;
