@@ -1000,16 +1000,16 @@ async function fetchDowntime() {
   }
 }
 
-/* Format datetime to HH:MM */
+/* Format datetime to HH only */
 function fmtDTTime(s) {
   s = (s || '').trim();
   if (!s) return '—';
   // Try ISO datetime: 2026-04-02 07:00:00 or 2026-04-02T07:00:00
-  let m = s.match(/(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2})/);
-  if (m) return m[2];
+  let m = s.match(/(\d{4}-\d{2}-\d{2})[T ](\d{2}):\d{2}/);
+  if (m) return m[2] + ':00';
   // Try M/D/YYYY HH:MM
-  m = s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}:\d{2})/);
-  if (m) return m[1].padStart(5, '0');
+  m = s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):\d{2}/);
+  if (m) return m[1].padStart(2, '0') + ':00';
   return s;
 }
 
