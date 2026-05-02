@@ -558,7 +558,11 @@
 <div class="top-bar">
   <div class="top-bar-left">
     <div class="logo-box">DASHBOARD<span>·</span>Daily Report Production of WL 1</div>
-  </div>
+    <div class="top-title">
+      Production Dashboard
+      <small>Data 1 · Machine Production Per Hour</small>
+    </div>
+  </div><!-- ✅ FIX: ปิด top-bar-left ที่นี่ -->
   <div class="controls">
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
@@ -579,7 +583,18 @@
 
   <div id="errorBanner"></div>
 
-  <!-- strip removed -->
+  <div class="strip">
+    <span class="strip-label">Shift</span>
+    <span class="shift-badge all" id="shiftBadge">
+      <span id="shiftBadgeText">All Shift · 08:00 – 07:00</span>
+    </span>
+    <span class="strip-sep">|</span>
+    <span class="strip-label">Period</span>
+    <span class="strip-val" id="shiftPeriodText">08:00 → 07:00</span>
+    <span class="strip-sep">|</span>
+    <span class="strip-label">Bars</span>
+    <span class="strip-val" id="shiftBarsCount">—</span>
+  </div>
 
   <!-- Body -->
   <div class="body-row">
