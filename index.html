@@ -684,7 +684,7 @@
           <div class="total-value" id="grandTotal">—</div>
         </div>
         <div class="clock-wrap">
-          <div class="total-label" style="margin-bottom:2px;">"Working Hour S3</div>
+          <div class="total-label" style="margin-bottom:2px;">Working Hour S3</div>
           <div class="clock-box" id="clockBox">—</div>
         </div>
       </div>
@@ -1191,11 +1191,13 @@ function renderForDate(wd){
   pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3];
   pieChart.update();
 
-  const pieItems=[
-    {label:'BWE 1',val:sBWE1,color:C.bwe1},{label:'BWE 2',val:sBWE2,color:C.bwe2},
-    {label:'CR 1', val:sCR1, color:C.cr1}, {label:'CR 2', val:sCR2, color:C.cr2},
-    {label:'CR 3', val:sCR3, color:C.cr3},
-  ];
+  const pieItems=[const pieItems = [
+  { label: 'BWE 1', val: sBWE1, color: '#6B007B' },
+  { label: 'BWE 2', val: sBWE2, color: '#F48FB1' },
+  { label: 'CR 1',  val: sCR1,  color: '#259B24' },
+  { label: 'CR 2',  val: sCR2,  color: '#72D572' },
+  { label: 'CR 3',  val: sCR3,  color: '#CDDC39' },
+];
   document.getElementById('pieLegend').innerHTML=pieItems.map(p=>`
     <div class="pie-legend-item">
       <div class="pie-legend-left">
