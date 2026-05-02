@@ -562,6 +562,7 @@
       Production Dashboard
       <small>Data 1 · Machine Production Per Hour</small>
     </div>
+  </div><!-- ✅ FIX: ปิด top-bar-left ที่นี่ -->
   <div class="controls">
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
@@ -575,7 +576,7 @@
     <button class="btn-nav" id="btnNext" disabled>&#8250;</button>
     <button class="btn-refresh" id="btnRefresh">⟳ Refresh</button>
   </div>
-</div>
+</div><!-- ✅ ปิด top-bar -->
 
 <!-- ── Page ── -->
 <div class="page">
@@ -882,8 +883,6 @@ function initPerfChart(){
 const DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 const DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
-// Col indices in MasterDowntime (0-based)
-// A=0 machine_name, B=1 start_time, C=2 end_time, D=3 duration, F=5 description, G=6 date, J=9 TypeMaster
 const DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, TYPE:9 };
 
 const EQUIP_DEF = [
@@ -905,8 +904,6 @@ const TYPE_DEF = [
 ];
 
 let dtAllRows = [];
-
-// ── Downtime Table state ──
 let dtCurrentRows = [];
 let dtActiveFilter = 'ALL';
 
@@ -990,43 +987,35 @@ async function fetchDowntime() {
     const rows = Papa.parse(text, { skipEmptyLines: true }).data;
     dtAllRows = rows.slice(1).filter(r => {
       const d = (r[DT_COL.DATE] || '').trim();
-      return d.length >= 8; // accept various date formats
+      return d.length >= 8;
     });
   } catch(e) {
     console.warn('MasterDowntime fetch failed:', e);
   }
 }
 
-/* Format datetime to HH only */
 function fmtDTTime(s) {
   s = (s || '').trim();
   if (!s) return '—';
-  // Try ISO datetime: 2026-04-02 07:00:00 or 2026-04-02T07:00:00
   let m = s.match(/(\d{4}-\d{2}-\d{2})[T ](\d{2}):\d{2}/);
   if (m) return m[2] + ':00';
-  // Try M/D/YYYY HH:MM
   m = s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):\d{2}/);
   if (m) return m[1].padStart(2, '0') + ':00';
   return s;
 }
 
-/* Normalize date from col G to YYYY-MM-DD */
 function normDateG(s) {
   s = (s || '').trim();
   if (!s) return '';
-  // Already YYYY-MM-DD
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  // M/D/YYYY or D/M/YYYY
   const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
   return s;
 }
 
-/* Render downtime table */
 function renderDTTable(filterType) {
   dtActiveFilter = filterType || dtActiveFilter;
 
-  // Update filter buttons
   document.querySelectorAll('.dt-filter-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.type === dtActiveFilter);
   });
@@ -1070,24 +1059,19 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Filter button click
 document.getElementById('dtFilterWrap').addEventListener('click', e => {
   const btn = e.target.closest('.dt-filter-btn');
   if (!btn) return;
   renderDTTable(btn.dataset.type);
 });
 
-/* Called after date changes — update radar + downtime table */
 function renderRadarForDate(wd) {
-  // Filter rows by working date (col G)
   const rows = dtAllRows.filter(r => normDateG(r[DT_COL.DATE] || '') === wd);
   dtCurrentRows = rows;
 
-  // Reset filter to ALL when date changes
   dtActiveFilter = 'ALL';
   renderDTTable('ALL');
 
-  // ── Equip radar ──
   const equipCounts = EQUIP_DEF.map(def =>
     rows.filter(r => (r[DT_COL.MACHINE] || '').trim() === def.key).length
   );
@@ -1103,7 +1087,6 @@ function renderRadarForDate(wd) {
       <span class="radar-legend-val">${equipCounts[i]}</span>
     </div>`).join('');
 
-  // ── Type radar ──
   const typeCounts = TYPE_DEF.map(def =>
     rows.filter(r => (r[DT_COL.TYPE] || '').trim() === def.key).length
   );
