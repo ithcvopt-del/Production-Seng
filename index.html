@@ -149,38 +149,6 @@
     overflow: hidden;
   }
 
-  /* ── Strip ── */
-  .strip {
-    display: flex; align-items: center; gap: 8px;
-    background: #fff; border: 1px solid var(--border);
-    border-radius: 7px; padding: 4px 12px;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-  }
-  .strip-label {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .6rem; color: var(--muted);
-    letter-spacing: 1.2px; text-transform: uppercase;
-  }
-  .strip-val {
-    font-family: 'Chakra Petch', monospace;
-    font-size: .72rem; font-weight: 700; color: var(--text);
-  }
-  .strip-sep { color: #d1d5db; font-size: .75rem; }
-  .shift-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .66rem; font-weight: 600;
-    padding: 2px 8px; border-radius: 20px; letter-spacing: .4px;
-  }
-  .shift-badge.all   { background:rgba(21,101,192,.1); color:#1565c0; border:1px solid rgba(21,101,192,.22); }
-  .shift-badge.day   { background:rgba(245,127,23,.1); color:#e65100; border:1px solid rgba(245,127,23,.28); }
-  .shift-badge.night { background:rgba(123,31,162,.1); color:#6a1b9a; border:1px solid rgba(123,31,162,.22); }
-  .shift-badge .dot  { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
-  .shift-badge.all   .dot { background:#1565c0; }
-  .shift-badge.day   .dot { background:#fb8c00; }
-  .shift-badge.night .dot { background:#7b1fa2; }
-
   /* ── Main body ── */
   .body-row {
     display: grid;
@@ -559,10 +527,9 @@
   <div class="top-bar-left">
     <div class="logo-box">DASHBOARD<span>·</span>Daily Report Production of WL 1</div>
     <div class="top-title">
-  
       <small> </small>
     </div>
-  </div><!-- ✅ FIX: ปิด top-bar-left ที่นี่ -->
+  </div>
   <div class="controls">
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
@@ -576,7 +543,7 @@
     <button class="btn-nav" id="btnNext" disabled>&#8250;</button>
     <button class="btn-refresh" id="btnRefresh">⟳ Refresh</button>
   </div>
-</div><!-- ✅ ปิด top-bar -->
+</div>
 
 <!-- ── Page ── -->
 <div class="page">
@@ -730,18 +697,17 @@ function filterByShift(rows,shift) {
   const {minH,maxH}=SHIFT_CONFIG[shift];
   return rows.filter(r=>{const sh=shiftHour(r);return sh>=minH&&sh<=maxH;});
 }
+
+/* ── แก้ไข: ลบ reference ถึง strip elements ที่ไม่มีแล้ว ── */
 function applyShiftUI(shift) {
   document.querySelectorAll('.btn-shift').forEach(btn=>{
     btn.className='btn-shift';
     if(btn.dataset.shift===shift) btn.classList.add('active-'+shift);
   });
-  const badge=document.getElementById('shiftBadge');
-  badge.className='shift-badge '+shift;
-  document.getElementById('shiftBadgeText').textContent=SHIFT_CONFIG[shift].label+' · '+SHIFT_CONFIG[shift].period;
-  document.getElementById('shiftPeriodText').textContent=SHIFT_CONFIG[shift].period;
   const bc=document.getElementById('barCard');
   bc.className='card bar-card'+(shift==='all'?'':' shift-'+shift);
 }
+
 document.querySelectorAll('.btn-shift').forEach(btn=>{
   btn.addEventListener('click',()=>{
     currentShift=btn.dataset.shift; applyShiftUI(currentShift);
@@ -1179,12 +1145,12 @@ function renderForDate(wd){
   pieChart.update();
 
   const pieItems=[
-  { label: 'BWE 1', val: sBWE1, color: '#6B007B' },
-  { label: 'BWE 2', val: sBWE2, color: '#F48FB1' },
-  { label: 'CR 1',  val: sCR1,  color: '#259B24' },
-  { label: 'CR 2',  val: sCR2,  color: '#72D572' },
-  { label: 'CR 3',  val: sCR3,  color: '#CDDC39' },
-];
+    { label: 'BWE 1', val: sBWE1, color: '#6B007B' },
+    { label: 'BWE 2', val: sBWE2, color: '#F48FB1' },
+    { label: 'CR 1',  val: sCR1,  color: '#259B24' },
+    { label: 'CR 2',  val: sCR2,  color: '#72D572' },
+    { label: 'CR 3',  val: sCR3,  color: '#CDDC39' },
+  ];
   document.getElementById('pieLegend').innerHTML=pieItems.map(p=>`
     <div class="pie-legend-item">
       <div class="pie-legend-left">
@@ -1200,7 +1166,7 @@ function renderForDate(wd){
   const th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
   document.getElementById('clockBox').textContent=`${th}:${tm}`;
 
-  document.getElementById('shiftBarsCount').textContent=`${rows.length} bars`;
+  /* ── แก้ไข: ลบบรรทัด shiftBarsCount ที่ไม่มี element แล้ว ── */
   document.getElementById('rowCount').textContent=`${rows.length} rows · ${allRows.length} total · ${availableDates.length} dates · ${toDisplay(wd)} · ${SHIFT_CONFIG[currentShift].label}`;
 
   renderRadarForDate(wd);
