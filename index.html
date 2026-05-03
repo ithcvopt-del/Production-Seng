@@ -889,7 +889,7 @@ function initBarChart(){
           },
           beginAtZero:true,
           min:0,
-          max:7000  /* ── FIX 2: Max Y = 7,000 ── */
+          max:7000
         }
       }
     }
@@ -956,7 +956,7 @@ function initPerfChart(){
           },
           beginAtZero:true,
           min:0,
-          max:160  /* ── FIX 3: Max Y = 160 ── */
+          max:160
         }
       }
     }
@@ -967,7 +967,7 @@ function initPerfChart(){
 const DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 const DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
-const DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, TYPE:9,TYPEMACHINE:11 };
+const DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, TYPE:9, TYPEMACHINE:11 };
 
 const EQUIP_DEF = [
   { label:'BW #1',   key:'Bucket Wheel #1', color:'#6B007B' },
@@ -1171,9 +1171,12 @@ function renderRadarForDate(wd) {
       <span class="radar-legend-val">${equipCounts[i]}</span>
     </div>`).join('');
 
+  /* ══ แก้ไข: ดึงข้อมูลจาก TYPEMACHINE (คอลัมน์ 11) แทน TYPE (คอลัมน์ 9) ══ */
   const typeCounts = TYPE_DEF.map(def =>
-    rows.filter(r => (r[DT_COL.TYPE] || '').trim() === def.key).length
+    rows.filter(r => (r[DT_COL.TYPEMACHINE] || '').trim() === def.key).length
   );
+  /* ══════════════════════════════════════════════════════════════════════════ */
+
   radarTypeChart.data.datasets[0].data = typeCounts;
   radarTypeChart.update();
 
@@ -1377,7 +1380,6 @@ fetchData().then(() => {
     const m = Math.floor(remaining / 60);
     const s = String(remaining % 60).padStart(2, '0');
     txtEl.textContent = `${m}:${s}`;
-    // pulse ring red in last 10 s
     progEl.style.stroke = remaining <= 10 ? '#ef5350' : '#42a5f5';
     txtEl.style.color   = remaining <= 10 ? '#ef5350' : '#42a5f5';
   }
