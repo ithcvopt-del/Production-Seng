@@ -119,6 +119,39 @@
     cursor: pointer; white-space: nowrap;
   }
   .btn-refresh:hover { background: rgba(66,165,245,.30); }
+
+  /* ── Auto-refresh countdown ── */
+  .auto-refresh-wrap {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(0,0,0,.18);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 6px;
+    padding: 4px 9px;
+    flex-shrink: 0;
+  }
+  .auto-refresh-label {
+    font-family: 'Chakra Petch', monospace;
+    font-size: .6rem; color: rgba(255,255,255,.45);
+    letter-spacing: .8px; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .countdown-ring {
+    position: relative; width: 20px; height: 20px; flex-shrink:0;
+  }
+  .countdown-ring svg { transform: rotate(-90deg); }
+  .countdown-ring circle.track {
+    fill: none; stroke: rgba(255,255,255,.12); stroke-width: 2.5;
+  }
+  .countdown-ring circle.prog {
+    fill: none; stroke: #42a5f5; stroke-width: 2.5;
+    stroke-linecap: round;
+    transition: stroke-dashoffset .9s linear;
+  }
+  .countdown-txt {
+    font-family: 'Chakra Petch', monospace;
+    font-size: .64rem; font-weight: 700;
+    color: #42a5f5; white-space: nowrap; min-width: 26px;
+  }
   .shift-group {
     display: flex; align-items: center; gap: 3px;
     background: rgba(0,0,0,.2);
@@ -591,6 +624,19 @@
     <select class="date-select" id="datePicker"><option>Loading…</option></select>
     <button class="btn-nav" id="btnNext" disabled>&#8250;</button>
     <button class="btn-refresh" id="btnRefresh">⟳ Refresh</button>
+
+    <!-- Auto-refresh countdown -->
+    <div class="auto-refresh-wrap">
+      <span class="auto-refresh-label">Auto</span>
+      <div class="countdown-ring">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <circle class="track" cx="10" cy="10" r="7.5"/>
+          <circle class="prog"  cx="10" cy="10" r="7.5" id="countdownProg"
+            stroke-dasharray="47.12" stroke-dashoffset="0"/>
+        </svg>
+      </div>
+      <span class="countdown-txt" id="countdownTxt">5:00</span>
+    </div>
   </div>
 </div>
 
@@ -1306,6 +1352,43 @@ fetchData().then(() => {
     if (wd) renderRadarForDate(wd);
   });
 });
+
+/* ══════════ AUTO-REFRESH (5 min) ══════════ */
+(function() {
+  const INTERVAL = 5 * 60; // seconds
+  const CIRCUMFERENCE = 47.12; // 2 * π * 7.5
+  let remaining = INTERVAL;
+  const progEl = document.getElementById('countdownProg');
+  const txtEl  = document.getElementById('countdownTxt');
+
+  function doRefresh() {
+    const wd = document.getElementById('datePicker').value;
+    fetchData().then(() => {
+      fetchDowntime().then(() => {
+        if (wd) renderRadarForDate(wd);
+      });
+    });
+    remaining = INTERVAL;
+  }
+
+  function updateUI() {
+    const ratio = remaining / INTERVAL;
+    progEl.style.strokeDashoffset = CIRCUMFERENCE * (1 - ratio);
+    const m = Math.floor(remaining / 60);
+    const s = String(remaining % 60).padStart(2, '0');
+    txtEl.textContent = `${m}:${s}`;
+    // pulse ring red in last 10 s
+    progEl.style.stroke = remaining <= 10 ? '#ef5350' : '#42a5f5';
+    txtEl.style.color   = remaining <= 10 ? '#ef5350' : '#42a5f5';
+  }
+
+  updateUI();
+  setInterval(() => {
+    remaining--;
+    if (remaining <= 0) doRefresh();
+    updateUI();
+  }, 1000);
+})();
 </script>
 </body>
 </html>
