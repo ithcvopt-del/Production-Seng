@@ -883,7 +883,7 @@ function initBarChart(){
           grid:{color:'#e8eaf0'},
           ticks:{
             font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},
-            color:'#374151',
+            color:'#e8eaf0',
             callback:v=>v.toLocaleString(),
             stepSize:1000
           },
@@ -950,7 +950,7 @@ function initPerfChart(){
           grid:{color:'#fce4ec'},
           ticks:{
             font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},
-            color:'#b71c1c',
+            color:'#e8eaf0',
             callback:v=>v.toLocaleString(),
             stepSize:20
           },
@@ -1355,7 +1355,7 @@ fetchData().then(() => {
 
 /* ══════════ AUTO-REFRESH (5 min) ══════════ */
 (function() {
-  const INTERVAL = 5 * 60; // seconds
+  const INTERVAL = 2 * 60; // seconds
   const CIRCUMFERENCE = 47.12; // 2 * π * 7.5
   let remaining = INTERVAL;
   const progEl = document.getElementById('countdownProg');
