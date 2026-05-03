@@ -152,7 +152,7 @@
   /* ── Main body ── */
   .body-row {
     display: grid;
-    grid-template-columns: 1fr 240px;
+    grid-template-columns: 1fr 320px;
     gap: 8px;
     flex: 1;
     min-height: 0;
@@ -189,9 +189,9 @@
   .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
   .card.dt-table-card::before { background: linear-gradient(90deg,#00695c,#26a69a); }
 
-  .bar-card  { flex: 55; min-height: 0; }
+  .bar-card  { flex: 40; min-height: 0; }
   .perf-card { flex: 25; min-height: 0; }
-  .dt-table-card { flex: 20; min-height: 0; overflow: hidden; }
+  .dt-table-card { flex: 30; min-height: 0; overflow: hidden; }
 
   .canvas-wrap {
     flex: 1;
@@ -271,8 +271,8 @@
     align-items: center;
   }
   .pie-wrap {
-    width: 110px;
-    height: 110px;
+    width: 140px;
+    height: 140px;
     flex-shrink: 0;
   }
   #pieChart { width:100% !important; height:100% !important; }
@@ -290,35 +290,41 @@
   }
   .pie-legend-item {
     display:flex; align-items:center; justify-content:space-between;
-    font-size:.64rem; color:var(--label);
-    padding:1px 0; border-bottom:1px solid #f0f2f5;
+    font-size:.68rem; color:var(--label);
+    padding:2px 0; border-bottom:1px solid #f0f2f5;
   }
   .pie-legend-left { display:flex; align-items:center; gap:4px; font-weight:600; }
   .pie-legend-dot  { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 
   .totals-row {
     display: flex;
-    gap: 8px;
-    margin-top: 4px;
-    padding-top: 4px;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 5px;
+    padding-top: 5px;
     border-top: 1px solid var(--border);
   }
   .total-box {
-    flex: 1;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 4px;
+    background: #f8f9fc;
+    border-radius: 5px;
+    border: 1px solid var(--border);
   }
   .total-label {
     font-family:'Chakra Petch',sans-serif;
-    font-size:.55rem; color:var(--muted);
-    letter-spacing:1px; text-transform:uppercase; margin-bottom:1px;
+    font-size:.6rem; color:var(--muted);
+    letter-spacing:.8px; text-transform:uppercase;
   }
   .total-value {
     font-family:'Chakra Petch',sans-serif;
-    font-size:1.15rem; font-weight:700; color:var(--blue); letter-spacing:-0.5px;
+    font-size:1.25rem; font-weight:700; color:var(--blue); letter-spacing:-0.5px;
   }
   .clock-box {
     font-family:'Chakra Petch',monospace;
-    font-size:1.15rem; font-weight:700; color:var(--blue);
+    font-size:1.25rem; font-weight:700; color:#00695c;
     letter-spacing:-0.5px; line-height:1;
   }
 
@@ -354,7 +360,7 @@
   }
   .radar-wrap {
     flex-shrink: 0;
-    width: 130px;
+    width: 160px;
     height: 100%;
     min-height: 0;
     position: relative;
@@ -678,11 +684,11 @@
             <div class="pie-legend" id="pieLegend"></div>
             <div class="totals-row">
               <div class="total-box">
-                <div class="total-label">Total</div>
+                <div class="total-label">Total Production</div>
                 <div class="total-value" id="grandTotal">—</div>
               </div>
               <div class="total-box">
-                <div class="total-label">Hour S3</div>
+                <div class="total-label">Working Hour S3</div>
                 <div class="clock-box" id="clockBox">—</div>
               </div>
             </div>
