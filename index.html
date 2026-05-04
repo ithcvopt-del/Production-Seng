@@ -369,7 +369,7 @@
     flex: 1;
     min-height: 0;
     overflow: hidden;
-    padding: 6px 12px 8px;
+    padding: 6px 10px 8px;
     display: flex;
     flex-direction: column;
   }
@@ -381,22 +381,23 @@
   }
   .radar-title {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: .75rem; font-weight: 700;
+    font-size: .78rem; font-weight: 700;
     color: #0d47a1; text-align: center;
     margin-bottom: 2px;
     flex-shrink: 0;
   }
   .radar-body {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     align-items: center;
     flex: 1;
     min-height: 0;
     overflow: hidden;
   }
+  /* Radar chart takes more space — legend pushed right */
   .radar-wrap {
     flex-shrink: 0;
-    width: 165px;
+    width: 195px;
     height: 100%;
     min-height: 0;
     position: relative;
@@ -409,43 +410,47 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
     min-width: 0;
     overflow: hidden;
+    padding-left: 4px;
   }
   .radar-legend-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: .68rem;
+    font-size: .73rem;
     color: #1a1f2e;
-    font-weight: 600;
-    padding: 2px 0;
+    font-weight: 700;
+    padding: 3px 0;
     border-bottom: 1px solid #e8eaf0;
   }
   .radar-legend-left {
-    display: flex; align-items: center; gap: 4px; font-weight: 700; color: #1a237e;
+    display: flex; align-items: center; gap: 5px; font-weight: 800; color: #0d47a1;
     overflow: hidden;
   }
   .radar-legend-left span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: .73rem;
   }
   .radar-legend-dot {
-    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    box-shadow: 0 0 0 1.5px rgba(0,0,0,.12);
   }
   .radar-legend-val {
     font-family: 'Chakra Petch', monospace;
-    font-size: .72rem; font-weight: 800; color: #0d47a1;
+    font-size: .78rem; font-weight: 800; color: #0d47a1;
     min-width: 18px; text-align: right;
   }
   .radar-total {
     font-family: 'Chakra Petch', monospace;
-    font-size: .65rem; color: #37474f; font-weight: 700;
+    font-size: .7rem; color: #1a237e; font-weight: 800;
     text-align: center;
-    margin-top: 2px;
+    margin-top: 4px;
     flex-shrink: 0;
+    letter-spacing: .3px;
   }
 
   /* ── Footer ── */
@@ -1016,17 +1021,19 @@ function radarOptions(size) {
       r: {
         beginAtZero: true,
         ticks: {
-          font: { family: "'Chakra Petch',monospace", size: 8, weight:'600' },
-          color: '#546e7a',
-          backdropColor: 'transparent',
+          font: { family: "'Chakra Petch',monospace", size: 9, weight:'700' },
+          color: '#37474f',
+          backdropColor: 'rgba(255,255,255,0.75)',
+          backdropPadding: 2,
           maxTicksLimit: 4,
         },
         pointLabels: {
-          font: { family: "'Chakra Petch',monospace", size: size || 9, weight: '700' },
-          color: '#1a237e',
+          font: { family: "'Chakra Petch',monospace", size: (size || 9) + 2, weight: '800' },
+          color: '#0d47a1',
+          padding: 6,
         },
-        grid: { color: 'rgba(0,0,0,.12)' },
-        angleLines: { color: 'rgba(0,0,0,.15)' },
+        grid: { color: 'rgba(0,0,0,.15)' },
+        angleLines: { color: 'rgba(0,0,0,.2)' },
       }
     }
   };
