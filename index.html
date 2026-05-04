@@ -183,7 +183,6 @@
   }
 
   /* ── Main body ── */
-  /* [FIX 2] Right column wider: 360px → was 320px */
   .body-row {
     display: grid;
     grid-template-columns: 1fr 360px;
@@ -223,7 +222,6 @@
   .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
   .card.dt-table-card::before { background: linear-gradient(90deg,#00695c,#26a69a); }
 
-  /* [FIX 3] Bar chart smaller (flex:30 → was 40), DT table bigger (flex:38 → was 30) */
   .bar-card  { flex: 30; min-height: 0; }
   .perf-card { flex: 22; min-height: 0; }
   .dt-table-card { flex: 38; min-height: 0; overflow: hidden; }
@@ -285,7 +283,7 @@
     overflow: hidden;
   }
 
-  /* Pie card: compact, fixed size */
+  /* Pie card */
   .pie-card {
     display: flex;
     flex-direction: column;
@@ -299,7 +297,6 @@
     margin-bottom:4px; flex-shrink:0;
   }
 
-  /* Two-column layout: pie on left, legend+totals on right */
   .pie-body {
     display: flex;
     gap: 10px;
@@ -406,7 +403,6 @@
     min-height: 0;
     overflow: hidden;
   }
-  /* Radar chart takes more space — legend pushed right */
   .radar-wrap {
     flex-shrink: 0;
     width: 195px;
@@ -516,13 +512,13 @@
   }
   .dt-filter-btn:hover { background: #e3f2fd; color: #1565c0; border-color: #90caf9; }
   .dt-filter-btn.active { background: #1565c0; color: #fff; border-color: #1565c0; }
-  .dt-filter-btn.typemachine-OPT.active     { background: #5677fc; border-color: #5677fc; }
-  .dt-filter-btn.typemachine-EE.active      { background: #26a69a; border-color: #26a69a; }
-  .dt-filter-btn.typemachine-ME.active      { background: #ff6f00; border-color: #ff6f00; }
-  .dt-filter-btn.typemachine-Plan.active    { background: #00bcd4; border-color: #00bcd4; }
-  .dt-filter-btn.typemachine-Uncontrol.active { background: #e91e63; border-color: #e91e63; }
-  .dt-filter-btn.typemachine-STB.active     { background: #78909c; border-color: #78909c; }
-  .dt-filter-btn.typemachine-Other.active   { background: #8d6e63; border-color: #8d6e63; }
+  .dt-filter-btn.type-OPT.active       { background: #5677fc; border-color: #5677fc; }
+  .dt-filter-btn.type-EE.active        { background: #26a69a; border-color: #26a69a; }
+  .dt-filter-btn.type-ME.active        { background: #ff6f00; border-color: #ff6f00; }
+  .dt-filter-btn.type-Plan.active      { background: #00bcd4; border-color: #00bcd4; }
+  .dt-filter-btn.type-Uncontrol.active { background: #e91e63; border-color: #e91e63; }
+  .dt-filter-btn.type-STB.active       { background: #78909c; border-color: #78909c; }
+  .dt-filter-btn.type-Other.active     { background: #8d6e63; border-color: #8d6e63; }
 
   .dt-table-wrap {
     flex: 1;
@@ -751,17 +747,17 @@
             <div class="pie-legend" id="pieLegend"></div>
             <div class="totals-row">
               <div class="total-box">
-  <div class="total-label">total production</div>
-  <div class="total-value" id="grandTotal">—</div>
-</div>
-<div class="total-box">
-  <div class="total-label">working hour s3</div>
-  <div class="clock-box" id="clockBox">—</div>
-</div>
-<div class="total-box productivity-card">
-  <div class="total-label">productivity</div>
-  <div class="productivity-box" id="productivityBox">—</div>
-</div>
+                <div class="total-label">total production</div>
+                <div class="total-value" id="grandTotal">—</div>
+              </div>
+              <div class="total-box">
+                <div class="total-label">working hour s3</div>
+                <div class="clock-box" id="clockBox">—</div>
+              </div>
+              <div class="total-box productivity-card">
+                <div class="total-label">productivity</div>
+                <div class="productivity-box" id="productivityBox">—</div>
+              </div>
             </div>
           </div>
         </div>
@@ -812,7 +808,6 @@ const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-1
 const CSV_URLS = [ BASE + '?gid=1971585139&single=true&output=csv' ];
 const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11, VALUE:23 };
 
-/* [FIX 1] Pie chart colors to match machine color scheme */
 const C = {
   bwe1: '#6B007B',
   bwe2: '#F48FB1',
@@ -934,7 +929,6 @@ function initPieChart(){
       labels:['BWE 1','BWE 2','CR 1','CR 2','CR 3'],
       datasets:[{
         data:[0,0,0,0,0],
-        /* [FIX 1] Use machine color scheme */
         backgroundColor:[C.bwe1, C.bwe2, C.cr1, C.cr2, C.cr3],
         borderColor:'#fff',
         borderWidth:2,
@@ -1117,13 +1111,28 @@ async function fetchDowntime() {
   }
 }
 
+/* ══════════ FIX: fmtDTTime ══════════
+   แสดงเฉพาะเวลา HH:MM จากทุก format ที่อาจมาจาก Google Sheet
+   รองรับ: "2026-05-04 7:00:00", "2026-05-04T07:00:00",
+           "4/5/2026 7:00:00", "4/5/2026, 7:00 AM",
+           "07:00", "7:00"
+*/
 function fmtDTTime(s) {
   s = (s || '').trim();
   if (!s) return '—';
-  let m = s.match(/(\d{4}-\d{2}-\d{2})[T ](\d{2}):\d{2}/);
-  if (m) return m[2] + ':00';
-  m = s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):\d{2}/);
-  if (m) return m[1].padStart(2, '0') + ':00';
+
+  // รูปแบบ ISO / datetime: 2026-05-04 7:00:00 หรือ 2026-05-04T07:00:00
+  let m = s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);
+  if (m) return m[1].padStart(2, '0') + ':' + m[2];
+
+  // รูปแบบ dd/mm/yyyy หรือ mm/dd/yyyy: 4/5/2026 7:00:00 หรือ 4/5/2026, 7:00 AM
+  m = s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):(\d{2})/);
+  if (m) return m[1].padStart(2, '0') + ':' + m[2];
+
+  // รูปแบบ HH:MM:SS หรือ H:MM:SS
+  m = s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+  if (m) return m[1].padStart(2, '0') + ':' + m[2];
+
   return s;
 }
 
@@ -1161,8 +1170,8 @@ function renderDTTable(filterType) {
 
   tbody.innerHTML = rows.map(r => {
     const machine  = (r[DT_COL.MACHINE]  || '').trim();
-    const startT   = fmtDTTime(r[DT_COL.START]  || '');
-    const endT     = fmtDTTime(r[DT_COL.END]    || '');
+    const startT   = fmtDTTime(r[DT_COL.START] || '');
+    const endT     = fmtDTTime(r[DT_COL.END]   || '');
     const desc     = (r[DT_COL.DESC]     || '').trim() || '—';
     const typeRaw  = (r[DT_COL.TYPE]     || '').trim();
     const duration = (r[DT_COL.DURATION] || '').trim() || '—';
@@ -1315,7 +1324,6 @@ function renderForDate(wd){
   pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3];
   pieChart.update();
 
-  /* [FIX 1] Pie legend uses correct machine colors */
   const pieItems=[
     { label: 'BWE 1', val: sBWE1, color: C.bwe1 },
     { label: 'BWE 2', val: sBWE2, color: C.bwe2 },
@@ -1338,7 +1346,6 @@ function renderForDate(wd){
   const th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
   document.getElementById('clockBox').textContent=`${th}:${tm}`;
 
-  /* Productivity = Total Production ÷ Working Hours (decimal) */
   const totalHoursDecimal = totalMinutes / 60;
   const productivity = totalHoursDecimal > 0 ? Math.round(grand / totalHoursDecimal) : 0;
   document.getElementById('productivityBox').textContent = productivity > 0 ? productivity.toLocaleString() : '—';
@@ -1407,7 +1414,6 @@ fetchData().then(() => {
   const progEl = document.getElementById('countdownProg');
   const txtEl  = document.getElementById('countdownTxt');
 
-  /* [FIX 4] Track the last date-advance so we only trigger once per day */
   let lastAdvanceDate = null;
 
   function doRefresh() {
@@ -1420,33 +1426,26 @@ fetchData().then(() => {
     remaining = INTERVAL;
   }
 
-  /* [FIX 4] Advance the date picker to today's working date and refresh */
   function advanceToToday() {
     const now = new Date();
-    /* Working date: if hour < 8 use yesterday's date */
     let target = new Date(now);
     if (now.getHours() < 8) target.setDate(target.getDate() - 1);
     const targetYMD = toYMD(target);
 
     const sel = document.getElementById('datePicker');
-    /* Only switch if the available date exists and is newer than current */
     if (availableDates.includes(targetYMD) && sel.value !== targetYMD) {
       sel.value = targetYMD;
       renderForDate(targetYMD);
     } else {
-      /* Data may not have arrived yet — just do a full refresh */
       doRefresh();
     }
   }
 
-  /* [FIX 4] Check if we should auto-advance (07:10 AM daily) */
   function checkDateAdvance() {
     const now = new Date();
     const h = now.getHours();
     const m = now.getMinutes();
-    /* Trigger window: 07:10:00 – 07:10:59 */
     if (h === 7 && m === 10) {
-      /* Build a key for today so we only fire once */
       const todayKey = toYMD(now);
       if (lastAdvanceDate !== todayKey) {
         lastAdvanceDate = todayKey;
@@ -1469,7 +1468,7 @@ fetchData().then(() => {
   setInterval(() => {
     remaining--;
     if (remaining <= 0) doRefresh();
-    checkDateAdvance();  /* [FIX 4] checked every second */
+    checkDateAdvance();
     updateUI();
   }, 1000);
 })();
