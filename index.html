@@ -183,9 +183,10 @@
   }
 
   /* ── Main body ── */
+  /* [FIX 2] Right column wider: 360px → was 320px */
   .body-row {
     display: grid;
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 1fr 360px;
     gap: 8px;
     flex: 1;
     min-height: 0;
@@ -222,9 +223,10 @@
   .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
   .card.dt-table-card::before { background: linear-gradient(90deg,#00695c,#26a69a); }
 
-  .bar-card  { flex: 40; min-height: 0; }
-  .perf-card { flex: 25; min-height: 0; }
-  .dt-table-card { flex: 30; min-height: 0; overflow: hidden; }
+  /* [FIX 3] Bar chart smaller (flex:30 → was 40), DT table bigger (flex:38 → was 30) */
+  .bar-card  { flex: 30; min-height: 0; }
+  .perf-card { flex: 22; min-height: 0; }
+  .dt-table-card { flex: 38; min-height: 0; overflow: hidden; }
 
   .canvas-wrap {
     flex: 1;
@@ -274,13 +276,13 @@
   @keyframes spin { to{ transform:rotate(360deg); } }
   .overlay-msg { font-family:'Chakra Petch',sans-serif; font-size:.65rem; color:var(--muted); letter-spacing:1px; }
 
-  /* ── Right column: NO scroll, fit everything ── */
+  /* ── Right column ── */
   .right-col {
     display: flex;
     flex-direction: column;
     gap: 5px;
     min-height: 0;
-    overflow: hidden; /* No scrolling — fit all 3 panels */
+    overflow: hidden;
   }
 
   /* Pie card: compact, fixed size */
@@ -288,7 +290,7 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    padding: 6px 10px 6px;
+    padding: 6px 12px 8px;
   }
   .pie-title {
     font-family:'Chakra Petch',sans-serif;
@@ -300,12 +302,12 @@
   /* Two-column layout: pie on left, legend+totals on right */
   .pie-body {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     align-items: center;
   }
   .pie-wrap {
-    width: 140px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
     flex-shrink: 0;
   }
   #pieChart { width:100% !important; height:100% !important; }
@@ -362,12 +364,12 @@
     letter-spacing:-0.5px; line-height:1;
   }
 
-  /* ── Radar Cards: flex:1 to share remaining space equally ── */
+  /* ── Radar Cards ── */
   .radar-card {
     flex: 1;
     min-height: 0;
     overflow: hidden;
-    padding: 5px 8px 6px;
+    padding: 6px 12px 8px;
     display: flex;
     flex-direction: column;
   }
@@ -386,7 +388,7 @@
   }
   .radar-body {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
     flex: 1;
     min-height: 0;
@@ -394,7 +396,7 @@
   }
   .radar-wrap {
     flex-shrink: 0;
-    width: 160px;
+    width: 165px;
     height: 100%;
     min-height: 0;
     position: relative;
@@ -718,7 +720,7 @@
       </div>
     </div>
 
-    <!-- Right column: no scroll, 3 panels stacked -->
+    <!-- Right column -->
     <div class="right-col">
 
       <!-- Pie -->
@@ -789,7 +791,14 @@ const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-1
 const CSV_URLS = [ BASE + '?gid=1971585139&single=true&output=csv' ];
 const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11, VALUE:23 };
 
-const C = { bwe1:'#7b1fa2', bwe2:'#f48fb1', cr1:'#66bb6a', cr2:'#2e7d32', cr3:'#c8e6c9' };
+/* [FIX 1] Pie chart colors to match machine color scheme */
+const C = {
+  bwe1: '#6B007B',
+  bwe2: '#F48FB1',
+  cr1:  '#2baf2b',
+  cr2:  '#72D572',
+  cr3:  '#CDDC39'
+};
 
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 let radarEquipChart=null, radarTypeChart=null;
@@ -902,7 +911,14 @@ function initPieChart(){
     type:'pie',
     data:{
       labels:['BWE 1','BWE 2','CR 1','CR 2','CR 3'],
-      datasets:[{data:[0,0,0,0,0],backgroundColor:[C.bwe1,C.bwe2,C.cr1,C.cr2,C.cr3],borderColor:'#fff',borderWidth:2,hoverOffset:8}]
+      datasets:[{
+        data:[0,0,0,0,0],
+        /* [FIX 1] Use machine color scheme */
+        backgroundColor:[C.bwe1, C.bwe2, C.cr1, C.cr2, C.cr3],
+        borderColor:'#fff',
+        borderWidth:2,
+        hoverOffset:8
+      }]
     },
     options:{
       responsive:true,maintainAspectRatio:true,
@@ -1171,11 +1187,9 @@ function renderRadarForDate(wd) {
       <span class="radar-legend-val">${equipCounts[i]}</span>
     </div>`).join('');
 
-  /* ══ แก้ไข: ดึงข้อมูลจาก TYPEMACHINE (คอลัมน์ 11) แทน TYPE (คอลัมน์ 9) ══ */
   const typeCounts = TYPE_DEF.map(def =>
     rows.filter(r => (r[DT_COL.TYPEMACHINE] || '').trim() === def.key).length
   );
-  /* ══════════════════════════════════════════════════════════════════════════ */
 
   radarTypeChart.data.datasets[0].data = typeCounts;
   radarTypeChart.update();
@@ -1278,12 +1292,13 @@ function renderForDate(wd){
   pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3];
   pieChart.update();
 
+  /* [FIX 1] Pie legend uses correct machine colors */
   const pieItems=[
-    { label: 'BWE 1', val: sBWE1, color: '#6B007B' },
-    { label: 'BWE 2', val: sBWE2, color: '#F48FB1' },
-    { label: 'CR 1',  val: sCR1,  color: '#2baf2b' },
-    { label: 'CR 2',  val: sCR2,  color: '#72D572' },
-    { label: 'CR 3',  val: sCR3,  color: '#CDDC39' },
+    { label: 'BWE 1', val: sBWE1, color: C.bwe1 },
+    { label: 'BWE 2', val: sBWE2, color: C.bwe2 },
+    { label: 'CR 1',  val: sCR1,  color: C.cr1  },
+    { label: 'CR 2',  val: sCR2,  color: C.cr2  },
+    { label: 'CR 3',  val: sCR3,  color: C.cr3  },
   ];
   document.getElementById('pieLegend').innerHTML=pieItems.map(p=>`
     <div class="pie-legend-item">
@@ -1356,13 +1371,16 @@ fetchData().then(() => {
   });
 });
 
-/* ══════════ AUTO-REFRESH (5 min) ══════════ */
+/* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10 ══════════ */
 (function() {
   const INTERVAL = 2 * 60; // seconds
-  const CIRCUMFERENCE = 47.12; // 2 * π * 7.5
+  const CIRCUMFERENCE = 47.12;
   let remaining = INTERVAL;
   const progEl = document.getElementById('countdownProg');
   const txtEl  = document.getElementById('countdownTxt');
+
+  /* [FIX 4] Track the last date-advance so we only trigger once per day */
+  let lastAdvanceDate = null;
 
   function doRefresh() {
     const wd = document.getElementById('datePicker').value;
@@ -1374,12 +1392,47 @@ fetchData().then(() => {
     remaining = INTERVAL;
   }
 
+  /* [FIX 4] Advance the date picker to today's working date and refresh */
+  function advanceToToday() {
+    const now = new Date();
+    /* Working date: if hour < 8 use yesterday's date */
+    let target = new Date(now);
+    if (now.getHours() < 8) target.setDate(target.getDate() - 1);
+    const targetYMD = toYMD(target);
+
+    const sel = document.getElementById('datePicker');
+    /* Only switch if the available date exists and is newer than current */
+    if (availableDates.includes(targetYMD) && sel.value !== targetYMD) {
+      sel.value = targetYMD;
+      renderForDate(targetYMD);
+    } else {
+      /* Data may not have arrived yet — just do a full refresh */
+      doRefresh();
+    }
+  }
+
+  /* [FIX 4] Check if we should auto-advance (07:10 AM daily) */
+  function checkDateAdvance() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    /* Trigger window: 07:10:00 – 07:10:59 */
+    if (h === 7 && m === 10) {
+      /* Build a key for today so we only fire once */
+      const todayKey = toYMD(now);
+      if (lastAdvanceDate !== todayKey) {
+        lastAdvanceDate = todayKey;
+        advanceToToday();
+      }
+    }
+  }
+
   function updateUI() {
     const ratio = remaining / INTERVAL;
     progEl.style.strokeDashoffset = CIRCUMFERENCE * (1 - ratio);
-    const m = Math.floor(remaining / 60);
-    const s = String(remaining % 60).padStart(2, '0');
-    txtEl.textContent = `${m}:${s}`;
+    const mins = Math.floor(remaining / 60);
+    const secs = String(remaining % 60).padStart(2, '0');
+    txtEl.textContent = `${mins}:${secs}`;
     progEl.style.stroke = remaining <= 10 ? '#ef5350' : '#42a5f5';
     txtEl.style.color   = remaining <= 10 ? '#ef5350' : '#42a5f5';
   }
@@ -1388,6 +1441,7 @@ fetchData().then(() => {
   setInterval(() => {
     remaining--;
     if (remaining <= 0) doRefresh();
+    checkDateAdvance();  /* [FIX 4] checked every second */
     updateUI();
   }, 1000);
 })();
