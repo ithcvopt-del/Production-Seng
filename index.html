@@ -356,12 +356,24 @@
   }
   .total-value {
     font-family:'Chakra Petch',sans-serif;
-    font-size:1.3rem; font-weight:800; color:#0d47a1; letter-spacing:-0.5px;
+    font-size:1.05rem; font-weight:800; color:#0d47a1; letter-spacing:-0.5px;
   }
   .clock-box {
     font-family:'Chakra Petch',monospace;
-    font-size:1.3rem; font-weight:800; color:#004d40;
+    font-size:1.05rem; font-weight:800; color:#004d40;
     letter-spacing:-0.5px; line-height:1;
+  }
+  .productivity-box {
+    font-family:'Chakra Petch',monospace;
+    font-size:1.05rem; font-weight:800; color:#b45309;
+    letter-spacing:-0.5px; line-height:1;
+  }
+  .total-box.productivity-card {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border-color: #fcd34d;
+  }
+  .total-box.productivity-card .total-label {
+    color: #92400e;
   }
 
   /* ── Radar Cards ── */
@@ -676,7 +688,7 @@
 
       <!-- Performance line chart -->
       <div class="card perf-card" id="perfCard">
-        <div class="card-head red">Performance Main Line S3</div>
+        <div class="card-head red">Performance Main Line</div>
         <div class="canvas-wrap">
           <canvas id="perfChart"></canvas>
         </div>
@@ -690,7 +702,7 @@
 
       <!-- ── Downtime Table ── -->
       <div class="card dt-table-card">
-        <div class="card-head teal">Downtime Detail</div>
+        <div class="card-head teal">Downtime Log</div>
         <div class="dt-table-header">
           <span class="dt-count-badge" id="dtCountBadge">0 records</span>
           <div class="dt-filter-wrap" id="dtFilterWrap">
@@ -745,6 +757,10 @@
               <div class="total-box">
                 <div class="total-label">Working Hour S3</div>
                 <div class="clock-box" id="clockBox">—</div>
+              </div>
+              <div class="total-box productivity-card">
+                <div class="total-label">Productivity</div>
+                <div class="productivity-box" id="productivityBox">—</div>
               </div>
             </div>
           </div>
@@ -991,8 +1007,8 @@ const DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 const DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, TYPE:9, TYPEMACHINE:11 };
 
 const EQUIP_DEF = [
-  { label:'BWE #1',   key:'Bucket Wheel #1', color:'#6B007B' },
-  { label:'BWE #2',   key:'Bucket Wheel #2', color:'#F48FB1' },
+  { label:'BW #1',   key:'Bucket Wheel #1', color:'#6B007B' },
+  { label:'BW #2',   key:'Bucket Wheel #2', color:'#F48FB1' },
   { label:'CR #1',   key:'Crusher #1',      color:'#2baf2b' },
   { label:'CR #2',   key:'Crusher #2',      color:'#72D572' },
   { label:'CR #3',   key:'Crusher #3',      color:'#CDDC39' },
@@ -1321,6 +1337,11 @@ function renderForDate(wd){
   const totalMinutes=rows.reduce((s,r)=>s+parseHHMM(r[COL.HOUR_S3]),0);
   const th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
   document.getElementById('clockBox').textContent=`${th}:${tm}`;
+
+  /* Productivity = Total Production ÷ Working Hours (decimal) */
+  const totalHoursDecimal = totalMinutes / 60;
+  const productivity = totalHoursDecimal > 0 ? Math.round(grand / totalHoursDecimal) : 0;
+  document.getElementById('productivityBox').textContent = productivity > 0 ? productivity.toLocaleString() : '—';
 
   document.getElementById('rowCount').textContent=`${rows.length} rows · ${allRows.length} total · ${availableDates.length} dates · ${toDisplay(wd)} · ${SHIFT_CONFIG[currentShift].label}`;
 
