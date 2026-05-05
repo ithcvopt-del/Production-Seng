@@ -1448,34 +1448,29 @@ fetchData().then(() => {
   let lastAdvanceDate = null;
 
   function doRefresh() {
-    // ดึงเวลาปัจจุบัน
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-
-    // ตรวจสอบว่าอยู่ในช่วง 07:10 AM ถึง 07:20 AM หรือไม่
-    if (hours === 7 && minutes >= 10 && minutes <= 20) {
-      const yyyy = now.getFullYear();
-      const mm = String(now.getMonth() + 1).padStart(2, '0'); // เติม 0 นำหน้าเดือน
-      const dd = String(now.getDate()).padStart(2, '0');     // เติม 0 นำหน้าวัน
-      const todayStr = `${yyyy}-${mm}-${dd}`;
-
-      // อัปเดตค่าวันที่ใน input element
-      document.getElementById('datePicker').value = todayStr;
-    }
-
     const wd = document.getElementById('datePicker').value;
-    
-    // ดึงข้อมูล
     fetchData().then(() => {
       fetchDowntime().then(() => {
         if (wd) renderRadarForDate(wd);
       });
     });
-    
     remaining = INTERVAL;
   }
-})();
+
+  function advanceToToday() {
+    const now = new Date();
+    let target = new Date(now);
+    if (now.getHours() < 8) target.setDate(target.getDate() - 1);
+    const targetYMD = toYMD(target);
+
+    const sel = document.getElementById('datePicker');
+    if (availableDates.includes(targetYMD) && sel.value !== targetYMD) {
+      sel.value = targetYMD;
+      renderForDate(targetYMD);
+    } else {
+      doRefresh();
+    }
+  }
 
   function advanceToToday() {
     const now = new Date();
