@@ -588,6 +588,30 @@
     color: #b71c1c; text-align: right;
   }
 
+  /* ── FIX 1: Unknown End Time indicator ── */
+  .end-unknown {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Chakra Petch', monospace;
+    font-size: .82rem;
+    font-weight: 900;
+    color: #ffffff;
+    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+    border: 1.5px solid #ef9a9a;
+    border-radius: 5px;
+    padding: 1px 7px;
+    letter-spacing: 1px;
+    box-shadow: 0 1px 6px rgba(198,40,40,.35), inset 0 1px 0 rgba(255,255,255,.15);
+    animation: pulse-red 2s ease-in-out infinite;
+    cursor: default;
+    user-select: none;
+  }
+  @keyframes pulse-red {
+    0%, 100% { box-shadow: 0 1px 6px rgba(198,40,40,.35), inset 0 1px 0 rgba(255,255,255,.15); }
+    50%       { box-shadow: 0 2px 12px rgba(198,40,40,.65), inset 0 1px 0 rgba(255,255,255,.15); }
+  }
+
   /* Type badges */
   .type-badge {
     display: inline-block;
@@ -1111,15 +1135,13 @@ async function fetchDowntime() {
   }
 }
 
-/* ══════════ FIX: fmtDTTime ══════════
+/* ══════════ FIX 1: fmtDTTime - returns '' for empty/missing end time ══════════
    แสดงเฉพาะเวลา HH:MM จากทุก format ที่อาจมาจาก Google Sheet
-   รองรับ: "2026-05-04 7:00:00", "2026-05-04T07:00:00",
-           "4/5/2026 7:00:00", "4/5/2026, 7:00 AM",
-           "07:00", "7:00"
+   คืน '' ถ้าไม่มีข้อมูล (สำหรับ End Time ที่ยังไม่มี)
 */
 function fmtDTTime(s) {
   s = (s || '').trim();
-  if (!s) return '—';
+  if (!s) return '';
 
   // รูปแบบ ISO / datetime: 2026-05-04 7:00:00 หรือ 2026-05-04T07:00:00
   let m = s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);
@@ -1145,6 +1167,39 @@ function normDateG(s) {
   return s;
 }
 
+/* ══════════ FIX 2: DT Shift filter using Start Time ══════════
+   Day Shift   : 07:00 – 18:59
+   Night Shift : 19:00 – 06:59 (next day)
+*/
+function getDTShiftHour(row) {
+  const startRaw = (row[DT_COL.START] || '').trim();
+  if (!startRaw) return -1;
+
+  // แปลง Start Time เป็น hour (0-23)
+  let m = startRaw.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):\d{2}/);
+  if (m) return parseInt(m[1]);
+  m = startRaw.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):\d{2}/);
+  if (m) return parseInt(m[1]);
+  m = startRaw.match(/^(\d{1,2}):\d{2}/);
+  if (m) return parseInt(m[1]);
+  return -1;
+}
+
+function filterDTByShift(rows, shift) {
+  if (shift === 'all') return rows;
+  return rows.filter(r => {
+    const h = getDTShiftHour(r);
+    if (h < 0) return shift === 'all';
+    if (shift === 'day') {
+      // Day: 07:00 – 18:59
+      return h >= 7 && h <= 18;
+    } else {
+      // Night: 19:00 – 06:59
+      return h >= 19 || h <= 6;
+    }
+  });
+}
+
 function renderDTTable(filterType) {
   dtActiveFilter = filterType || dtActiveFilter;
 
@@ -1152,7 +1207,9 @@ function renderDTTable(filterType) {
     btn.classList.toggle('active', btn.dataset.type === dtActiveFilter);
   });
 
-  let rows = dtCurrentRows;
+  // FIX 2: กรองตาม Shift ก่อน แล้วค่อยกรองตาม Type
+  let rows = filterDTByShift(dtCurrentRows, currentShift);
+
   if (dtActiveFilter !== 'ALL') {
     rows = rows.filter(r => {
       const t = (r[DT_COL.TYPE] || '').trim().toUpperCase();
@@ -1170,16 +1227,24 @@ function renderDTTable(filterType) {
 
   tbody.innerHTML = rows.map(r => {
     const machine  = (r[DT_COL.MACHINE]  || '').trim();
-    const startT   = fmtDTTime(r[DT_COL.START] || '');
-    const endT     = fmtDTTime(r[DT_COL.END]   || '');
+    const startRaw = (r[DT_COL.START]    || '').trim();
+    const endRaw   = (r[DT_COL.END]      || '').trim();
+    const startT   = fmtDTTime(startRaw);
+    const endT     = fmtDTTime(endRaw);
     const desc     = (r[DT_COL.DESC]     || '').trim() || '—';
     const typeRaw  = (r[DT_COL.TYPE]     || '').trim();
     const duration = (r[DT_COL.DURATION] || '').trim() || '—';
     const typeClass = 'type-' + typeRaw;
+
+    // FIX 1: ถ้า End Time ว่างหรือไม่มีข้อมูล → แสดง ? สีแดง
+    const endHtml = endT
+      ? `<span class="time-cell">${escHtml(endT)}</span>`
+      : `<span class="end-unknown" title="End time not recorded yet">?</span>`;
+
     return `<tr>
       <td class="machine-cell">${escHtml(machine)}</td>
-      <td class="time-cell">${escHtml(startT)}</td>
-      <td class="time-cell">${escHtml(endT)}</td>
+      <td class="time-cell">${escHtml(startT || '—')}</td>
+      <td>${endHtml}</td>
       <td class="desc-cell">${escHtml(desc)}</td>
       <td><span class="type-badge ${typeClass}">${escHtml(typeRaw) || '—'}</span></td>
       <td class="dur-cell">${escHtml(duration)}</td>
@@ -1204,6 +1269,7 @@ function renderRadarForDate(wd) {
   dtActiveFilter = 'ALL';
   renderDTTable('ALL');
 
+  // Radar: ใช้ข้อมูลทั้งหมด (ไม่กรอง shift) เพื่อให้ radar แสดงข้อมูลรวม
   const equipCounts = EQUIP_DEF.map(def =>
     rows.filter(r => (r[DT_COL.MACHINE] || '').trim() === def.key).length
   );
@@ -1267,11 +1333,18 @@ function parseDT(s){
 }
 function fmtTime(s){const d=parseDT(s);if(!d||isNaN(d))return s;return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;}
 function toYMD(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+
+/* ══════════ FIX 3: getWorkingDate - shift starts at 07:00, not midnight ══════════
+   วันทำงาน (working date) คือ:
+   - ถ้าเวลา 07:00 – 23:59 → วันที่นั้น
+   - ถ้าเวลา 00:00 – 06:59 → วันที่ก่อนหน้า (ยังอยู่ใน shift ของวันก่อน)
+*/
 function getWorkingDate(dtStr){
   const d=parseDT(dtStr);if(!d||isNaN(d))return null;
-  if(d.getHours()<8){const p=new Date(d);p.setDate(p.getDate()-1);return toYMD(p);}
+  if(d.getHours()<7){const p=new Date(d);p.setDate(p.getDate()-1);return toYMD(p);}
   return toYMD(d);
 }
+
 function toDisplay(s){const p=s.split('-');return p.length===3?`${p[2]}-${p[1]}-${p[0]}`:s;}
 
 function processCSV(text){
@@ -1353,6 +1426,10 @@ function renderForDate(wd){
   document.getElementById('rowCount').textContent=`${rows.length} rows · ${allRows.length} total · ${availableDates.length} dates · ${toDisplay(wd)} · ${SHIFT_CONFIG[currentShift].label}`;
 
   renderRadarForDate(wd);
+
+  // FIX 2: re-render DT table when shift changes
+  renderDTTable(dtActiveFilter);
+
   hideOverlay(); syncNav();
 }
 
@@ -1406,7 +1483,12 @@ fetchData().then(() => {
   });
 });
 
-/* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10 ══════════ */
+/* ══════════ AUTO-REFRESH (2 min) + FIX 3: DATE AUTO-ADVANCE at 07:10 ══════════
+   Logic การเปลี่ยนวันที่:
+   - Shift เริ่มที่ 07:00 ของทุกวัน
+   - ถ้าตอนนี้คือ 00:00–06:59 → working date ยังเป็นวันก่อนหน้า
+   - เปลี่ยนวันที่ที่ dashboard แสดงเมื่อถึง 07:10 เท่านั้น
+*/
 (function() {
   const INTERVAL = 2 * 60; // seconds
   const CIRCUMFERENCE = 47.12;
@@ -1414,7 +1496,8 @@ fetchData().then(() => {
   const progEl = document.getElementById('countdownProg');
   const txtEl  = document.getElementById('countdownTxt');
 
-  let lastAdvanceDate = null;
+  // เก็บ key ของวันที่ advance ล่าสุด เพื่อไม่ advance ซ้ำ
+  let lastAdvanceTriggerKey = null;
 
   function doRefresh() {
     const wd = document.getElementById('datePicker').value;
@@ -1426,30 +1509,46 @@ fetchData().then(() => {
     remaining = INTERVAL;
   }
 
-  function advanceToToday() {
+  /* FIX 3: คำนวณ working date ปัจจุบัน (shift เริ่ม 07:00)
+     - ถ้า now.hour < 7  → working date = เมื่อวาน
+     - ถ้า now.hour >= 7 → working date = วันนี้
+  */
+  function getCurrentWorkingDate() {
     const now = new Date();
-    let target = new Date(now);
-    if (now.getHours() < 8) target.setDate(target.getDate() - 1);
-    const targetYMD = toYMD(target);
+    const target = new Date(now);
+    if (now.getHours() < 7) target.setDate(target.getDate() - 1);
+    return toYMD(target);
+  }
 
+  /* FIX 3: advance วันที่ใน picker ไปที่ working date ปัจจุบัน
+     เรียกเมื่อถึงเวลา 07:10 เท่านั้น
+  */
+  function advanceToCurrentWorkingDate() {
+    const targetYMD = getCurrentWorkingDate();
     const sel = document.getElementById('datePicker');
     if (availableDates.includes(targetYMD) && sel.value !== targetYMD) {
       sel.value = targetYMD;
       renderForDate(targetYMD);
     } else {
+      // ถ้ายังไม่มีวันนั้นในข้อมูล ให้ refresh ก่อน
       doRefresh();
     }
   }
 
+  /* FIX 3: ตรวจสอบว่าถึงเวลา 07:10 หรือยัง
+     ใช้ key = "YYYY-MM-DD_07:10" เพื่อ trigger แค่ครั้งเดียวต่อวัน
+  */
   function checkDateAdvance() {
     const now = new Date();
     const h = now.getHours();
     const m = now.getMinutes();
+
+    // Trigger เมื่อถึง 07:10 (ไม่ trigger ที่ midnight)
     if (h === 7 && m === 10) {
-      const todayKey = toYMD(now);
-      if (lastAdvanceDate !== todayKey) {
-        lastAdvanceDate = todayKey;
-        advanceToToday();
+      const triggerKey = toYMD(now) + '_07:10';
+      if (lastAdvanceTriggerKey !== triggerKey) {
+        lastAdvanceTriggerKey = triggerKey;
+        advanceToCurrentWorkingDate();
       }
     }
   }
