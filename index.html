@@ -22,7 +22,7 @@
     --topbar-h: 52px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
   html, body {
     height: 100%;
     overflow: hidden;
@@ -30,7 +30,7 @@
     color: var(--text);
     font-family: 'Sarabun', sans-serif;
   }
- 
+
   /* ── Top Bar ── */
   .top-bar {
     height: var(--topbar-h);
@@ -119,7 +119,7 @@
     cursor: pointer; white-space: nowrap;
   }
   .btn-refresh:hover { background: rgba(66,165,245,.30); }
- 
+
   /* ── Auto-refresh countdown ── */
   .auto-refresh-wrap {
     display: flex; align-items: center; gap: 5px;
@@ -171,7 +171,7 @@
   .btn-shift.active-all   { background: linear-gradient(135deg,#1565c0,#42a5f5); color:#fff; }
   .btn-shift.active-day   { background: linear-gradient(135deg,#f57f17,#ffca28); color:#1a1f2e; }
   .btn-shift.active-night { background: linear-gradient(135deg,#311b92,#7b1fa2); color:#fff; }
- 
+
   /* ── Page wrapper ── */
   .page {
     display: flex;
@@ -181,7 +181,7 @@
     gap: 6px;
     overflow: hidden;
   }
- 
+
   /* ── Main body ── */
   .body-row {
     display: grid;
@@ -191,7 +191,7 @@
     min-height: 0;
     overflow: hidden;
   }
- 
+
   .left-col {
     display: flex;
     flex-direction: column;
@@ -199,7 +199,7 @@
     min-height: 0;
     overflow: hidden;
   }
- 
+
   /* ── Card ── */
   .card {
     background: var(--card);
@@ -221,18 +221,18 @@
   .card.shift-night::before  { background: linear-gradient(90deg,#311b92,#7b1fa2); }
   .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
   .card.dt-table-card::before { background: linear-gradient(90deg,#00695c,#26a69a); }
- 
+
   .bar-card  { flex: 30; min-height: 0; }
   .perf-card { flex: 22; min-height: 0; }
   .dt-table-card { flex: 38; min-height: 0; overflow: hidden; }
- 
+
   .canvas-wrap {
     flex: 1;
     min-height: 0;
     position: relative;
   }
   canvas { display:block; width:100% !important; height:100% !important; }
- 
+
   .card-head {
     font-family: 'Chakra Petch', sans-serif;
     font-size: .78rem; font-weight: 700;
@@ -250,14 +250,14 @@
   }
   .card-head.red::before { background: linear-gradient(180deg,#c62828,#ef5350); }
   .card-head.teal::before { background: linear-gradient(180deg,#00695c,#26a69a); }
- 
+
   .legend {
     display:flex; gap:10px; flex-wrap:wrap;
     margin-top:4px; justify-content:center; flex-shrink:0;
   }
   .legend-item { display:flex; align-items:center; gap:4px; font-size:.74rem; color:#1a237e; font-weight:700; }
   .legend-dot  { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
- 
+
   /* ── Overlay ── */
   .overlay {
     position:absolute; inset:0;
@@ -273,7 +273,7 @@
   }
   @keyframes spin { to{ transform:rotate(360deg); } }
   .overlay-msg { font-family:'Chakra Petch',sans-serif; font-size:.65rem; color:var(--muted); letter-spacing:1px; }
- 
+
   /* ── Right column ── */
   .right-col {
     display: flex;
@@ -282,7 +282,7 @@
     min-height: 0;
     overflow: hidden;
   }
- 
+
   /* Pie card */
   .pie-card {
     display: flex;
@@ -296,7 +296,7 @@
     color:#0d47a1; text-align:center;
     margin-bottom:4px; flex-shrink:0;
   }
- 
+
   .pie-body {
     display: flex;
     gap: 10px;
@@ -308,7 +308,7 @@
     flex-shrink: 0;
   }
   #pieChart { width:100% !important; height:100% !important; }
- 
+
   .pie-right {
     flex: 1;
     display: flex;
@@ -316,7 +316,7 @@
     gap: 2px;
     min-width: 0;
   }
- 
+
   .pie-legend {
     display:flex; flex-direction:column; gap:2px;
   }
@@ -328,7 +328,7 @@
   }
   .pie-legend-left { display:flex; align-items:center; gap:4px; font-weight:700; color:#1a237e; }
   .pie-legend-dot  { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
- 
+
   .totals-row {
     display: flex;
     flex-direction: column;
@@ -372,7 +372,7 @@
   .total-box.productivity-card .total-label {
     color: #92400e;
   }
- 
+
   /* ── Radar Cards ── */
   .radar-card {
     flex: 1;
@@ -460,7 +460,7 @@
     flex-shrink: 0;
     letter-spacing: .3px;
   }
- 
+
   /* ── Footer ── */
   .footer {
     display:flex; justify-content:space-between; align-items:center;
@@ -470,7 +470,7 @@
     font-family:'Chakra Petch',monospace;
     font-size:.6rem; color:#546e7a; font-weight:600;
   }
- 
+
   /* ── Error ── */
   #errorBanner {
     display:none;
@@ -478,7 +478,7 @@
     border-radius:7px; padding:7px 12px; margin-bottom:6px;
     font-size:.73rem; color:#c62828; line-height:1.5; flex-shrink:0;
   }
- 
+
   /* ══════════ DOWNTIME TABLE ══════════ */
   .dt-table-header {
     display: flex;
@@ -519,7 +519,7 @@
   .dt-filter-btn.type-Uncontrol.active { background: #e91e63; border-color: #e91e63; }
   .dt-filter-btn.type-STB.active       { background: #78909c; border-color: #78909c; }
   .dt-filter-btn.type-Other.active     { background: #8d6e63; border-color: #8d6e63; }
- 
+
   .dt-table-wrap {
     flex: 1;
     overflow-y: auto;
@@ -532,7 +532,7 @@
   }
   .dt-table-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
   .dt-table-wrap::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 4px; }
- 
+
   .dt-table {
     width: 100%;
     border-collapse: collapse;
@@ -586,30 +586,6 @@
     font-family: 'Chakra Petch', monospace;
     font-size: .7rem; font-weight: 800;
     color: #b71c1c; text-align: right;
-  }
- 
-  /* ── FIX 1: Unknown End Time indicator ── */
-  .end-unknown {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Chakra Petch', monospace;
-    font-size: .82rem;
-    font-weight: 900;
-    color: #ffffff;
-    background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
-    border: 1.5px solid #ef9a9a;
-    border-radius: 5px;
-    padding: 1px 7px;
-    letter-spacing: 1px;
-    box-shadow: 0 1px 6px rgba(198,40,40,.35), inset 0 1px 0 rgba(255,255,255,.15);
-    animation: pulse-red 2s ease-in-out infinite;
-    cursor: default;
-    user-select: none;
-  }
-  @keyframes pulse-red {
-    0%, 100% { box-shadow: 0 1px 6px rgba(198,40,40,.35), inset 0 1px 0 rgba(255,255,255,.15); }
-    50%       { box-shadow: 0 2px 12px rgba(198,40,40,.65), inset 0 1px 0 rgba(255,255,255,.15); }
   }
 
   /* Type badges */
@@ -1143,7 +1119,7 @@ async function fetchDowntime() {
 */
 function fmtDTTime(s) {
   s = (s || '').trim();
-  if (!s) return '';
+  if (!s) return '—';
 
   // รูปแบบ ISO / datetime: 2026-05-04 7:00:00 หรือ 2026-05-04T07:00:00
   let m = s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);
