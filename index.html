@@ -720,21 +720,24 @@
 
       <!-- ── Downtime Table ── -->
       <div class="card dt-table-card">
-        <div class="card-head teal">Downtime Detail</div>
-        <div class="dt-table-header">
-          <span class="dt-count-badge" id="dtCountBadge">0 records</span>
-          <div class="dt-filter-wrap" id="dtFilterWrap">
-            <button class="dt-filter-btn active" data-type="ALL">All</button>
-            <button class="dt-filter-btn type-OPT"       data-type="OPT">OPT</button>
-            <button class="dt-filter-btn type-EE"        data-type="EE">EE</button>
-            <button class="dt-filter-btn type-ME"        data-type="ME">ME</button>
-            <button class="dt-filter-btn type-Plan"      data-type="Plan">Plan</button>
-            <button class="dt-filter-btn type-Uncontrol" data-type="Uncontrol">Uncontrol</button>
-            <button class="dt-filter-btn type-STB"       data-type="STB">STB</button>
-            <button class="dt-filter-btn type-PM"        data-type="PM">PM</button>
-            <button class="dt-filter-btn type-Other"     data-type="Other">Other</button>
-          </div>
-        </div>
+  <div class="dt-table-header" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: space-between; padding: 10px;">
+    
+    <div class="card-head teal" style="margin: 0; white-space: nowrap;">Downtime Detail</div>
+    
+    <span class="dt-count-badge" id="dtCountBadge" style="white-space: nowrap;">0 records</span>
+    
+    <div class="dt-filter-wrap" id="dtFilterWrap" style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+      <button class="dt-filter-btn active" data-type="ALL">All</button>
+      <button class="dt-filter-btn type-OPT" data-type="OPT">OPT</button>
+      <button class="dt-filter-btn type-EE" data-type="EE">EE</button>
+      <button class="dt-filter-btn type-ME" data-type="ME">ME</button>
+      <button class="dt-filter-btn type-Plan" data-type="Plan">Plan</button>
+      <button class="dt-filter-btn type-Uncontrol" data-type="Uncontrol">Uncontrol</button>
+      <button class="dt-filter-btn type-STB" data-type="STB">STB</button>
+      <button class="dt-filter-btn type-PM" data-type="PM">PM</button>
+      <button class="dt-filter-btn type-Other" data-type="Other">Other</button>
+    </div>
+  </div>
         <div class="dt-table-wrap">
           <table class="dt-table">
             <thead>
