@@ -588,6 +588,28 @@
     color: #b71c1c; text-align: right;
   }
 
+  /* End Time unknown indicator */
+.end-unknown {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #ff1744, #d50000);
+  color: #fff;
+  font-family: 'Chakra Petch', monospace;
+  font-size: .8rem;
+  font-weight: 900;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255,23,68,.25), 0 2px 6px rgba(213,0,0,.35);
+  animation: pulse-red 1.6s ease-in-out infinite;
+  cursor: default;
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(255,23,68,.25), 0 2px 6px rgba(213,0,0,.35); }
+  50%       { box-shadow: 0 0 0 5px rgba(255,23,68,.12), 0 2px 10px rgba(213,0,0,.5); }
+}
   /* Type badges */
   .type-badge {
     display: inline-block;
@@ -1117,23 +1139,21 @@ async function fetchDowntime() {
            "4/5/2026 7:00:00", "4/5/2026, 7:00 AM",
            "07:00", "7:00"
 */
+<!-- แทนที่ฟังก์ชัน fmtDTTime เดิม -->
 function fmtDTTime(s) {
   s = (s || '').trim();
-  if (!s) return '—';
+  if (!s) return null;   // ← คืน null แทน '—'
 
-  // รูปแบบ ISO / datetime: 2026-05-04 7:00:00 หรือ 2026-05-04T07:00:00
   let m = s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);
   if (m) return m[1].padStart(2, '0') + ':' + m[2];
 
-  // รูปแบบ dd/mm/yyyy หรือ mm/dd/yyyy: 4/5/2026 7:00:00 หรือ 4/5/2026, 7:00 AM
   m = s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):(\d{2})/);
   if (m) return m[1].padStart(2, '0') + ':' + m[2];
 
-  // รูปแบบ HH:MM:SS หรือ H:MM:SS
   m = s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
   if (m) return m[1].padStart(2, '0') + ':' + m[2];
 
-  return s;
+  return null;   // ← ไม่รู้จัก format ก็คืน null
 }
 
 function normDateG(s) {
@@ -1168,18 +1188,25 @@ function renderDTTable(filterType) {
     return;
   }
 
-  tbody.innerHTML = rows.map(r => {
+ <!-- แทนที่บรรทัดใน renderDTTable ที่สร้าง <tr> -->
+tbody.innerHTML = rows.map(r => {
     const machine  = (r[DT_COL.MACHINE]  || '').trim();
     const startT   = fmtDTTime(r[DT_COL.START] || '');
-    const endT     = fmtDTTime(r[DT_COL.END]   || '');
+    const endRaw   = fmtDTTime(r[DT_COL.END]   || '');
     const desc     = (r[DT_COL.DESC]     || '').trim() || '—';
     const typeRaw  = (r[DT_COL.TYPE]     || '').trim();
     const duration = (r[DT_COL.DURATION] || '').trim() || '—';
     const typeClass = 'type-' + typeRaw;
+
+    // ถ้า endRaw เป็น null = ยังไม่มีข้อมูล → แสดง ? สีแดง
+    const endCell = endRaw
+      ? `<span class="time-cell">${escHtml(endRaw)}</span>`
+      : `<span class="end-unknown">?</span>`;
+
     return `<tr>
       <td class="machine-cell">${escHtml(machine)}</td>
-      <td class="time-cell">${escHtml(startT)}</td>
-      <td class="time-cell">${escHtml(endT)}</td>
+      <td class="time-cell">${escHtml(startT || '—')}</td>
+      <td>${endCell}</td>
       <td class="desc-cell">${escHtml(desc)}</td>
       <td><span class="type-badge ${typeClass}">${escHtml(typeRaw) || '—'}</span></td>
       <td class="dur-cell">${escHtml(duration)}</td>
