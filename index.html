@@ -1500,17 +1500,17 @@ fetchData().then(() => {
   });
 });
 
-/* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10 ══════════ */
+/* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10–07:20 ══════════ */
 (function() {
   const INTERVAL = 2 * 60;
   const CIRCUMFERENCE = 47.12;
   let remaining = INTERVAL;
   const progEl = document.getElementById('countdownProg');
   const txtEl  = document.getElementById('countdownTxt');
-
   let lastAdvanceDate = null;
 
   function doRefresh() {
+    // ✅ Lock วันที่ไว้ก่อน — refresh แค่ข้อมูล ไม่แตะ datePicker
     const wd = document.getElementById('datePicker').value;
     fetchData().then(() => {
       fetchDowntime().then(() => {
@@ -1525,7 +1525,6 @@ fetchData().then(() => {
     let target = new Date(now);
     if (now.getHours() < 8) target.setDate(target.getDate() - 1);
     const targetYMD = toYMD(target);
-
     const sel = document.getElementById('datePicker');
     if (availableDates.includes(targetYMD) && sel.value !== targetYMD) {
       sel.value = targetYMD;
@@ -1539,13 +1538,19 @@ fetchData().then(() => {
     const now = new Date();
     const h = now.getHours();
     const m = now.getMinutes();
-    if (h === 7 && m === 10) {
+
+    // ✅ ขยาย window เป็น 07:10–07:20 และ advance ได้แค่ครั้งเดียวต่อวัน
+    if (h === 7 && m >= 10 && m <= 20) {
       const todayKey = toYMD(now);
       if (lastAdvanceDate !== todayKey) {
         lastAdvanceDate = todayKey;
         advanceToToday();
+        return; // ออกเลย ไม่ต้อง doRefresh ซ้ำ
       }
     }
+
+    // ✅ นอกช่วง 07:10–07:20 → refresh ข้อมูลอย่างเดียว ไม่เปลี่ยนวันที่
+    doRefresh();
   }
 
   function updateUI() {
