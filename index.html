@@ -588,28 +588,49 @@
     color: #b71c1c; text-align: right;
   }
 
-  /* End Time unknown indicator */
-.end-unknown {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  background: linear-gradient(135deg, #ffeb3b, #d50000);
-  color: #fff;
-  font-family: 'Chakra Petch', monospace;
-  font-size: .8rem;
-  font-weight: 900;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px rgba(255,23,68,.25), 0 2px 6px rgba(213,0,0,.35);
-  animation: pulse-red 1.6s ease-in-out infinite;
-  cursor: default;
-}
+  /* Shift badge in table */
+  .shift-badge {
+    display: inline-block;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: .55rem; font-weight: 700;
+    padding: 1px 5px; border-radius: 3px;
+    letter-spacing: .3px;
+    white-space: nowrap;
+  }
+  .shift-badge-d {
+    background: rgba(245,127,23,.15);
+    color: #e65100;
+    border: 1px solid rgba(245,127,23,.3);
+  }
+  .shift-badge-n {
+    background: rgba(49,27,146,.15);
+    color: #4527a0;
+    border: 1px solid rgba(49,27,146,.3);
+  }
 
-@keyframes pulse-red {
-  0%, 100% { box-shadow: 0 0 0 2px rgba(255,23,68,.25), 0 2px 6px rgba(213,0,0,.35); }
-  50%       { box-shadow: 0 0 0 5px rgba(255,23,68,.12), 0 2px 10px rgba(213,0,0,.5); }
-}
+  /* End Time unknown indicator */
+  .end-unknown {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(135deg, #ffeb3b, #d50000);
+    color: #fff;
+    font-family: 'Chakra Petch', monospace;
+    font-size: .8rem;
+    font-weight: 900;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(255,23,68,.25), 0 2px 6px rgba(213,0,0,.35);
+    animation: pulse-red 1.6s ease-in-out infinite;
+    cursor: default;
+  }
+
+  @keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(255,23,68,.25), 0 2px 6px rgba(213,0,0,.35); }
+    50%       { box-shadow: 0 0 0 5px rgba(255,23,68,.12), 0 2px 10px rgba(213,0,0,.5); }
+  }
+
   /* Type badges */
   .type-badge {
     display: inline-block;
@@ -719,31 +740,32 @@
       </div>
 
       <!-- ── Downtime Table ── -->
-<div class="card dt-table-card">
-  <div class="dt-table-header" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: space-between; padding: 2px 7px; min-height: 20px;">
-    
-    <div class="card-head teal" style="margin: 0; white-space: nowrap; font-size: 0.8rem;">Downtime Detail</div>
-    
-    <span class="dt-count-badge" id="dtCountBadge" style="white-space: nowrap; font-size: 0.8rem; padding: 2px 6px;">12 records</span>
-    
-    <div class="dt-filter-wrap" id="dtFilterWrap" style="display: flex; gap: 3px; flex-wrap: wrap; align-items: center;">
-      <button class="dt-filter-btn active" style="font-size: 0.75rem; padding: 2px 5px;" data-type="ALL">All</button>
-      <button class="dt-filter-btn type-OPT" style="font-size: 0.75rem; padding: 2px 5px;" data-type="OPT">OPT</button>
-      <button class="dt-filter-btn type-EE" style="font-size: 0.75rem; padding: 2px 5px;" data-type="EE">EE</button>
-      <button class="dt-filter-btn type-ME" style="font-size: 0.75rem; padding: 2px 5px;" data-type="ME">ME</button>
-      <button class="dt-filter-btn type-Plan" style="font-size: 0.75rem; padding: 2px 5px;" data-type="Plan">Plan</button>
-      <button class="dt-filter-btn type-Uncontrol" style="font-size: 0.75rem; padding: 2px 5px;" data-type="Uncontrol">Uncontrol</button>
-      <button class="dt-filter-btn type-STB" style="font-size: 0.75rem; padding: 2px 5px;" data-type="STB">STB</button>
-      <button class="dt-filter-btn type-PM" style="font-size: 0.75rem; padding: 2px 5px;" data-type="PM">PM</button>
-      <button class="dt-filter-btn type-Other" style="font-size: 0.75rem; padding: 2px 5px;" data-type="Other">Other</button>
-    </div>
+      <div class="card dt-table-card">
+        <div class="dt-table-header" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: space-between; padding: 2px 7px; min-height: 20px;">
+          
+          <div class="card-head teal" style="margin: 0; white-space: nowrap; font-size: 0.8rem;">Downtime Detail</div>
+          
+          <span class="dt-count-badge" id="dtCountBadge" style="white-space: nowrap; font-size: 0.8rem; padding: 2px 6px;">— records</span>
+          
+          <div class="dt-filter-wrap" id="dtFilterWrap" style="display: flex; gap: 3px; flex-wrap: wrap; align-items: center;">
+            <button class="dt-filter-btn active" style="font-size: 0.75rem; padding: 2px 5px;" data-type="ALL">All</button>
+            <button class="dt-filter-btn type-OPT" style="font-size: 0.75rem; padding: 2px 5px;" data-type="OPT">OPT</button>
+            <button class="dt-filter-btn type-EE" style="font-size: 0.75rem; padding: 2px 5px;" data-type="EE">EE</button>
+            <button class="dt-filter-btn type-ME" style="font-size: 0.75rem; padding: 2px 5px;" data-type="ME">ME</button>
+            <button class="dt-filter-btn type-Plan" style="font-size: 0.75rem; padding: 2px 5px;" data-type="Plan">Plan</button>
+            <button class="dt-filter-btn type-Uncontrol" style="font-size: 0.75rem; padding: 2px 5px;" data-type="Uncontrol">Uncontrol</button>
+            <button class="dt-filter-btn type-STB" style="font-size: 0.75rem; padding: 2px 5px;" data-type="STB">STB</button>
+            <button class="dt-filter-btn type-PM" style="font-size: 0.75rem; padding: 2px 5px;" data-type="PM">PM</button>
+            <button class="dt-filter-btn type-Other" style="font-size: 0.75rem; padding: 2px 5px;" data-type="Other">Other</button>
+          </div>
 
-  </div>
+        </div>
         <div class="dt-table-wrap">
           <table class="dt-table">
             <thead>
               <tr>
                 <th>Machine Name</th>
+                <th>Shift</th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Description</th>
@@ -752,7 +774,7 @@
               </tr>
             </thead>
             <tbody id="dtTableBody">
-              <tr><td colspan="6" class="dt-empty">Select a date to load downtime data…</td></tr>
+              <tr><td colspan="7" class="dt-empty">Select a date to load downtime data…</td></tr>
             </tbody>
           </table>
         </div>
@@ -1024,7 +1046,21 @@ function initPerfChart(){
 const DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 const DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
-const DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, TYPE:9, TYPEMACHINE:11 };
+/* ══════════════════════════════════════════════════════════════════
+   DT_COL: Column index ของ MasterDowntime sheet
+   H = index 7 → คอลัมน์ Shift (d = Day, n = Night)
+══════════════════════════════════════════════════════════════════ */
+const DT_COL = {
+  MACHINE:     0,
+  START:       1,
+  END:         2,
+  DURATION:    3,
+  DESC:        5,
+  DATE:        6,
+  SHIFT:       7,   // ← NEW: column H = Shift (d / n)
+  TYPE:        9,
+  TYPEMACHINE: 11
+};
 
 const EQUIP_DEF = [
   { label:'BWE #1',   key:'Bucket Wheel #1', color:'#6B007B' },
@@ -1121,7 +1157,7 @@ function initRadarType() {
   });
 }
 
-/* Fetch MasterDowntime CSV once */
+/* ── Fetch MasterDowntime CSV ── */
 async function fetchDowntime() {
   try {
     const res = await fetch(DT_URL + '&_cb=' + Date.now());
@@ -1137,16 +1173,10 @@ async function fetchDowntime() {
   }
 }
 
-/* ══════════ FIX: fmtDTTime ══════════
-   แสดงเฉพาะเวลา HH:MM จากทุก format ที่อาจมาจาก Google Sheet
-   รองรับ: "2026-05-04 7:00:00", "2026-05-04T07:00:00",
-           "4/5/2026 7:00:00", "4/5/2026, 7:00 AM",
-           "07:00", "7:00"
-*/
-<!-- แทนที่ฟังก์ชัน fmtDTTime เดิม -->
+/* ── fmtDTTime: คืนค่า HH:MM หรือ null ถ้าไม่มีข้อมูล ── */
 function fmtDTTime(s) {
   s = (s || '').trim();
-  if (!s) return null;   // ← คืน null แทน '—'
+  if (!s) return null;
 
   let m = s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);
   if (m) return m[1].padStart(2, '0') + ':' + m[2];
@@ -1157,7 +1187,7 @@ function fmtDTTime(s) {
   m = s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
   if (m) return m[1].padStart(2, '0') + ':' + m[2];
 
-  return null;   // ← ไม่รู้จัก format ก็คืน null
+  return null;
 }
 
 function normDateG(s) {
@@ -1169,6 +1199,15 @@ function normDateG(s) {
   return s;
 }
 
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   renderDTTable
+   - กรอง Type (OPT / EE / ME …) จาก dtCurrentRows
+   - dtCurrentRows ถูก set โดย renderRadarForDate (กรอง Date + Shift แล้ว)
+══════════════════════════════════════════════════════════════════ */
 function renderDTTable(filterType) {
   dtActiveFilter = filterType || dtActiveFilter;
 
@@ -1188,27 +1227,35 @@ function renderDTTable(filterType) {
 
   const tbody = document.getElementById('dtTableBody');
   if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="dt-empty">No downtime records for this date${dtActiveFilter !== 'ALL' ? ' / type' : ''}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="dt-empty">No downtime records for this date${dtActiveFilter !== 'ALL' ? ' / type' : ''}</td></tr>`;
     return;
   }
 
- <!-- แทนที่บรรทัดใน renderDTTable ที่สร้าง <tr> -->
-tbody.innerHTML = rows.map(r => {
+  tbody.innerHTML = rows.map(r => {
     const machine  = (r[DT_COL.MACHINE]  || '').trim();
     const startT   = fmtDTTime(r[DT_COL.START] || '');
     const endRaw   = fmtDTTime(r[DT_COL.END]   || '');
     const desc     = (r[DT_COL.DESC]     || '').trim() || '—';
     const typeRaw  = (r[DT_COL.TYPE]     || '').trim();
     const duration = (r[DT_COL.DURATION] || '').trim() || '—';
+    const shiftRaw = (r[DT_COL.SHIFT]    || '').trim().toLowerCase(); // ← NEW
     const typeClass = 'type-' + typeRaw;
 
-    // ถ้า endRaw เป็น null = ยังไม่มีข้อมูล → แสดง ? สีแดง
+    // Shift badge
+    const shiftCell = shiftRaw === 'd'
+      ? `<span class="shift-badge shift-badge-d">☀️ Day</span>`
+      : shiftRaw === 'n'
+        ? `<span class="shift-badge shift-badge-n">🌙 Night</span>`
+        : `<span style="color:var(--muted);font-size:.65rem;">—</span>`;
+
+    // End time cell
     const endCell = endRaw
       ? `<span class="time-cell">${escHtml(endRaw)}</span>`
-      : `<span class="end-unknown">?</span>`;
+      : `<span class="end-unknown" title="ยังไม่มีข้อมูล End Time">?</span>`;
 
     return `<tr>
       <td class="machine-cell">${escHtml(machine)}</td>
+      <td>${shiftCell}</td>
       <td class="time-cell">${escHtml(startT || '—')}</td>
       <td>${endCell}</td>
       <td class="desc-cell">${escHtml(desc)}</td>
@@ -1218,25 +1265,40 @@ tbody.innerHTML = rows.map(r => {
   }).join('');
 }
 
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
 document.getElementById('dtFilterWrap').addEventListener('click', e => {
   const btn = e.target.closest('.dt-filter-btn');
   if (!btn) return;
   renderDTTable(btn.dataset.type);
 });
 
+/* ══════════════════════════════════════════════════════════════════
+   renderRadarForDate
+   ─── แก้ไขหลัก: กรอง Shift จาก column H ก่อน set dtCurrentRows ───
+   currentShift = 'all'   → ไม่กรอง (ทั้ง d และ n)
+   currentShift = 'day'   → เฉพาะ r[DT_COL.SHIFT] === 'd'
+   currentShift = 'night' → เฉพาะ r[DT_COL.SHIFT] === 'n'
+══════════════════════════════════════════════════════════════════ */
 function renderRadarForDate(wd) {
+  // 1) กรองตามวันที่
   const rows = dtAllRows.filter(r => normDateG(r[DT_COL.DATE] || '') === wd);
-  dtCurrentRows = rows;
 
+  // 2) กรองตาม Shift (column H) ← สิ่งที่เพิ่มใหม่
+  let shiftRows = rows;
+  if (currentShift === 'day') {
+    shiftRows = rows.filter(r => (r[DT_COL.SHIFT] || '').trim().toLowerCase() === 'd');
+  } else if (currentShift === 'night') {
+    shiftRows = rows.filter(r => (r[DT_COL.SHIFT] || '').trim().toLowerCase() === 'n');
+  }
+  // currentShift === 'all' → shiftRows = rows (ทั้งหมด)
+
+  // 3) ส่งให้ Table ใช้ (กรอง Type อีกชั้นใน renderDTTable)
+  dtCurrentRows = shiftRows;
   dtActiveFilter = 'ALL';
   renderDTTable('ALL');
 
+  // 4) Radar — Equipment
   const equipCounts = EQUIP_DEF.map(def =>
-    rows.filter(r => (r[DT_COL.MACHINE] || '').trim() === def.key).length
+    shiftRows.filter(r => (r[DT_COL.MACHINE] || '').trim() === def.key).length
   );
   radarEquipChart.data.datasets[0].data = equipCounts;
   radarEquipChart.update();
@@ -1250,10 +1312,10 @@ function renderRadarForDate(wd) {
       <span class="radar-legend-val">${equipCounts[i]}</span>
     </div>`).join('');
 
+  // 5) Radar — Type
   const typeCounts = TYPE_DEF.map(def =>
-    rows.filter(r => (r[DT_COL.TYPEMACHINE] || '').trim() === def.key).length
+    shiftRows.filter(r => (r[DT_COL.TYPEMACHINE] || '').trim() === def.key).length
   );
-
   radarTypeChart.data.datasets[0].data = typeCounts;
   radarTypeChart.update();
 
@@ -1270,7 +1332,7 @@ function renderRadarForDate(wd) {
   document.getElementById('radarTypeTotal').textContent  = `Total: ${typeCounts.reduce((a,b)=>a+b,0)} events`;
 }
 
-/* ══════════ FETCH ══════════ */
+/* ══════════ FETCH Production CSV ══════════ */
 async function fetchData(){
   showOverlay('LOADING DATA…'); hideError();
   let lastErr='';
@@ -1325,7 +1387,7 @@ function processCSV(text){
   document.getElementById('rowCount').textContent=`${allRows.length} rows · ${availableDates.length} dates`;
 }
 
-/* ══════════ RENDER ══════════ */
+/* ══════════ RENDER Production ══════════ */
 function renderForDate(wd){
   const allForDate=allRows.filter(r=>r._wd===wd).sort((a,b)=>shiftHour(a)-shiftHour(b));
   const rows=filterByShift(allForDate,currentShift);
@@ -1383,6 +1445,7 @@ function renderForDate(wd){
 
   document.getElementById('rowCount').textContent=`${rows.length} rows · ${allRows.length} total · ${availableDates.length} dates · ${toDisplay(wd)} · ${SHIFT_CONFIG[currentShift].label}`;
 
+  /* ── Downtime: กรองใหม่ทุกครั้งที่ render (shift อาจเปลี่ยน) ── */
   renderRadarForDate(wd);
   hideOverlay(); syncNav();
 }
@@ -1439,7 +1502,7 @@ fetchData().then(() => {
 
 /* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10 ══════════ */
 (function() {
-  const INTERVAL = 2 * 60; // seconds
+  const INTERVAL = 2 * 60;
   const CIRCUMFERENCE = 47.12;
   let remaining = INTERVAL;
   const progEl = document.getElementById('countdownProg');
@@ -1455,21 +1518,6 @@ fetchData().then(() => {
       });
     });
     remaining = INTERVAL;
-  }
-
-  function advanceToToday() {
-    const now = new Date();
-    let target = new Date(now);
-    if (now.getHours() < 8) target.setDate(target.getDate() - 1);
-    const targetYMD = toYMD(target);
-
-    const sel = document.getElementById('datePicker');
-    if (availableDates.includes(targetYMD) && sel.value !== targetYMD) {
-      sel.value = targetYMD;
-      renderForDate(targetYMD);
-    } else {
-      doRefresh();
-    }
   }
 
   function advanceToToday() {
