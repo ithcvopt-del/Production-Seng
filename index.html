@@ -1507,8 +1507,23 @@ fetchData().then(() => {
   let remaining = INTERVAL;
   const progEl = document.getElementById('countdownProg');
   const txtEl  = document.getElementById('countdownTxt');
-
   let lastAdvanceDate = null;
+
+  /**
+   * คืนค่า "วันที่ที่ควรแสดง" ตาม Logic:
+   *   - ก่อน 07:10 → ใช้วันก่อนหน้า
+   *   - ตั้งแต่ 07:10 เป็นต้นไป → ใช้วันนี้
+   */
+  function getDashboardDate() {
+    const now = new Date();
+    const target = new Date(now);
+    const isBefore0710 = now.getHours() < 7 ||
+                         (now.getHours() === 7 && now.getMinutes() < 10);
+    if (isBefore0710) {
+      target.setDate(target.getDate() - 1);
+    }
+    return target;
+  }
 
   function doRefresh() {
     const wd = document.getElementById('datePicker').value;
@@ -1521,11 +1536,7 @@ fetchData().then(() => {
   }
 
   function advanceToToday() {
-    const now = new Date();
-    let target = new Date(now);
-    if (now.getHours() < 8) target.setDate(target.getDate() - 1);
-    const targetYMD = toYMD(target);
-
+    const targetYMD = toYMD(getDashboardDate());
     const sel = document.getElementById('datePicker');
     if (availableDates.includes(targetYMD) && sel.value !== targetYMD) {
       sel.value = targetYMD;
@@ -1537,15 +1548,17 @@ fetchData().then(() => {
 
   function checkDateAdvance() {
     const now = new Date();
-    const h = now.getHours();
-    const m = now.getMinutes();
-    if (h === 7 && m === 10) {
-      const todayKey = toYMD(now);
-      if (lastAdvanceDate !== todayKey) {
-        lastAdvanceDate = todayKey;
-        advanceToToday();
-      }
+    const todayKey = toYMD(now);
+
+    // ✅ ใช้ >= แทน === เพื่อไม่พลาดถ้า tick ข้ามนาที 10 ไป
+    const isAfter0710 = now.getHours() > 7 ||
+                        (now.getHours() === 7 && now.getMinutes() >= 10);
+
+    if (isAfter0710 && lastAdvanceDate !== todayKey) {
+      lastAdvanceDate = todayKey;
+      advanceToToday();
     }
+  }
   }
 
   function updateUI() {
