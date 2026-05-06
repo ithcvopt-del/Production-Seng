@@ -1500,32 +1500,16 @@ fetchData().then(() => {
   });
 });
   
-/* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10–07:20 ══════════ */
+/* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10 ══════════ */
 (function() {
-  const INTERVAL = 2 * 60;          // 120 วินาที
+  const INTERVAL = 2 * 60;
   const CIRCUMFERENCE = 47.12;
-  const RED_THRESHOLD = 10;         // เปลี่ยนแดงเมื่อเหลือ 10 วิ
   let remaining = INTERVAL;
   const progEl = document.getElementById('countdownProg');
   const txtEl  = document.getElementById('countdownTxt');
+
   let lastAdvanceDate = null;
 
-  // ── วาด ring + ตัวเลข ──────────────────────────────────────────
-  function updateUI() {
-    const ratio = remaining / INTERVAL;
-    const offset = CIRCUMFERENCE * (1 - ratio);
-    if (progEl) {
-      progEl.style.strokeDashoffset = offset;
-      // เปลี่ยนสีแดงเมื่อเหลือ ≤ 10 วินาที
-      progEl.style.stroke = remaining <= RED_THRESHOLD ? '#ef4444' : '';
-    }
-    if (txtEl) {
-      txtEl.textContent = remaining + 's';
-      txtEl.style.color = remaining <= RED_THRESHOLD ? '#ef4444' : '';
-    }
-  }
-
-  // ── Refresh ข้อมูล (ไม่เปลี่ยนวันที่) ────────────────────────
   function doRefresh() {
     const wd = document.getElementById('datePicker').value;
     fetchData().then(() => {
@@ -1534,15 +1518,14 @@ fetchData().then(() => {
       });
     });
     remaining = INTERVAL;
-    updateUI();
   }
 
-  // ── เลื่อนวันที่เป็นวันล่าสุด ────────────────────────────────
   function advanceToToday() {
     const now = new Date();
     let target = new Date(now);
     if (now.getHours() < 8) target.setDate(target.getDate() - 1);
     const targetYMD = toYMD(target);
+
     const sel = document.getElementById('datePicker');
     if (availableDates.includes(targetYMD) && sel.value !== targetYMD) {
       sel.value = targetYMD;
@@ -1552,36 +1535,18 @@ fetchData().then(() => {
     }
   }
 
-  // ── ตรวจ advance วันที่ช่วง 07:10–07:20 ──────────────────────
   function checkDateAdvance() {
     const now = new Date();
     const h = now.getHours();
     const m = now.getMinutes();
-
-    if (h === 7 && m >= 10 && m <= 20) {
+    if (h === 7 && m === 10) {
       const todayKey = toYMD(now);
       if (lastAdvanceDate !== todayKey) {
         lastAdvanceDate = todayKey;
         advanceToToday();
-        return;
       }
     }
-    doRefresh();
   }
-
-  // ── Tick ทุก 1 วินาที ─────────────────────────────────────────
-  setInterval(() => {
-    remaining -= 1;
-    updateUI();
-    if (remaining <= 0) {
-      checkDateAdvance();
-    }
-  }, 1000);
-
-  // วาด UI ครั้งแรกทันที
-  updateUI();
-
-})
 
   function updateUI() {
     const ratio = remaining / INTERVAL;
