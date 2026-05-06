@@ -1500,7 +1500,7 @@ fetchData().then(() => {
   });
 });
 
- /* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10 ══════════ */
+/* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10 ══════════ */
 (function() {
   const INTERVAL = 2 * 60;
   const CIRCUMFERENCE = 47.12;
@@ -1547,7 +1547,6 @@ fetchData().then(() => {
       }
     }
   }
-นี้คือโคด Auto Refresh Data Dashboard ผมอยากให้ Refresh เพราะข้อมูลไม่อยากให้วันที่เปลี่ยนตาม เช่นวันนี้ 06-05-2026 07:21 AM ถึง 07-05-2026 07:09AM ยังเป็นวันที่ 06-05-2026 เหมือนเดิม พอถึง 07-05-2026 07:10 AM ถึง 07:20 AM ค่อยเปลี่ยนวันที่เป็นวันที่ 07-05-2026 แบบออโต้ครับ
 
   function updateUI() {
     const ratio = remaining / INTERVAL;
@@ -1570,3 +1569,4 @@ fetchData().then(() => {
 </script>
 </body>
 </html>
+ 
