@@ -1500,7 +1500,7 @@ fetchData().then(() => {
   });
 });
 
-/* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10 ══════════ */
+/* ══════════ AUTO-REFRESH (2 min) + DATE AUTO-ADVANCE at 07:10–07:20 ══════════ */
 (function() {
   const INTERVAL = 2 * 60;
   const CIRCUMFERENCE = 47.12;
@@ -1510,16 +1510,29 @@ fetchData().then(() => {
 
   let lastAdvanceDate = null;
 
+  /* รีเฟรชข้อมูลเท่านั้น — ไม่เปลี่ยน datePicker */
   function doRefresh() {
-    const wd = document.getElementById('datePicker').value;
+    const wd = document.getElementById('datePicker').value; // จำวันที่ปัจจุบันไว้ก่อน
     fetchData().then(() => {
       fetchDowntime().then(() => {
-        if (wd) renderRadarForDate(wd);
+        // หลัง fetchData เสร็จ picker อาจถูก rebuild → restore วันที่เดิม
+        const sel = document.getElementById('datePicker');
+        if (availableDates.includes(wd)) {
+          sel.value = wd;          // คืนวันที่เดิม
+          renderForDate(wd);       // render ด้วยวันที่เดิม
+        } else {
+          // วันที่เดิมหายไปจาก sheet (ไม่น่าเกิด) → ใช้วันล่าสุด
+          const latest = availableDates[availableDates.length - 1];
+          sel.value = latest;
+          renderForDate(latest);
+        }
+        if (wd) renderRadarForDate(sel.value);
       });
     });
     remaining = INTERVAL;
   }
 
+  /* เฉพาะช่วง 07:10–07:20 → เปลี่ยนวันที่เป็นล่าสุด */
   function advanceToToday() {
     const now = new Date();
     let target = new Date(now);
@@ -1531,7 +1544,7 @@ fetchData().then(() => {
       sel.value = targetYMD;
       renderForDate(targetYMD);
     } else {
-      doRefresh();
+      doRefresh(); // วันล่าสุดตรงกับที่เลือกอยู่แล้ว → รีเฟรชข้อมูลปกติ
     }
   }
 
@@ -1539,7 +1552,8 @@ fetchData().then(() => {
     const now = new Date();
     const h = now.getHours();
     const m = now.getMinutes();
-    if (h === 7 && m === 10) {
+    // ช่วง 07:10–07:20 เท่านั้น
+    if (h === 7 && m >= 10 && m <= 20) {
       const todayKey = toYMD(now);
       if (lastAdvanceDate !== todayKey) {
         lastAdvanceDate = todayKey;
