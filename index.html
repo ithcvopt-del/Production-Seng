@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>BCM Production Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -19,69 +19,83 @@
     --label:  #374151;
     --header-bg: #1a237e;
     --header-accent: #42a5f5;
-    --topbar-h: 52px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
-
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Sarabun', sans-serif;
     min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  /* ── Top Bar ── */
+  /* ═══════════════════════════════════
+     TOP BAR — Mobile-first
+  ═══════════════════════════════════ */
   .top-bar {
-    height: var(--topbar-h);
     background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #1565c0 100%);
-    padding: 0 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
     box-shadow: 0 3px 16px rgba(21,35,126,.35);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    flex-wrap: wrap;
-    min-height: var(--topbar-h);
+    position: sticky; top: 0; z-index: 100;
+    padding: 6px 10px;
+    display: flex; flex-direction: column; gap: 5px;
   }
-  .top-bar-left { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .topbar-row1 {
+    display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  }
+  .topbar-row2 {
+    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
+  }
   .logo-box {
     background: rgba(255,255,255,.12);
     border: 1px solid rgba(255,255,255,.2);
     border-radius: 7px;
     padding: 4px 10px;
     font-family: 'Chakra Petch', sans-serif;
-    font-size: clamp(.75rem, 1.5vw, 1.1rem);
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: 1px;
-    white-space: nowrap;
+    font-size: clamp(.65rem, 2.2vw, 1rem);
+    font-weight: 700; color: #fff; letter-spacing: .5px;
+    white-space: nowrap; flex-shrink: 0;
   }
   .logo-box span { color: var(--header-accent); }
 
-  .controls {
-    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
-  }
   .ctrl-label {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: .62rem; color: rgba(255,255,255,.55);
-    letter-spacing: 1.2px; text-transform: uppercase; white-space: nowrap;
+    font-size: .58rem; color: rgba(255,255,255,.55);
+    letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .shift-group {
+    display: flex; align-items: center; gap: 2px;
+    background: rgba(0,0,0,.2);
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 7px; padding: 2px; flex-shrink: 0;
+  }
+  .btn-shift {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(.56rem, 1.6vw, .68rem);
+    font-weight: 600; letter-spacing: .2px;
+    padding: 4px 8px; border-radius: 5px; border: none;
+    cursor: pointer; white-space: nowrap;
+    color: rgba(255,255,255,.55); background: transparent;
+    transition: all .18s; min-height: 28px;
+  }
+  .btn-shift:hover { color: #fff; background: rgba(255,255,255,.1); }
+  .btn-shift.active-all   { background: linear-gradient(135deg,#1565c0,#42a5f5); color:#fff; }
+  .btn-shift.active-day   { background: linear-gradient(135deg,#f57f17,#ffca28); color:#1a1f2e; }
+  .btn-shift.active-night { background: linear-gradient(135deg,#311b92,#7b1fa2); color:#fff; }
+
+  .date-nav-group {
+    display: flex; align-items: center; gap: 3px; flex-shrink: 0;
   }
   .date-select {
     background: rgba(255,255,255,.1);
     border: 1px solid rgba(255,255,255,.22);
-    border-radius: 6px;
-    color: #fff;
+    border-radius: 6px; color: #fff;
     font-family: 'Chakra Petch', monospace;
-    font-size: .76rem;
-    padding: 5px 8px;
-    cursor: pointer; outline: none;
-    min-width: 110px;
+    font-size: clamp(.65rem, 1.8vw, .78rem);
+    padding: 5px 6px; cursor: pointer; outline: none;
+    min-width: 100px; max-width: 130px;
     -webkit-appearance: none;
   }
   .date-select option { background: #1a237e; color: #fff; }
@@ -90,107 +104,68 @@
     border: 1px solid rgba(255,255,255,.2);
     border-radius: 6px;
     color: rgba(255,255,255,.8);
-    font-size: .9rem; width: 28px; height: 28px;
+    font-size: 1rem; width: 30px; height: 30px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+    flex-shrink: 0; min-height: 30px;
   }
   .btn-nav:hover { background: rgba(255,255,255,.22); }
   .btn-nav:disabled { opacity: .25; cursor: not-allowed; }
+
   .btn-refresh {
     background: rgba(66,165,245,.18);
     border: 1px solid rgba(66,165,245,.38);
-    border-radius: 6px;
-    color: var(--header-accent);
+    border-radius: 6px; color: var(--header-accent);
     font-family: 'Chakra Petch', monospace;
-    font-size: .66rem; padding: 5px 8px;
-    cursor: pointer; white-space: nowrap;
+    font-size: clamp(.58rem, 1.6vw, .68rem);
+    padding: 5px 8px; cursor: pointer; white-space: nowrap;
+    min-height: 30px; flex-shrink: 0;
   }
   .auto-refresh-wrap {
     display: flex; align-items: center; gap: 5px;
     background: rgba(0,0,0,.18);
     border: 1px solid rgba(255,255,255,.12);
-    border-radius: 6px;
-    padding: 4px 8px;
-    flex-shrink: 0;
+    border-radius: 6px; padding: 4px 8px; flex-shrink: 0;
   }
   .auto-refresh-label {
     font-family: 'Chakra Petch', monospace;
-    font-size: .6rem; color: rgba(255,255,255,.45);
-    letter-spacing: .8px; text-transform: uppercase;
-    white-space: nowrap;
+    font-size: .58rem; color: rgba(255,255,255,.45);
+    letter-spacing: .8px; text-transform: uppercase; white-space: nowrap;
   }
   .countdown-ring { position: relative; width: 20px; height: 20px; flex-shrink:0; }
   .countdown-ring svg { transform: rotate(-90deg); }
   .countdown-ring circle.track { fill: none; stroke: rgba(255,255,255,.12); stroke-width: 2.5; }
   .countdown-ring circle.prog {
     fill: none; stroke: #42a5f5; stroke-width: 2.5;
-    stroke-linecap: round;
-    transition: stroke-dashoffset .9s linear;
+    stroke-linecap: round; transition: stroke-dashoffset .9s linear;
   }
   .countdown-txt {
     font-family: 'Chakra Petch', monospace;
-    font-size: .64rem; font-weight: 700;
-    color: #42a5f5; white-space: nowrap; min-width: 26px;
-  }
-  .shift-group {
-    display: flex; align-items: center; gap: 2px;
-    background: rgba(0,0,0,.2);
-    border: 1px solid rgba(255,255,255,.13);
-    border-radius: 7px; padding: 2px;
-    flex-shrink: 0;
-  }
-  .btn-shift {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: .62rem; font-weight: 600; letter-spacing: .3px;
-    padding: 4px 7px; border-radius: 5px; border: none;
-    cursor: pointer; white-space: nowrap;
-    color: rgba(255,255,255,.55); background: transparent;
-    transition: all .18s;
-  }
-  .btn-shift:hover { color: #fff; background: rgba(255,255,255,.1); }
-  .btn-shift.active-all   { background: linear-gradient(135deg,#1565c0,#42a5f5); color:#fff; }
-  .btn-shift.active-day   { background: linear-gradient(135deg,#f57f17,#ffca28); color:#1a1f2e; }
-  .btn-shift.active-night { background: linear-gradient(135deg,#311b92,#7b1fa2); color:#fff; }
-
-  /* ── Page wrapper ── */
-  .page {
-    padding: 10px 14px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    font-size: .62rem; font-weight: 700; color: #42a5f5;
+    white-space: nowrap; min-width: 26px;
   }
 
-  /* ── Main layout: responsive grid ── */
+  /* ═══════════════════════════════════
+     PAGE LAYOUT
+  ═══════════════════════════════════ */
+  .page { padding: 8px 10px 14px; display: flex; flex-direction: column; gap: 8px; }
+
+  /* Mobile default: single column */
   .body-row {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 8px;
-    align-items: start;
+    display: flex; flex-direction: column; gap: 8px;
   }
+  .left-col { display: flex; flex-direction: column; gap: 8px; }
+  .right-col { display: flex; flex-direction: column; gap: 8px; }
 
-  /* Left column */
-  .left-col {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  /* Right column */
-  .right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  /* ── Card ── */
+  /* ═══════════════════════════════════
+     CARDS
+  ═══════════════════════════════════ */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 10px;
     box-shadow: var(--shadow);
-    padding: 10px 12px 12px;
-    position: relative;
-    overflow: hidden;
+    padding: 10px 10px 12px;
+    position: relative; overflow: hidden;
   }
   .card::before {
     content:''; position:absolute; top:0; left:0; right:0; height:3px;
@@ -202,77 +177,66 @@
   .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
   .card.dt-table-card::before { background: linear-gradient(90deg,#00695c,#26a69a); }
 
-  /* Chart wrappers — fixed heights that scale nicely */
+  /* ═══════════════════════════════════
+     CHART CONTAINERS
+  ═══════════════════════════════════ */
+  /* Mobile: use viewport height ratios */
   .bar-chart-wrap {
-    position: relative;
-    width: 100%;
-    /* height adjusts with viewport */
-    height: clamp(200px, 28vw, 340px);
+    position: relative; width: 100%;
+    height: clamp(220px, 55vw, 320px);
   }
   .perf-chart-wrap {
-    position: relative;
-    width: 100%;
-    height: clamp(130px, 16vw, 220px);
+    position: relative; width: 100%;
+    height: clamp(140px, 38vw, 200px);
   }
-
   canvas { display: block; width: 100% !important; height: 100% !important; }
 
   .card-head {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: .78rem; font-weight: 700;
-    color: #0d47a1;
+    font-size: clamp(.7rem, 2vw, .82rem);
+    font-weight: 700; color: #0d47a1;
     margin-bottom: 8px;
     display: flex; align-items: center; gap: 6px;
   }
-  .card-head.red { color: #b71c1c; }
+  .card-head.red  { color: #b71c1c; }
   .card-head.teal { color: #004d40; }
   .card-head::before {
     content:''; width:3px; height:13px;
     background: linear-gradient(180deg, var(--blue), var(--header-accent));
     border-radius: 2px; flex-shrink:0;
   }
-  .card-head.red::before { background: linear-gradient(180deg,#c62828,#ef5350); }
+  .card-head.red::before  { background: linear-gradient(180deg,#c62828,#ef5350); }
   .card-head.teal::before { background: linear-gradient(180deg,#00695c,#26a69a); }
 
   .legend {
     display:flex; gap:10px; flex-wrap:wrap;
     margin-top:6px; justify-content:center;
   }
-  .legend-item { display:flex; align-items:center; gap:4px; font-size:.74rem; color:#1a237e; font-weight:700; }
-  .legend-dot  { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-
-  /* Overlay */
-  .overlay {
-    position:absolute; inset:0;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    background:rgba(255,255,255,.88); border-radius:10px;
-    gap:8px; z-index:10;
+  .legend-item {
+    display:flex; align-items:center; gap:4px;
+    font-size: clamp(.65rem, 1.8vw, .76rem);
+    color:#1a237e; font-weight:700;
   }
-  .overlay.hidden { display:none; }
-  .spinner {
-    width:26px; height:26px;
-    border:3px solid #e3e8f0; border-top-color:var(--blue);
-    border-radius:50%; animation:spin .75s linear infinite;
-  }
-  @keyframes spin { to{ transform:rotate(360deg); } }
-  .overlay-msg { font-family:'Chakra Petch',sans-serif; font-size:.65rem; color:var(--muted); letter-spacing:1px; }
+  .legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
 
-  /* ── Right column — Pie card ── */
-  .pie-card { padding: 8px 12px 12px; }
+  /* ═══════════════════════════════════
+     PIE CARD (right col)
+  ═══════════════════════════════════ */
+  .pie-card { padding: 8px 10px 12px; }
   .pie-title {
     font-family:'Chakra Petch',sans-serif;
-    font-size:.78rem; font-weight:700;
-    color:#0d47a1; text-align:center;
-    margin-bottom:6px;
+    font-size: clamp(.68rem, 2vw, .82rem);
+    font-weight:700; color:#0d47a1; text-align:center; margin-bottom:6px;
   }
   .pie-body { display: flex; gap: 10px; align-items: center; }
-  .pie-wrap { width: 140px; height: 140px; flex-shrink: 0; }
+  .pie-wrap { width: 130px; height: 130px; flex-shrink: 0; }
   #pieChart { width:100% !important; height:100% !important; }
-  .pie-right { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .pie-right { flex:1; display:flex; flex-direction:column; gap:4px; min-width:0; }
   .pie-legend { display:flex; flex-direction:column; gap:2px; }
   .pie-legend-item {
     display:flex; align-items:center; justify-content:space-between;
-    font-size:.72rem; color:#1a1f2e; font-weight:700;
+    font-size: clamp(.68rem, 1.9vw, .76rem);
+    color:#1a1f2e; font-weight:700;
     padding:2px 0; border-bottom:1px solid #e8eaf0;
   }
   .pie-legend-left { display:flex; align-items:center; gap:4px; font-weight:700; color:#1a237e; }
@@ -280,56 +244,64 @@
   .totals-row { display:flex; flex-direction:column; gap:4px; margin-top:6px; padding-top:6px; border-top:1px solid var(--border); }
   .total-box {
     display:flex; align-items:center; justify-content:space-between;
-    padding:2px 6px; background:#f8f9fc; border-radius:5px; border:1px solid var(--border);
+    padding:3px 8px; background:#f8f9fc; border-radius:5px; border:1px solid var(--border);
   }
-  .total-label { font-family:'Chakra Petch',sans-serif; font-size:.62rem; color:#37474f; letter-spacing:.8px; text-transform:uppercase; font-weight:700; }
-  .total-value { font-family:'Chakra Petch',sans-serif; font-size:1.05rem; font-weight:800; color:#0d47a1; }
-  .clock-box { font-family:'Chakra Petch',monospace; font-size:1.05rem; font-weight:800; color:#004d40; }
-  .productivity-box { font-family:'Chakra Petch',monospace; font-size:1.05rem; font-weight:800; color:#b45309; }
+  .total-label { font-family:'Chakra Petch',sans-serif; font-size:.6rem; color:#37474f; letter-spacing:.7px; text-transform:uppercase; font-weight:700; }
+  .total-value { font-family:'Chakra Petch',sans-serif; font-size: clamp(.9rem,2.5vw,1.1rem); font-weight:800; color:#0d47a1; }
+  .clock-box { font-family:'Chakra Petch',monospace; font-size: clamp(.9rem,2.5vw,1.1rem); font-weight:800; color:#004d40; }
+  .productivity-box { font-family:'Chakra Petch',monospace; font-size: clamp(.9rem,2.5vw,1.1rem); font-weight:800; color:#b45309; }
   .total-box.productivity-card { background: linear-gradient(135deg,#fffbeb,#fef3c7); border-color:#fcd34d; }
   .total-box.productivity-card .total-label { color:#92400e; }
 
-  /* Radar Cards */
+  /* ═══════════════════════════════════
+     RADAR CARDS
+  ═══════════════════════════════════ */
   .radar-card { padding: 8px 10px 10px; }
   .radar-card::before { background: linear-gradient(90deg,#1a237e,#42a5f5); }
   .radar-title {
     font-family:'Chakra Petch',sans-serif;
-    font-size:.78rem; font-weight:700;
-    color:#0d47a1; text-align:center; margin-bottom:4px;
+    font-size: clamp(.68rem,2vw,.82rem);
+    font-weight:700; color:#0d47a1; text-align:center; margin-bottom:4px;
   }
-  .radar-body { display:flex; gap:6px; align-items:center; }
-  .radar-wrap { flex-shrink:0; width:170px; height:170px; position:relative; }
+  .radar-body { display:flex; gap:8px; align-items:center; }
+  .radar-wrap { flex-shrink:0; width:140px; height:140px; position:relative; }
   .radar-wrap canvas { width:100% !important; height:100% !important; }
   .radar-legend { flex:1; display:flex; flex-direction:column; gap:3px; min-width:0; }
   .radar-legend-item {
     display:flex; align-items:center; justify-content:space-between;
-    font-size:.71rem; color:#1a1f2e; font-weight:700;
+    font-size: clamp(.66rem,1.8vw,.74rem);
+    color:#1a1f2e; font-weight:700;
     padding:2px 0; border-bottom:1px solid #e8eaf0;
   }
   .radar-legend-left { display:flex; align-items:center; gap:5px; font-weight:800; color:#0d47a1; overflow:hidden; }
-  .radar-legend-left span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:.71rem; }
+  .radar-legend-left span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size: clamp(.64rem,1.7vw,.72rem); }
   .radar-legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-  .radar-legend-val { font-family:'Chakra Petch',monospace; font-size:.76rem; font-weight:800; color:#0d47a1; min-width:18px; text-align:right; }
-  .radar-total { font-family:'Chakra Petch',monospace; font-size:.68rem; color:#1a237e; font-weight:800; text-align:center; margin-top:4px; }
+  .radar-legend-val { font-family:'Chakra Petch',monospace; font-size:.74rem; font-weight:800; color:#0d47a1; min-width:18px; text-align:right; }
+  .radar-total { font-family:'Chakra Petch',monospace; font-size:.66rem; color:#1a237e; font-weight:800; text-align:center; margin-top:4px; }
 
-  /* Downtime Table */
+  /* ═══════════════════════════════════
+     DOWNTIME TABLE
+  ═══════════════════════════════════ */
   .dt-table-header {
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:6px; gap:6px; flex-wrap:wrap;
+    display:flex; align-items:center; flex-wrap:wrap;
+    margin-bottom:6px; gap:5px;
   }
   .dt-count-badge {
     font-family:'Chakra Petch',monospace;
-    font-size:.66rem; font-weight:700; color:#004d40;
+    font-size:.64rem; font-weight:700; color:#004d40;
     background:rgba(0,77,64,.08); border:1px solid rgba(0,77,64,.25);
     border-radius:20px; padding:2px 10px; white-space:nowrap;
   }
-  .dt-filter-wrap { display:flex; gap:3px; align-items:center; flex-wrap:wrap; }
+  .dt-filter-wrap {
+    display:flex; gap:3px; flex-wrap:wrap; align-items:center;
+    width:100%;
+  }
   .dt-filter-btn {
     font-family:'Chakra Petch',sans-serif;
-    font-size:.58rem; font-weight:600;
-    padding:2px 7px; border-radius:4px; border:1px solid transparent;
+    font-size:clamp(.54rem,1.6vw,.62rem); font-weight:600;
+    padding:3px 8px; border-radius:4px; border:1px solid transparent;
     cursor:pointer; background:#f0f2f5; color:var(--muted);
-    transition:all .15s; white-space:nowrap;
+    transition:all .15s; white-space:nowrap; min-height:26px;
   }
   .dt-filter-btn:hover { background:#e3f2fd; color:#1565c0; border-color:#90caf9; }
   .dt-filter-btn.active { background:#1565c0; color:#fff; border-color:#1565c0; }
@@ -343,19 +315,20 @@
 
   .dt-table-wrap {
     overflow-x: auto; overflow-y: auto;
-    max-height: 320px;
+    max-height: 300px;
     border-radius: 6px; border: 1px solid var(--border);
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: thin; scrollbar-color: #dde1e8 transparent;
   }
   .dt-table-wrap::-webkit-scrollbar { width:4px; height:4px; }
   .dt-table-wrap::-webkit-scrollbar-thumb { background:#dde1e8; border-radius:4px; }
 
-  .dt-table { width:100%; border-collapse:collapse; font-size:.74rem; min-width:580px; }
+  .dt-table { width:100%; border-collapse:collapse; font-size:.72rem; min-width:560px; }
   .dt-table thead th {
     position:sticky; top:0; z-index:2;
     background:#1a237e; color:#fff;
     font-family:'Chakra Petch',sans-serif;
-    font-size:.75rem; font-weight:700; letter-spacing:.5px;
+    font-size:.72rem; font-weight:700; letter-spacing:.4px;
     padding:6px 8px; text-align:left; white-space:nowrap;
     border-right:1px solid rgba(255,255,255,.15);
   }
@@ -366,12 +339,12 @@
   .dt-table tbody tr:nth-child(even):hover { background:#f0f7ff; }
   .dt-table tbody td { padding:4px 8px; color:var(--text); vertical-align:middle; white-space:nowrap; border-right:1px solid #f0f2f5; }
   .dt-table tbody td:last-child { border-right:none; }
-  .dt-table tbody td.desc-cell { white-space:normal; max-width:260px; word-break:break-word; line-height:1.3; }
-  .dt-table .machine-cell { font-family:'Chakra Petch',monospace; font-size:.7rem; font-weight:800; color:#0d47a1; }
-  .dt-table .time-cell { font-family:'Chakra Petch',monospace; font-size:.7rem; color:#263238; font-weight:600; }
-  .dt-table .dur-cell { font-family:'Chakra Petch',monospace; font-size:.7rem; font-weight:800; color:#b71c1c; text-align:right; }
+  .dt-table tbody td.desc-cell { white-space:normal; max-width:220px; word-break:break-word; line-height:1.3; }
+  .dt-table .machine-cell { font-family:'Chakra Petch',monospace; font-size:.68rem; font-weight:800; color:#0d47a1; }
+  .dt-table .time-cell { font-family:'Chakra Petch',monospace; font-size:.68rem; color:#263238; font-weight:600; }
+  .dt-table .dur-cell { font-family:'Chakra Petch',monospace; font-size:.68rem; font-weight:800; color:#b71c1c; text-align:right; }
 
-  .shift-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:.55rem; font-weight:700; padding:1px 5px; border-radius:3px; letter-spacing:.3px; white-space:nowrap; }
+  .shift-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:.54rem; font-weight:700; padding:1px 5px; border-radius:3px; letter-spacing:.3px; white-space:nowrap; }
   .shift-badge-d { background:rgba(245,127,23,.15); color:#e65100; border:1px solid rgba(245,127,23,.3); }
   .shift-badge-n { background:rgba(49,27,146,.15); color:#4527a0; border:1px solid rgba(49,27,146,.3); }
 
@@ -389,7 +362,7 @@
     50%      { box-shadow:0 0 0 5px rgba(255,23,68,.12),0 2px 10px rgba(213,0,0,.5); }
   }
 
-  .type-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:.58rem; font-weight:700; padding:1px 6px; border-radius:3px; letter-spacing:.4px; white-space:nowrap; }
+  .type-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:.56rem; font-weight:700; padding:1px 6px; border-radius:3px; letter-spacing:.4px; white-space:nowrap; }
   .type-OPT       { background:rgba(86,119,252,.12); color:#5677fc; border:1px solid rgba(86,119,252,.25); }
   .type-EE        { background:rgba(38,166,154,.12); color:#00796b; border:1px solid rgba(38,166,154,.25); }
   .type-ME        { background:rgba(255,111,0,.12);  color:#e65100; border:1px solid rgba(255,111,0,.25); }
@@ -402,9 +375,25 @@
 
   .dt-empty { text-align:center; padding:16px; font-family:'Chakra Petch',sans-serif; font-size:.65rem; color:var(--muted); letter-spacing:1px; }
 
+  /* Overlay */
+  .overlay {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.88); border-radius:10px;
+    gap:8px; z-index:10;
+  }
+  .overlay.hidden { display:none; }
+  .spinner {
+    width:26px; height:26px;
+    border:3px solid #e3e8f0; border-top-color:var(--blue);
+    border-radius:50%; animation:spin .75s linear infinite;
+  }
+  @keyframes spin { to{ transform:rotate(360deg); } }
+  .overlay-msg { font-family:'Chakra Petch',sans-serif; font-size:.65rem; color:var(--muted); letter-spacing:1px; }
+
   /* Footer */
   .footer { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px; }
-  .footer-txt { font-family:'Chakra Petch',monospace; font-size:.6rem; color:#546e7a; font-weight:600; }
+  .footer-txt { font-family:'Chakra Petch',monospace; font-size:.58rem; color:#546e7a; font-weight:600; }
 
   /* Error */
   #errorBanner {
@@ -414,87 +403,119 @@
     font-size:.73rem; color:#c62828; line-height:1.5;
   }
 
-  /* ══════════════════════════════════
-     RESPONSIVE BREAKPOINTS
-  ══════════════════════════════════ */
-
-  /* Large TV screens (43"–62" ≈ 1920px+) */
-  @media (min-width: 1920px) {
-    :root { --topbar-h: 64px; }
-    .logo-box { font-size: 1.3rem; }
-    .bar-chart-wrap { height: clamp(300px, 24vw, 500px); }
-    .perf-chart-wrap { height: clamp(180px, 14vw, 280px); }
-    .card-head { font-size: .92rem; }
-    .dt-table { font-size: .82rem; }
-    .dt-table-wrap { max-height: 420px; }
-    .pie-wrap { width: 180px; height: 180px; }
-    .radar-wrap { width: 220px; height: 220px; }
-    .pie-legend-item { font-size: .82rem; }
-    .radar-legend-item { font-size: .82rem; }
-    .total-value, .clock-box, .productivity-box { font-size: 1.3rem; }
-    .body-row { grid-template-columns: 1fr 420px; }
-  }
-
-  /* Mid-size (1600–1919px) */
-  @media (min-width: 1600px) and (max-width: 1919px) {
-    .bar-chart-wrap { height: clamp(260px, 26vw, 400px); }
-    .perf-chart-wrap { height: clamp(160px, 15vw, 250px); }
-    .body-row { grid-template-columns: 1fr 380px; }
-    .radar-wrap { width: 190px; height: 190px; }
-    .pie-wrap { width: 160px; height: 160px; }
-  }
-
-  /* Tablet landscape / small screens (768–1199px) */
-  @media (max-width: 1199px) {
-    .body-row {
-      grid-template-columns: 1fr;
-    }
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — Tablet portrait (≥ 600px)
+  ═══════════════════════════════════════════ */
+  @media (min-width: 600px) {
+    .top-bar { padding: 6px 14px; }
     .right-col {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
       gap: 8px;
     }
-    .bar-chart-wrap { height: clamp(220px, 35vw, 380px); }
-    .perf-chart-wrap { height: clamp(150px, 22vw, 240px); }
-    .pie-wrap { width: 120px; height: 120px; }
-    .radar-wrap { width: 130px; height: 130px; }
-    .pie-body { flex-direction: column; align-items: flex-start; }
-    .radar-body { flex-direction: column; }
+    /* Pie card spans 2 cols on tablet */
+    .pie-card { grid-column: 1 / -1; }
+    .bar-chart-wrap { height: clamp(240px, 42vw, 360px); }
+    .perf-chart-wrap { height: clamp(150px, 28vw, 220px); }
+    .pie-wrap { width: 150px; height: 150px; }
+    .radar-wrap { width: 160px; height: 160px; }
   }
 
-  /* Tablet portrait (600–767px) */
-  @media (max-width: 767px) {
-    .top-bar {
-      height: auto;
-      padding: 8px 10px;
-      flex-direction: column;
-      align-items: flex-start;
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — Tablet landscape (≥ 900px)
+  ═══════════════════════════════════════════ */
+  @media (min-width: 900px) {
+    .top-bar { flex-direction: row; align-items: center; padding: 0 14px; min-height: 52px; gap: 8px; }
+    .topbar-row1 { flex: 0 0 auto; }
+    .topbar-row2 { flex: 1; justify-content: flex-end; }
+    .right-col {
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto;
     }
-    .controls { width: 100%; justify-content: flex-start; }
-    .page { padding: 8px; gap: 8px; }
-    .body-row { grid-template-columns: 1fr; }
-    .right-col { grid-template-columns: 1fr 1fr; }
-    .bar-chart-wrap { height: clamp(200px, 55vw, 320px); }
-    .perf-chart-wrap { height: clamp(130px, 35vw, 200px); }
-    .radar-wrap { width: 120px; height: 120px; }
-    .dt-table-wrap { max-height: 280px; }
+    .pie-card { grid-column: 1 / -1; }
+    .bar-chart-wrap { height: clamp(240px, 30vw, 380px); }
+    .perf-chart-wrap { height: clamp(150px, 18vw, 240px); }
   }
 
-  /* Mobile portrait (< 600px) */
-  @media (max-width: 599px) {
-    .logo-box { font-size: .72rem; letter-spacing: 0; }
-    .right-col { grid-template-columns: 1fr; }
-    .bar-chart-wrap { height: clamp(180px, 65vw, 280px); }
-    .perf-chart-wrap { height: clamp(120px, 45vw, 180px); }
-    .pie-body { flex-direction: row; align-items: center; }
-    .pie-wrap { width: 100px; height: 100px; }
-    .radar-body { flex-direction: row; align-items: center; }
-    .radar-wrap { width: 110px; height: 110px; }
-    .dt-table { font-size: .68rem; }
-    .dt-table thead th { font-size: .68rem; padding: 5px 6px; }
-    .dt-table tbody td { padding: 3px 6px; }
-    .footer { flex-direction: column; align-items: flex-start; }
-    .ctrl-label { display: none; }
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — Desktop (≥ 1200px) — 2-col layout
+  ═══════════════════════════════════════════ */
+  @media (min-width: 1200px) {
+    .page { padding: 10px 14px 14px; }
+    .body-row {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 8px; align-items: start;
+    }
+    .right-col {
+      display: flex; flex-direction: column;
+      gap: 8px;
+    }
+    .pie-card { grid-column: unset; }
+    .pie-wrap { width: 140px; height: 140px; }
+    .radar-wrap { width: 170px; height: 170px; }
+    .bar-chart-wrap { height: clamp(260px, 26vw, 380px); }
+    .perf-chart-wrap { height: clamp(160px, 16vw, 240px); }
+    .dt-table-wrap { max-height: 340px; }
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — 1600px+
+  ═══════════════════════════════════════════ */
+  @media (min-width: 1600px) {
+    .body-row { grid-template-columns: 1fr 380px; }
+    .bar-chart-wrap { height: clamp(300px, 26vw, 420px); }
+    .perf-chart-wrap { height: clamp(180px, 15vw, 260px); }
+    .radar-wrap { width: 190px; height: 190px; }
+    .pie-wrap { width: 160px; height: 160px; }
+    .dt-table-wrap { max-height: 380px; }
+    .total-value, .clock-box, .productivity-box { font-size: 1.2rem; }
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — Large TV (≥ 1920px) 43"–62"
+  ═══════════════════════════════════════════ */
+  @media (min-width: 1920px) {
+    .top-bar { min-height: 64px; }
+    .logo-box { font-size: 1.2rem; }
+    .body-row { grid-template-columns: 1fr 460px; gap: 12px; }
+    .page { padding: 12px 20px 20px; gap: 12px; }
+    .bar-chart-wrap { height: clamp(340px, 22vw, 520px); }
+    .perf-chart-wrap { height: clamp(200px, 14vw, 300px); }
+    .card { padding: 14px 16px 16px; }
+    .card-head { font-size: 1rem; margin-bottom: 10px; }
+    .dt-table { font-size: .86rem; }
+    .dt-table thead th { font-size: .86rem; padding: 8px 10px; }
+    .dt-table tbody td { padding: 5px 10px; }
+    .dt-table-wrap { max-height: 460px; }
+    .pie-wrap { width: 200px; height: 200px; }
+    .radar-wrap { width: 240px; height: 240px; }
+    .pie-legend-item { font-size: .9rem; }
+    .radar-legend-item { font-size: .9rem; }
+    .total-value, .clock-box, .productivity-box { font-size: 1.45rem; }
+    .total-label { font-size: .72rem; }
+    .legend-item { font-size: .88rem; }
+    .btn-shift { font-size: .78rem; padding: 6px 12px; min-height: 34px; }
+    .dt-filter-btn { font-size: .72rem; padding: 4px 12px; min-height: 30px; }
+    .radar-legend-val { font-size: .88rem; }
+    .radar-legend-left span { font-size: .82rem; }
+    .radar-total { font-size: .78rem; }
+    .footer-txt { font-size: .68rem; }
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — 4K / Ultra-wide (≥ 2560px)
+  ═══════════════════════════════════════════ */
+  @media (min-width: 2560px) {
+    .body-row { grid-template-columns: 1fr 600px; }
+    .bar-chart-wrap { height: clamp(400px, 20vw, 650px); }
+    .perf-chart-wrap { height: clamp(240px, 12vw, 380px); }
+    .pie-wrap { width: 260px; height: 260px; }
+    .radar-wrap { width: 300px; height: 300px; }
+    .card-head { font-size: 1.2rem; }
+    .dt-table { font-size: 1rem; }
+    .total-value, .clock-box, .productivity-box { font-size: 1.7rem; }
   }
 </style>
 </head>
@@ -502,20 +523,22 @@
 
 <!-- ── Top Bar ── -->
 <div class="top-bar">
-  <div class="top-bar-left">
+  <div class="topbar-row1">
     <div class="logo-box">DASHBOARD<span>: </span>Daily Report Production of WL 1</div>
   </div>
-  <div class="controls">
+  <div class="topbar-row2">
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
       <button class="btn-shift active-all" id="btnAll"   data-shift="all">☀️🌙 All</button>
       <button class="btn-shift"            id="btnDay"   data-shift="day">☀️ Day</button>
       <button class="btn-shift"            id="btnNight" data-shift="night">🌙 Night</button>
     </div>
-    <span class="ctrl-label" style="margin-left:4px;">Date</span>
-    <button class="btn-nav" id="btnPrev" disabled>&#8249;</button>
-    <select class="date-select" id="datePicker"><option>Loading…</option></select>
-    <button class="btn-nav" id="btnNext" disabled>&#8250;</button>
+    <div class="date-nav-group">
+      <span class="ctrl-label">Date</span>
+      <button class="btn-nav" id="btnPrev" disabled>&#8249;</button>
+      <select class="date-select" id="datePicker"><option>Loading…</option></select>
+      <button class="btn-nav" id="btnNext" disabled>&#8250;</button>
+    </div>
     <button class="btn-refresh" id="btnRefresh">⟳ Refresh</button>
     <div class="auto-refresh-wrap">
       <span class="auto-refresh-label">Auto</span>
@@ -592,11 +615,11 @@
               <tr>
                 <th>Machine Name</th>
                 <th>Shift</th>
-                <th>Start Time</th>
-                <th>End Time</th>
+                <th>Start</th>
+                <th>End</th>
                 <th>Description</th>
                 <th>Type</th>
-                <th style="text-align:right;">Duration</th>
+                <th style="text-align:right;">Dur.</th>
               </tr>
             </thead>
             <tbody id="dtTableBody">
@@ -723,6 +746,12 @@ document.querySelectorAll('.btn-shift').forEach(btn=>{
 /* ══════════ CHART INIT ══════════ */
 Chart.defaults.font.family="'Sarabun',sans-serif";
 
+/* Format hour label: shiftHour → display string 08:00 – 07:00 */
+function shiftHourLabel(h) {
+  const real = h >= 24 ? h - 24 : h;
+  return String(real).padStart(2,'0') + ':00';
+}
+
 const totalLabelPlugin={
   id:'totalLabel',
   afterDatasetsDraw(chart){
@@ -734,10 +763,10 @@ const totalLabelPlugin={
       if(!total) return;
       const xp=x.getPixelForValue(i), yp=y.getPixelForValue(total);
       const lbl=total.toLocaleString();
-      ctx.font="bold 10px 'Chakra Petch',monospace";
+      ctx.font="bold 9px 'Chakra Petch',monospace";
       const tw=ctx.measureText(lbl).width;
-      const pw=tw+8,ph=15,pr=3,px=xp-pw/2,py=yp-ph-3;
-      ctx.fillStyle='rgba(21,35,126,.95)';
+      const pw=tw+8,ph=14,pr=3,px=xp-pw/2,py=yp-ph-3;
+      ctx.fillStyle='rgba(21,35,126,.92)';
       ctx.beginPath(); ctx.roundRect(px,py,pw,ph,pr); ctx.fill();
       ctx.fillStyle='#ffffff'; ctx.textAlign='center'; ctx.textBaseline='bottom';
       ctx.fillText(lbl,xp,yp-3);
@@ -773,10 +802,19 @@ function initBarChart(){
         }
       },
       scales:{
-        x:{stacked:true,grid:{color:'#e8eaf0'},ticks:{font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},color:'#1a237e',maxRotation:0,minRotation:0}},
+        x:{
+          stacked:true,
+          grid:{color:'#e8eaf0'},
+          ticks:{
+            font:{family:"'Chakra Petch',monospace",size:9,weight:'600'},
+            color:'#1a237e',
+            maxRotation:0, minRotation:0,
+            autoSkip:true, maxTicksLimit:16
+          }
+        },
         y:{
           stacked:true, grid:{color:'#e8eaf0'},
-          ticks:{font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:1000},
+          ticks:{font:{family:"'Chakra Petch',monospace",size:9,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:1000},
           beginAtZero:true, min:0, max:7000
         }
       }
@@ -837,10 +875,17 @@ function initPerfChart(){
         }
       },
       scales:{
-        x:{grid:{color:'#fce4ec'},ticks:{font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},color:'#1a237e',maxRotation:0,minRotation:0}},
+        x:{
+          grid:{color:'#fce4ec'},
+          ticks:{
+            font:{family:"'Chakra Petch',monospace",size:9,weight:'600'},
+            color:'#1a237e',maxRotation:0,minRotation:0,
+            autoSkip:true, maxTicksLimit:16
+          }
+        },
         y:{
           grid:{color:'#fce4ec'},
-          ticks:{font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:20},
+          ticks:{font:{family:"'Chakra Petch',monospace",size:9,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:20},
           beginAtZero:true, min:0, max:160
         }
       }
@@ -883,8 +928,8 @@ function radarOptions() {
     scales:{
       r:{
         beginAtZero:true,
-        ticks:{ font:{family:"'Chakra Petch',monospace",size:9,weight:'700'}, color:'#37474f', backdropColor:'rgba(255,255,255,0.75)', backdropPadding:2, maxTicksLimit:4 },
-        pointLabels:{ font:{family:"'Chakra Petch',monospace",size:10,weight:'800'}, color:'#0d47a1', padding:6 },
+        ticks:{ font:{family:"'Chakra Petch',monospace",size:8,weight:'700'}, color:'#37474f', backdropColor:'rgba(255,255,255,0.75)', backdropPadding:2, maxTicksLimit:4 },
+        pointLabels:{ font:{family:"'Chakra Petch',monospace",size:9,weight:'800'}, color:'#0d47a1', padding:4 },
         grid:{ color:'rgba(0,0,0,.15)' },
         angleLines:{ color:'rgba(0,0,0,.2)' },
       }
@@ -1060,7 +1105,12 @@ function parseDT(s){
   if(m)return new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5],0);
   return new Date(NaN);
 }
-function fmtTime(s){const d=parseDT(s);if(!d||isNaN(d))return s;return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;}
+function fmtTime(s){
+  const d=parseDT(s);
+  if(!d||isNaN(d))return s;
+  const h=d.getHours();
+  return String(h).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
 function toYMD(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function getWorkingDate(dtStr){
   const d=parseDT(dtStr);if(!d||isNaN(d))return null;
@@ -1090,8 +1140,11 @@ function processCSV(text){
 }
 
 function renderForDate(wd){
+  /* Sort rows so 08:00 is first, going through 23:00, then 00:00–07:00 (next day) */
   const allForDate=allRows.filter(r=>r._wd===wd).sort((a,b)=>shiftHour(a)-shiftHour(b));
   const rows=filterByShift(allForDate,currentShift);
+
+  /* Labels: display as HH:MM, midnight = "00:00" not "0:00" */
   const labels=rows.map(r=>fmtTime(r[COL.DT]||''));
   const dataB=rows.map(r=>parseNum(r[COL.BCM_CR]));
   const dataCR1=rows.map(r=>parseNum(r[COL.CR1]));
