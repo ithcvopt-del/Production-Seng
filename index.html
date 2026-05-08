@@ -8,30 +8,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
+  /* ══════════════════════════════════
+     LG TV WebOS FIX:
+     1. ไม่ใช้ clamp() — ใช้ px คงที่ + media query แทน
+     2. ไม่ใช้ min() / max() CSS functions
+     3. ไม่ใช้ aspect-ratio
+     4. ใช้ height คงที่บน chart wrappers
+  ══════════════════════════════════ */
+
   :root {
-    --bg: #f0f2f5;
-    --card: #ffffff;
-    --border: #dde1e8;
-    --shadow: 0 2px 12px rgba(0,0,0,.07);
-    --blue:   #1565c0;
-    --text:   #1a1f2e;
-    --muted:  #6b7280;
-    --label:  #374151;
-    --header-bg: #1a237e;
-    --header-accent: #42a5f5;
-    --topbar-h: 52px;
+    --bg:           #f0f2f5;
+    --card:         #ffffff;
+    --border:       #dde1e8;
+    --shadow:       0 2px 12px rgba(0,0,0,.07);
+    --blue:         #1565c0;
+    --text:         #1a1f2e;
+    --muted:        #6b7280;
+    --label:        #374151;
+    --header-bg:    #1a237e;
+    --header-accent:#42a5f5;
+    --topbar-h:     52px;
 
-    /* ── Fluid scale (clamp ให้ทำงานได้ทุกขนาดโดยไม่ต้อง breakpoint เยอะ) ── */
-    --fs-xs:   clamp(.55rem, .8vw,  .78rem);
-    --fs-sm:   clamp(.65rem, .9vw,  .9rem);
-    --fs-base: clamp(.72rem, 1vw,   1rem);
-    --fs-lg:   clamp(.85rem, 1.2vw, 1.2rem);
-    --fs-xl:   clamp(1rem,   1.6vw, 1.8rem);
-    --fs-2xl:  clamp(1.2rem, 2vw,   2.4rem);
+    /* ── ✅ FIXED: ไม่ใช้ clamp() ── */
+    --fs-xs:   0.72rem;
+    --fs-sm:   0.82rem;
+    --fs-base: 0.92rem;
+    --fs-lg:   1.05rem;
+    --fs-xl:   1.35rem;
+    --fs-2xl:  1.7rem;
 
-    /* chart heights — clamp จะปรับตาม viewport width */
-    --bar-h:  clamp(220px, 28vh, 500px);
-    --perf-h: clamp(140px, 18vh, 320px);
+    --bar-h:  320px;
+    --perf-h: 200px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,32 +46,51 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Sarabun', sans-serif;
+    font-family: 'Sarabun', Arial, sans-serif;
     min-height: 100vh;
   }
 
   /* ── Top Bar ── */
   .top-bar {
+    background: #1a237e;
+    background: -webkit-linear-gradient(135deg, #1a237e 0%, #283593 60%, #1565c0 100%);
     background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #1565c0 100%);
     padding: 0 14px;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
     justify-content: space-between;
     gap: 6px;
     box-shadow: 0 3px 16px rgba(21,35,126,.35);
+    position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 100;
     height: var(--topbar-h);
     min-height: var(--topbar-h);
   }
-  .top-bar-left { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .top-bar-left {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 10px;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+  }
   .logo-box {
     background: rgba(255,255,255,.12);
     border: 1px solid rgba(255,255,255,.2);
     border-radius: 7px;
     padding: 4px 10px;
-    font-family: 'Chakra Petch', sans-serif;
+    font-family: 'Chakra Petch', Arial, sans-serif;
     font-size: var(--fs-base);
     font-weight: 700;
     color: #fff;
@@ -74,12 +100,23 @@
   .logo-box span { color: var(--header-accent); }
 
   .controls {
-    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 5px;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
   }
   .ctrl-label {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: var(--fs-xs); color: rgba(255,255,255,.55);
-    letter-spacing: 1.2px; text-transform: uppercase; white-space: nowrap;
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: var(--fs-xs);
+    color: rgba(255,255,255,.55);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    white-space: nowrap;
   }
   .date-select {
     background: rgba(255,255,255,.1);
@@ -89,9 +126,12 @@
     font-family: 'Chakra Petch', monospace;
     font-size: var(--fs-sm);
     padding: 5px 8px;
-    cursor: pointer; outline: none;
+    cursor: pointer;
+    outline: none;
     min-width: 110px;
     -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
   .date-select option { background: #1a237e; color: #fff; }
   .btn-nav {
@@ -99,8 +139,20 @@
     border: 1px solid rgba(255,255,255,.2);
     border-radius: 6px;
     color: rgba(255,255,255,.8);
-    font-size: var(--fs-base); width: 28px; height: 28px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: var(--fs-base);
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-negative: 0;
     flex-shrink: 0;
   }
   .btn-nav:hover { background: rgba(255,255,255,.22); }
@@ -111,99 +163,162 @@
     border-radius: 6px;
     color: var(--header-accent);
     font-family: 'Chakra Petch', monospace;
-    font-size: var(--fs-xs); padding: 5px 8px;
-    cursor: pointer; white-space: nowrap;
+    font-size: var(--fs-xs);
+    padding: 5px 8px;
+    cursor: pointer;
+    white-space: nowrap;
   }
   .auto-refresh-wrap {
-    display: flex; align-items: center; gap: 5px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 5px;
     background: rgba(0,0,0,.18);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 6px;
     padding: 4px 8px;
+    -ms-flex-negative: 0;
     flex-shrink: 0;
   }
   .auto-refresh-label {
     font-family: 'Chakra Petch', monospace;
-    font-size: var(--fs-xs); color: rgba(255,255,255,.45);
-    letter-spacing: .8px; text-transform: uppercase;
+    font-size: var(--fs-xs);
+    color: rgba(255,255,255,.45);
+    letter-spacing: .8px;
+    text-transform: uppercase;
     white-space: nowrap;
   }
-  .countdown-ring { position: relative; width: 20px; height: 20px; flex-shrink:0; }
-  .countdown-ring svg { transform: rotate(-90deg); }
+  .countdown-ring { position: relative; width: 20px; height: 20px; flex-shrink: 0; }
+  .countdown-ring svg { -webkit-transform: rotate(-90deg); transform: rotate(-90deg); }
   .countdown-ring circle.track { fill: none; stroke: rgba(255,255,255,.12); stroke-width: 2.5; }
   .countdown-ring circle.prog {
-    fill: none; stroke: #42a5f5; stroke-width: 2.5;
+    fill: none;
+    stroke: #42a5f5;
+    stroke-width: 2.5;
     stroke-linecap: round;
+    -webkit-transition: stroke-dashoffset .9s linear;
     transition: stroke-dashoffset .9s linear;
   }
   .countdown-txt {
     font-family: 'Chakra Petch', monospace;
-    font-size: var(--fs-xs); font-weight: 700;
-    color: #42a5f5; white-space: nowrap; min-width: 26px;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: #42a5f5;
+    white-space: nowrap;
+    min-width: 26px;
   }
   .shift-group {
-    display: flex; align-items: center; gap: 2px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 2px;
     background: rgba(0,0,0,.2);
     border: 1px solid rgba(255,255,255,.13);
-    border-radius: 7px; padding: 2px;
+    border-radius: 7px;
+    padding: 2px;
+    -ms-flex-negative: 0;
     flex-shrink: 0;
   }
   .btn-shift {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: var(--fs-xs); font-weight: 600; letter-spacing: .3px;
-    padding: 4px 7px; border-radius: 5px; border: none;
-    cursor: pointer; white-space: nowrap;
-    color: rgba(255,255,255,.55); background: transparent;
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: .3px;
+    padding: 4px 7px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    color: rgba(255,255,255,.55);
+    background: transparent;
+    -webkit-transition: all .18s;
     transition: all .18s;
   }
   .btn-shift:hover { color: #fff; background: rgba(255,255,255,.1); }
-  .btn-shift.active-all   { background: linear-gradient(135deg,#1565c0,#42a5f5); color:#fff; }
-  .btn-shift.active-day   { background: linear-gradient(135deg,#f57f17,#ffca28); color:#1a1f2e; }
-  .btn-shift.active-night { background: linear-gradient(135deg,#311b92,#7b1fa2); color:#fff; }
+  .btn-shift.active-all   { background: #1565c0; background: -webkit-linear-gradient(135deg,#1565c0,#42a5f5); background: linear-gradient(135deg,#1565c0,#42a5f5); color:#fff; }
+  .btn-shift.active-day   { background: #f57f17; background: -webkit-linear-gradient(135deg,#f57f17,#ffca28); background: linear-gradient(135deg,#f57f17,#ffca28); color:#1a1f2e; }
+  .btn-shift.active-night { background: #311b92; background: -webkit-linear-gradient(135deg,#311b92,#7b1fa2); background: linear-gradient(135deg,#311b92,#7b1fa2); color:#fff; }
 
   .top-bar-row1 {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
     gap: 6px;
+    -ms-flex-negative: 0;
     flex-shrink: 0;
   }
   .top-bar-row2 {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
     gap: 5px;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
 
   /* ── Page wrapper ── */
   .page {
-    padding: clamp(6px, 1vh, 14px) clamp(8px, 1.2vw, 16px);
+    padding: 10px 12px;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
-    gap: clamp(6px, 1vh, 10px);
+    gap: 8px;
   }
 
-  /* ── Main layout ──
-     right-col ใช้ clamp เพื่อปรับขนาดแบบ fluid ตาม viewport
-     ไม่ต้องพึ่ง breakpoint เยอะ
-  */
+  /* ── Main layout ── */
   .body-row {
-    display: grid;
-    grid-template-columns: 1fr clamp(280px, 24vw, 480px);
-    gap: clamp(6px, 1vw, 10px);
-    align-items: start;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 10px;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
   }
 
   .left-col {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
-    gap: clamp(6px, 1vh, 10px);
+    gap: 8px;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 0%;
+    flex: 1 1 0%;
     min-width: 0;
   }
 
   .right-col {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
-    gap: clamp(6px, 1vh, 10px);
+    gap: 8px;
+    width: 340px;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
     min-width: 0;
   }
 
@@ -213,27 +328,33 @@
     border: 1px solid var(--border);
     border-radius: 10px;
     box-shadow: var(--shadow);
-    padding: clamp(8px,1vh,12px) clamp(10px,1.2vw,14px) clamp(10px,1.5vh,14px);
+    padding: 10px 12px 12px;
     position: relative;
     overflow: hidden;
   }
   .card::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:3px;
-    background: linear-gradient(90deg, var(--blue), var(--header-accent));
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #1565c0;
+    background: -webkit-linear-gradient(90deg, #1565c0, #42a5f5);
+    background: linear-gradient(90deg, #1565c0, #42a5f5);
     border-radius: 10px 10px 0 0;
   }
-  .card.shift-day::before    { background: linear-gradient(90deg,#f57f17,#ffca28); }
-  .card.shift-night::before  { background: linear-gradient(90deg,#311b92,#7b1fa2); }
-  .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
-  .card.dt-table-card::before { background: linear-gradient(90deg,#00695c,#26a69a); }
+  .card.shift-day::before    { background: -webkit-linear-gradient(90deg,#f57f17,#ffca28); background: linear-gradient(90deg,#f57f17,#ffca28); }
+  .card.shift-night::before  { background: -webkit-linear-gradient(90deg,#311b92,#7b1fa2); background: linear-gradient(90deg,#311b92,#7b1fa2); }
+  .card.perf-card::before    { background: -webkit-linear-gradient(90deg,#c62828,#ef5350); background: linear-gradient(90deg,#c62828,#ef5350); }
+  .card.dt-table-card::before { background: -webkit-linear-gradient(90deg,#00695c,#26a69a); background: linear-gradient(90deg,#00695c,#26a69a); }
 
-  /* Chart wrappers — fluid height */
+  /* ✅ FIXED: ใช้ height คงที่ ไม่ใช้ clamp */
   .bar-chart-wrap {
     position: relative;
     width: 100%;
     height: var(--bar-h);
   }
-
   .perf-chart-wrap {
     position: relative;
     width: 100%;
@@ -243,58 +364,119 @@
   canvas { display: block; }
 
   .card-head {
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: var(--fs-sm); font-weight: 700;
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: var(--fs-sm);
+    font-weight: 700;
     color: #0d47a1;
-    margin-bottom: clamp(5px, .8vh, 10px);
-    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 6px;
   }
   .card-head.red { color: #b71c1c; }
   .card-head.teal { color: #004d40; }
   .card-head::before {
-    content:''; width:3px; height:13px;
-    background: linear-gradient(180deg, var(--blue), var(--header-accent));
-    border-radius: 2px; flex-shrink:0;
+    content: '';
+    width: 3px;
+    height: 13px;
+    background: #1565c0;
+    background: -webkit-linear-gradient(180deg, #1565c0, #42a5f5);
+    background: linear-gradient(180deg, #1565c0, #42a5f5);
+    border-radius: 2px;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
   }
-  .card-head.red::before { background: linear-gradient(180deg,#c62828,#ef5350); }
-  .card-head.teal::before { background: linear-gradient(180deg,#00695c,#26a69a); }
+  .card-head.red::before  { background: -webkit-linear-gradient(180deg,#c62828,#ef5350); background: linear-gradient(180deg,#c62828,#ef5350); }
+  .card-head.teal::before { background: -webkit-linear-gradient(180deg,#00695c,#26a69a); background: linear-gradient(180deg,#00695c,#26a69a); }
 
   .legend {
-    display:flex; gap:10px; flex-wrap:wrap;
-    margin-top:6px; justify-content:center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 10px;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-top: 6px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
   }
-  .legend-item { display:flex; align-items:center; gap:4px; font-size:var(--fs-xs); color:#1a237e; font-weight:700; }
-  .legend-dot  { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .legend-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--fs-xs);
+    color: #1a237e;
+    font-weight: 700;
+  }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; -ms-flex-negative: 0; flex-shrink: 0; }
 
   /* Overlay */
   .overlay {
-    position:absolute; inset:0;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    background:rgba(255,255,255,.88); border-radius:10px;
-    gap:8px; z-index:10;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    background: rgba(255,255,255,.88);
+    border-radius: 10px;
+    gap: 8px;
+    z-index: 10;
   }
-  .overlay.hidden { display:none; }
+  .overlay.hidden { display: none; }
   .spinner {
-    width:26px; height:26px;
-    border:3px solid #e3e8f0; border-top-color:var(--blue);
-    border-radius:50%; animation:spin .75s linear infinite;
+    width: 26px; height: 26px;
+    border: 3px solid #e3e8f0;
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    -webkit-animation: spin .75s linear infinite;
+    animation: spin .75s linear infinite;
   }
-  @keyframes spin { to{ transform:rotate(360deg); } }
-  .overlay-msg { font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); color:var(--muted); letter-spacing:1px; }
+  @-webkit-keyframes spin { to { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
+  @keyframes spin { to { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
+  .overlay-msg { font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-xs); color: var(--muted); letter-spacing: 1px; }
 
   /* ── Right column — Pie card ── */
-  .pie-card { padding: clamp(6px,.8vh,10px) clamp(10px,1.2vw,14px) clamp(10px,1.5vh,14px); }
+  .pie-card { padding: 8px 12px 12px; }
   .pie-title {
-    font-family:'Chakra Petch',sans-serif;
-    font-size:var(--fs-sm); font-weight:700;
-    color:#0d47a1; text-align:center;
-    margin-bottom:clamp(4px,.6vh,8px);
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: #0d47a1;
+    text-align: center;
+    margin-bottom: 6px;
   }
-  .pie-body { display: flex; gap: clamp(6px,.8vw,12px); align-items: center; }
-
+  .pie-body {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 10px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
   .pie-wrap {
-    width: clamp(100px, 12vw, 180px);
-    height: clamp(100px, 12vw, 180px);
+    width: 140px;
+    height: 140px;
+    -ms-flex-negative: 0;
     flex-shrink: 0;
     position: relative;
   }
@@ -304,42 +486,109 @@
     width: 100% !important;
     height: 100% !important;
   }
-
-  .pie-right { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .pie-legend { display:flex; flex-direction:column; gap:2px; }
+  .pie-right {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .pie-legend { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; gap: 2px; }
   .pie-legend-item {
-    display:flex; align-items:center; justify-content:space-between;
-    font-size:var(--fs-xs); color:#1a1f2e; font-weight:700;
-    padding:2px 0; border-bottom:1px solid #e8eaf0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    font-size: var(--fs-xs);
+    color: #1a1f2e;
+    font-weight: 700;
+    padding: 2px 0;
+    border-bottom: 1px solid #e8eaf0;
   }
-  .pie-legend-left { display:flex; align-items:center; gap:4px; font-weight:700; color:#1a237e; }
-  .pie-legend-dot  { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-  .totals-row { display:flex; flex-direction:column; gap:clamp(3px,.5vh,6px); margin-top:clamp(4px,.6vh,8px); padding-top:clamp(4px,.6vh,8px); border-top:1px solid var(--border); }
+  .pie-legend-left {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    color: #1a237e;
+  }
+  .pie-legend-dot { width: 8px; height: 8px; border-radius: 50%; -ms-flex-negative: 0; flex-shrink: 0; }
+  .totals-row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+  }
   .total-box {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:clamp(2px,.4vh,5px) clamp(5px,.6vw,8px);
-    background:#f8f9fc; border-radius:5px; border:1px solid var(--border);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 4px 7px;
+    background: #f8f9fc;
+    border-radius: 5px;
+    border: 1px solid var(--border);
   }
-  .total-label { font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); color:#37474f; letter-spacing:.8px; text-transform:uppercase; font-weight:700; }
-  .total-value { font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xl); font-weight:800; color:#0d47a1; }
-  .clock-box { font-family:'Chakra Petch',monospace; font-size:var(--fs-xl); font-weight:800; color:#004d40; }
-  .productivity-box { font-family:'Chakra Petch',monospace; font-size:var(--fs-xl); font-weight:800; color:#b45309; }
-  .total-box.productivity-card { background: linear-gradient(135deg,#fffbeb,#fef3c7); border-color:#fcd34d; }
-  .total-box.productivity-card .total-label { color:#92400e; }
+  .total-label { font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-xs); color: #37474f; letter-spacing: .8px; text-transform: uppercase; font-weight: 700; }
+  .total-value { font-family: 'Chakra Petch', Arial, monospace; font-size: var(--fs-xl); font-weight: 800; color: #0d47a1; }
+  .clock-box { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xl); font-weight: 800; color: #004d40; }
+  .productivity-box { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xl); font-weight: 800; color: #b45309; }
+  .total-box.productivity-card { background: #fffbeb; border-color: #fcd34d; }
+  .total-box.productivity-card .total-label { color: #92400e; }
 
   /* Radar Cards */
-  .radar-card { padding: clamp(6px,.8vh,10px) clamp(8px,1vw,12px) clamp(8px,1.2vh,12px); }
-  .radar-card::before { background: linear-gradient(90deg,#1a237e,#42a5f5); }
+  .radar-card { padding: 8px 10px 10px; }
+  .radar-card::before { background: -webkit-linear-gradient(90deg,#1a237e,#42a5f5); background: linear-gradient(90deg,#1a237e,#42a5f5); }
   .radar-title {
-    font-family:'Chakra Petch',sans-serif;
-    font-size:var(--fs-sm); font-weight:700;
-    color:#0d47a1; text-align:center; margin-bottom:clamp(3px,.5vh,6px);
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: #0d47a1;
+    text-align: center;
+    margin-bottom: 5px;
   }
-  .radar-body { display:flex; gap:clamp(4px,.6vw,8px); align-items:center; }
+  .radar-body {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 8px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
   .radar-wrap {
-    flex-shrink:0;
-    width: clamp(120px, 13vw, 220px);
-    height: clamp(120px, 13vw, 220px);
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
     position: relative;
   }
   .radar-wrap canvas {
@@ -348,226 +597,333 @@
     width: 100% !important;
     height: 100% !important;
   }
-  .radar-legend { flex:1; display:flex; flex-direction:column; gap:3px; min-width:0; }
-  .radar-legend-item {
-    display:flex; align-items:center; justify-content:space-between;
-    font-size:var(--fs-xs); color:#1a1f2e; font-weight:700;
-    padding:2px 0; border-bottom:1px solid #e8eaf0;
+  .radar-legend {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
   }
-  .radar-legend-left { display:flex; align-items:center; gap:5px; font-weight:800; color:#0d47a1; overflow:hidden; }
-  .radar-legend-left span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:var(--fs-xs); }
-  .radar-legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-  .radar-legend-val { font-family:'Chakra Petch',monospace; font-size:var(--fs-sm); font-weight:800; color:#0d47a1; min-width:18px; text-align:right; }
-  .radar-total { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); color:#1a237e; font-weight:800; text-align:center; margin-top:4px; }
+  .radar-legend-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    font-size: var(--fs-xs);
+    color: #1a1f2e;
+    font-weight: 700;
+    padding: 2px 0;
+    border-bottom: 1px solid #e8eaf0;
+  }
+  .radar-legend-left {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    gap: 5px;
+    font-weight: 800;
+    color: #0d47a1;
+    overflow: hidden;
+  }
+  .radar-legend-left span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--fs-xs); }
+  .radar-legend-dot { width: 9px; height: 9px; border-radius: 50%; -ms-flex-negative: 0; flex-shrink: 0; }
+  .radar-legend-val { font-family: 'Chakra Petch', monospace; font-size: var(--fs-sm); font-weight: 800; color: #0d47a1; min-width: 18px; text-align: right; }
+  .radar-total { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); color: #1a237e; font-weight: 800; text-align: center; margin-top: 4px; }
 
   /* Downtime Table */
   .dt-table-header {
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:clamp(4px,.6vh,8px); gap:6px; flex-wrap:wrap;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    gap: 6px;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
   }
   .dt-count-badge {
-    font-family:'Chakra Petch',monospace;
-    font-size:var(--fs-xs); font-weight:700; color:#004d40;
-    background:rgba(0,77,64,.08); border:1px solid rgba(0,77,64,.25);
-    border-radius:20px; padding:2px 10px; white-space:nowrap;
+    font-family: 'Chakra Petch', monospace;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: #004d40;
+    background: rgba(0,77,64,.08);
+    border: 1px solid rgba(0,77,64,.25);
+    border-radius: 20px;
+    padding: 2px 10px;
+    white-space: nowrap;
   }
-  .dt-filter-wrap { display:flex; gap:3px; align-items:center; flex-wrap:wrap; }
+  .dt-filter-wrap {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 3px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
   .dt-filter-btn {
-    font-family:'Chakra Petch',sans-serif;
-    font-size:var(--fs-xs); font-weight:600;
-    padding:2px 7px; border-radius:4px; border:1px solid transparent;
-    cursor:pointer; background:#f0f2f5; color:var(--muted);
-    transition:all .15s; white-space:nowrap;
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    background: #f0f2f5;
+    color: var(--muted);
+    -webkit-transition: all .15s;
+    transition: all .15s;
+    white-space: nowrap;
   }
-  .dt-filter-btn:hover { background:#e3f2fd; color:#1565c0; border-color:#90caf9; }
-  .dt-filter-btn.active { background:#1565c0; color:#fff; border-color:#1565c0; }
-  .dt-filter-btn.type-OPT.active       { background:#5677fc; border-color:#5677fc; }
-  .dt-filter-btn.type-EE.active        { background:#26a69a; border-color:#26a69a; }
-  .dt-filter-btn.type-ME.active        { background:#ff6f00; border-color:#ff6f00; }
-  .dt-filter-btn.type-Plan.active      { background:#00bcd4; border-color:#00bcd4; }
-  .dt-filter-btn.type-Uncontrol.active { background:#e91e63; border-color:#e91e63; }
-  .dt-filter-btn.type-STB.active       { background:#78909c; border-color:#78909c; }
-  .dt-filter-btn.type-Other.active     { background:#8d6e63; border-color:#8d6e63; }
+  .dt-filter-btn:hover { background: #e3f2fd; color: #1565c0; border-color: #90caf9; }
+  .dt-filter-btn.active { background: #1565c0; color: #fff; border-color: #1565c0; }
+  .dt-filter-btn.type-OPT.active       { background: #5677fc; border-color: #5677fc; }
+  .dt-filter-btn.type-EE.active        { background: #26a69a; border-color: #26a69a; }
+  .dt-filter-btn.type-ME.active        { background: #ff6f00; border-color: #ff6f00; }
+  .dt-filter-btn.type-Plan.active      { background: #00bcd4; border-color: #00bcd4; }
+  .dt-filter-btn.type-Uncontrol.active { background: #e91e63; border-color: #e91e63; }
+  .dt-filter-btn.type-STB.active       { background: #78909c; border-color: #78909c; }
+  .dt-filter-btn.type-Other.active     { background: #8d6e63; border-color: #8d6e63; }
 
   .dt-table-wrap {
-    overflow-x: auto; overflow-y: auto;
-    max-height: clamp(240px, 30vh, 420px);
-    border-radius: 6px; border: 1px solid var(--border);
-    scrollbar-width: thin; scrollbar-color: #dde1e8 transparent;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 300px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    scrollbar-width: thin;
+    scrollbar-color: #dde1e8 transparent;
   }
-  .dt-table-wrap::-webkit-scrollbar { width:4px; height:4px; }
-  .dt-table-wrap::-webkit-scrollbar-thumb { background:#dde1e8; border-radius:4px; }
+  .dt-table-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
+  .dt-table-wrap::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 4px; }
 
-  .dt-table { width:100%; border-collapse:collapse; font-size:var(--fs-xs); min-width:580px; }
+  .dt-table { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); min-width: 580px; }
   .dt-table thead th {
-    position:sticky; top:0; z-index:2;
-    background:#1a237e; color:#fff;
-    font-family:'Chakra Petch',sans-serif;
-    font-size:var(--fs-xs); font-weight:700; letter-spacing:.5px;
-    padding:clamp(4px,.6vh,8px) clamp(6px,.8vw,10px); text-align:left; white-space:nowrap;
-    border-right:1px solid rgba(255,255,255,.15);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #1a237e;
+    color: #fff;
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: .5px;
+    padding: 6px 8px;
+    text-align: left;
+    white-space: nowrap;
+    border-right: 1px solid rgba(255,255,255,.15);
   }
-  .dt-table thead th:last-child { border-right:none; }
-  .dt-table tbody tr { border-bottom:1px solid #f0f2f5; transition:background .12s; }
-  .dt-table tbody tr:hover { background:#f0f7ff; }
-  .dt-table tbody tr:nth-child(even) { background:#fafbfc; }
-  .dt-table tbody tr:nth-child(even):hover { background:#f0f7ff; }
-  .dt-table tbody td { padding:clamp(3px,.5vh,6px) clamp(6px,.8vw,10px); color:var(--text); vertical-align:middle; white-space:nowrap; border-right:1px solid #f0f2f5; }
-  .dt-table tbody td:last-child { border-right:none; }
-  .dt-table tbody td.desc-cell { white-space:normal; max-width:260px; word-break:break-word; line-height:1.3; }
-  .dt-table .machine-cell { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); font-weight:800; color:#0d47a1; }
-  .dt-table .time-cell { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); color:#263238; font-weight:600; }
-  .dt-table .dur-cell { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); font-weight:800; color:#b71c1c; text-align:right; }
+  .dt-table thead th:last-child { border-right: none; }
+  .dt-table tbody tr { border-bottom: 1px solid #f0f2f5; -webkit-transition: background .12s; transition: background .12s; }
+  .dt-table tbody tr:hover { background: #f0f7ff; }
+  .dt-table tbody tr:nth-child(even) { background: #fafbfc; }
+  .dt-table tbody tr:nth-child(even):hover { background: #f0f7ff; }
+  .dt-table tbody td { padding: 5px 8px; color: var(--text); vertical-align: middle; white-space: nowrap; border-right: 1px solid #f0f2f5; }
+  .dt-table tbody td:last-child { border-right: none; }
+  .dt-table tbody td.desc-cell { white-space: normal; max-width: 260px; word-break: break-word; line-height: 1.3; }
+  .dt-table .machine-cell { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); font-weight: 800; color: #0d47a1; }
+  .dt-table .time-cell { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); color: #263238; font-weight: 600; }
+  .dt-table .dur-cell { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); font-weight: 800; color: #b71c1c; text-align: right; }
 
-  .shift-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); font-weight:700; padding:1px 5px; border-radius:3px; letter-spacing:.3px; white-space:nowrap; }
-  .shift-badge-d { background:rgba(245,127,23,.15); color:#e65100; border:1px solid rgba(245,127,23,.3); }
-  .shift-badge-n { background:rgba(49,27,146,.15); color:#4527a0; border:1px solid rgba(49,27,146,.3); }
+  .shift-badge { display: inline-block; font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-xs); font-weight: 700; padding: 1px 5px; border-radius: 3px; letter-spacing: .3px; white-space: nowrap; }
+  .shift-badge-d { background: rgba(245,127,23,.15); color: #e65100; border: 1px solid rgba(245,127,23,.3); }
+  .shift-badge-n { background: rgba(49,27,146,.15); color: #4527a0; border: 1px solid rgba(49,27,146,.3); }
 
   .end-unknown {
-    display:inline-flex; align-items:center; justify-content:center;
-    width:22px; height:22px;
-    background:linear-gradient(135deg,#ffeb3b,#d50000);
-    color:#fff; font-family:'Chakra Petch',monospace;
-    font-size:.8rem; font-weight:900; border-radius:50%;
-    box-shadow:0 0 0 2px rgba(255,23,68,.25),0 2px 6px rgba(213,0,0,.35);
-    animation:pulse-red 1.6s ease-in-out infinite; cursor:default;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    background: #ffeb3b;
+    background: -webkit-linear-gradient(135deg,#ffeb3b,#d50000);
+    background: linear-gradient(135deg,#ffeb3b,#d50000);
+    color: #fff;
+    font-family: 'Chakra Petch', monospace;
+    font-size: .8rem; font-weight: 900; border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(255,23,68,.25), 0 2px 6px rgba(213,0,0,.35);
+    -webkit-animation: pulse-red 1.6s ease-in-out infinite;
+    animation: pulse-red 1.6s ease-in-out infinite;
+    cursor: default;
+  }
+  @-webkit-keyframes pulse-red {
+    0%,100% { box-shadow: 0 0 0 2px rgba(255,23,68,.25), 0 2px 6px rgba(213,0,0,.35); }
+    50%      { box-shadow: 0 0 0 5px rgba(255,23,68,.12), 0 2px 10px rgba(213,0,0,.5); }
   }
   @keyframes pulse-red {
-    0%,100% { box-shadow:0 0 0 2px rgba(255,23,68,.25),0 2px 6px rgba(213,0,0,.35); }
-    50%      { box-shadow:0 0 0 5px rgba(255,23,68,.12),0 2px 10px rgba(213,0,0,.5); }
+    0%,100% { box-shadow: 0 0 0 2px rgba(255,23,68,.25), 0 2px 6px rgba(213,0,0,.35); }
+    50%      { box-shadow: 0 0 0 5px rgba(255,23,68,.12), 0 2px 10px rgba(213,0,0,.5); }
   }
 
-  .type-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); font-weight:700; padding:1px 6px; border-radius:3px; letter-spacing:.4px; white-space:nowrap; }
-  .type-OPT       { background:rgba(86,119,252,.12); color:#5677fc; border:1px solid rgba(86,119,252,.25); }
-  .type-EE        { background:rgba(38,166,154,.12); color:#00796b; border:1px solid rgba(38,166,154,.25); }
-  .type-ME        { background:rgba(255,111,0,.12);  color:#e65100; border:1px solid rgba(255,111,0,.25); }
-  .type-Plan      { background:rgba(0,188,212,.12);  color:#4dd0e1; border:1px solid rgba(0,188,212,.25); }
-  .type-Uncontrol { background:rgba(233,30,99,.12);  color:#c2185b; border:1px solid rgba(233,30,99,.25); }
-  .type-STB       { background:rgba(120,144,156,.12);color:#795548; border:1px solid rgba(120,144,156,.25); }
-  .type-PM        { background:rgba(255,152,0,.12);  color:#9292D1; border:1px solid rgba(255,152,0,.25); }
-  .type-Other     { background:rgba(141,110,99,.12); color:#4e342e; border:1px solid rgba(141,110,99,.25); }
-  .type-PLAN      { background:rgba(0,188,212,.12);  color:#00838f; border:1px solid rgba(0,188,212,.25); }
+  .type-badge { display: inline-block; font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-xs); font-weight: 700; padding: 1px 6px; border-radius: 3px; letter-spacing: .4px; white-space: nowrap; }
+  .type-OPT       { background: rgba(86,119,252,.12); color: #5677fc; border: 1px solid rgba(86,119,252,.25); }
+  .type-EE        { background: rgba(38,166,154,.12); color: #00796b; border: 1px solid rgba(38,166,154,.25); }
+  .type-ME        { background: rgba(255,111,0,.12);  color: #e65100; border: 1px solid rgba(255,111,0,.25); }
+  .type-Plan      { background: rgba(0,188,212,.12);  color: #4dd0e1; border: 1px solid rgba(0,188,212,.25); }
+  .type-Uncontrol { background: rgba(233,30,99,.12);  color: #c2185b; border: 1px solid rgba(233,30,99,.25); }
+  .type-STB       { background: rgba(120,144,156,.12);color: #795548; border: 1px solid rgba(120,144,156,.25); }
+  .type-PM        { background: rgba(255,152,0,.12);  color: #9292D1; border: 1px solid rgba(255,152,0,.25); }
+  .type-Other     { background: rgba(141,110,99,.12); color: #4e342e; border: 1px solid rgba(141,110,99,.25); }
+  .type-PLAN      { background: rgba(0,188,212,.12);  color: #00838f; border: 1px solid rgba(0,188,212,.25); }
 
-  .dt-empty { text-align:center; padding:16px; font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); color:var(--muted); letter-spacing:1px; }
+  .dt-empty { text-align: center; padding: 16px; font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-xs); color: var(--muted); letter-spacing: 1px; }
 
   /* Footer */
-  .footer { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px; }
-  .footer-txt { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); color:#546e7a; font-weight:600; }
+  .footer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .footer-txt { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); color: #546e7a; font-weight: 600; }
 
   /* Error */
   #errorBanner {
-    display:none;
-    background:#fff3f3; border:1px solid #ffcdd2;
-    border-radius:7px; padding:7px 12px;
-    font-size:var(--fs-sm); color:#c62828; line-height:1.5;
+    display: none;
+    background: #fff3f3;
+    border: 1px solid #ffcdd2;
+    border-radius: 7px;
+    padding: 7px 12px;
+    font-size: var(--fs-sm);
+    color: #c62828;
+    line-height: 1.5;
   }
 
   /* ══════════════════════════════════
      RESPONSIVE BREAKPOINTS
-     ใช้เป็น override เฉพาะจุดที่ clamp ไม่เพียงพอ
   ══════════════════════════════════ */
 
-  /* ── Tablet landscape / small screens (768–1199px) ── */
-  @media (max-width: 1199px) {
-    .body-row { grid-template-columns: 1fr; }
-    .right-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
+  /* ── Large TV / 4K ── */
+  @media (min-width: 1800px) {
+    :root {
+      --topbar-h: 62px;
+      --fs-xs:   0.85rem;
+      --fs-sm:   0.95rem;
+      --fs-base: 1.05rem;
+      --fs-lg:   1.2rem;
+      --fs-xl:   1.6rem;
+      --fs-2xl:  2rem;
+      --bar-h:  420px;
+      --perf-h: 280px;
     }
-    .pie-body  { flex-direction: column; align-items: flex-start; }
-    .radar-body { flex-direction: column; }
+    .right-col { width: 420px; }
+    .pie-wrap  { width: 180px; height: 180px; }
+    .radar-wrap { width: 190px; height: 190px; }
+    .dt-table-wrap { max-height: 400px; }
   }
 
-  /* ── MOBILE TOP BAR — 2 rows ── */
+  /* ── Standard desktop ── */
+  @media (min-width: 1400px) and (max-width: 1799px) {
+    :root {
+      --bar-h:  380px;
+      --perf-h: 240px;
+    }
+    .right-col { width: 380px; }
+    .pie-wrap  { width: 160px; height: 160px; }
+    .radar-wrap { width: 170px; height: 170px; }
+  }
+
+  /* ── Tablet landscape ── */
+  @media (max-width: 1199px) {
+    .body-row { -ms-flex-wrap: wrap; flex-wrap: wrap; }
+    .left-col { width: 100%; }
+    .right-col {
+      width: 100%;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+      flex-direction: row;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .right-col > .card {
+      -webkit-box-flex: 1;
+      -ms-flex: 1 1 280px;
+      flex: 1 1 280px;
+    }
+  }
+
+  /* ── Mobile top bar ── */
   @media (max-width: 767px) {
     .top-bar {
       height: auto;
       min-height: unset;
       padding: 7px 10px 6px;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
       flex-direction: column;
+      -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
       align-items: stretch;
       gap: 5px;
     }
     .top-bar-row1 {
-      display: flex;
-      align-items: center;
+      -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
       justify-content: space-between;
-      gap: 6px;
     }
-    .logo-box {
-      font-size: .72rem;
-      letter-spacing: .3px;
-      padding: 4px 8px;
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .logo-box { font-size: .72rem; letter-spacing: .3px; padding: 4px 8px; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
     .auto-refresh-wrap { padding: 3px 6px; gap: 4px; }
     .auto-refresh-label { display: none; }
-    .countdown-txt { font-size: .72rem; min-width: 28px; }
-    .top-bar-row2 {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      padding-bottom: 2px;
-    }
+    .top-bar-row2 { -ms-flex-wrap: nowrap; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px; }
     .top-bar-row2::-webkit-scrollbar { display: none; }
     .ctrl-label { display: none; }
-    .shift-group { flex-shrink: 0; }
+    .shift-group { -ms-flex-negative: 0; flex-shrink: 0; }
     .btn-shift { font-size: .72rem; padding: 6px 10px; }
-    .btn-nav   { width: 34px; height: 34px; font-size: 1.1rem; flex-shrink: 0; }
-    .date-select { font-size: .78rem; padding: 6px 8px; min-width: 100px; flex-shrink: 0; }
-    .btn-refresh { font-size: .72rem; padding: 6px 10px; flex-shrink: 0; }
-
+    .btn-nav   { width: 34px; height: 34px; font-size: 1.1rem; -ms-flex-negative: 0; flex-shrink: 0; }
+    .date-select { font-size: .78rem; padding: 6px 8px; min-width: 100px; -ms-flex-negative: 0; flex-shrink: 0; }
+    .btn-refresh { font-size: .72rem; padding: 6px 10px; -ms-flex-negative: 0; flex-shrink: 0; }
     .page { padding: 8px; gap: 8px; }
-    .body-row { grid-template-columns: 1fr; }
-    .right-col { grid-template-columns: 1fr 1fr; }
+    .body-row { -ms-flex-wrap: wrap; flex-wrap: wrap; }
+    .right-col { width: 100%; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -ms-flex-direction: row; flex-direction: row; -ms-flex-wrap: wrap; flex-wrap: wrap; }
   }
 
-  /* ── Mobile portrait (< 600px) ── */
   @media (max-width: 599px) {
-    .right-col { grid-template-columns: 1fr; }
-    .pie-body  { flex-direction: row; align-items: center; }
-    .radar-body { flex-direction: row; align-items: center; }
+    .right-col { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; }
     .dt-table  { font-size: .68rem; }
     .dt-table thead th { font-size: .68rem; padding: 5px 6px; }
     .dt-table tbody td { padding: 3px 6px; }
-    .footer { flex-direction: column; align-items: flex-start; }
-  }
-
-  /* ── ✅ 4K 55" TV FIX ──
-     จอ 55" 4K ที่ devicePixelRatio=2 จะมี CSS pixel = 1920px
-     ใช้ min-resolution เพื่อจับจอ high-DPI ขนาดใหญ่ด้วย
-  */
-  @media (min-width: 1800px),
-         (min-width: 1400px) and (min-resolution: 1.5dppx) {
-    :root {
-      --topbar-h: 62px;
-      /* เพิ่ม chart height สำหรับจอใหญ่ */
-      --bar-h:  clamp(380px, 32vh, 560px);
-      --perf-h: clamp(240px, 22vh, 380px);
-    }
-
-    .body-row {
-      grid-template-columns: 1fr clamp(360px, 28vw, 520px);
-    }
-
-    /* Topbar */
-    .logo-box      { letter-spacing: 2px; }
-    .btn-nav       { width: 36px; height: 36px; }
-    .date-select   { min-width: 130px; }
-
-    /* Downtime table */
-    .dt-table-wrap { max-height: clamp(300px, 35vh, 500px); }
-
-    /* Footer */
-    .footer { padding-top: 4px; }
+    .footer { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: start; -ms-flex-align: start; align-items: flex-start; }
   }
 </style>
 </head>
@@ -575,7 +931,6 @@
 
 <!-- ── Top Bar ── -->
 <div class="top-bar">
-  <!-- Row 1: Logo + Auto timer -->
   <div class="top-bar-row1">
     <div class="top-bar-left">
       <div class="logo-box">DASHBOARD<span>: </span>Daily Report Production of WL 1</div>
@@ -593,19 +948,18 @@
     </div>
   </div>
 
-  <!-- Row 2: Controls -->
   <div class="controls top-bar-row2">
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
-      <button class="btn-shift active-all" id="btnAll"   data-shift="all">☀️🌙 All</button>
-      <button class="btn-shift"            id="btnDay"   data-shift="day">☀️ Day</button>
-      <button class="btn-shift"            id="btnNight" data-shift="night">🌙 Night</button>
+      <button class="btn-shift active-all" id="btnAll"   data-shift="all">All</button>
+      <button class="btn-shift"            id="btnDay"   data-shift="day">Day</button>
+      <button class="btn-shift"            id="btnNight" data-shift="night">Night</button>
     </div>
     <span class="ctrl-label" style="margin-left:4px;">Date</span>
     <button class="btn-nav" id="btnPrev" disabled>&#8249;</button>
     <select class="date-select" id="datePicker"><option>Loading…</option></select>
     <button class="btn-nav" id="btnNext" disabled>&#8250;</button>
-    <button class="btn-refresh" id="btnRefresh">⟳ Refresh</button>
+    <button class="btn-refresh" id="btnRefresh">Refresh</button>
   </div>
 </div>
 
@@ -722,7 +1076,7 @@
           <div class="radar-wrap">
             <canvas id="radarEquipChart"></canvas>
           </div>
-          <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;">
+          <div style="display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-flex:1;-ms-flex:1;flex:1;min-width:0;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;">
             <div class="radar-legend" id="radarEquipLegend"></div>
             <div class="radar-total" id="radarEquipTotal">Total: — events</div>
           </div>
@@ -736,7 +1090,7 @@
           <div class="radar-wrap">
             <canvas id="radarTypeChart"></canvas>
           </div>
-          <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;">
+          <div style="display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-flex:1;-ms-flex:1;flex:1;min-width:0;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;">
             <div class="radar-legend" id="radarTypeLegend"></div>
             <div class="radar-total" id="radarTypeTotal">Total: — events</div>
           </div>
@@ -770,121 +1124,137 @@ const C = {
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 let radarEquipChart=null, radarTypeChart=null;
 
-/* ══════════ FLUID FONT SIZE for charts ══════════ */
-function vw(pct) { return window.innerWidth * pct / 100; }
-function chartFontSize(min, pct, max) {
-  return Math.min(max, Math.max(min, vw(pct)));
-}
-
-/* ══════════ SHIFT ══════════ */
-let currentShift = 'all';
-const SHIFT_CONFIG = {
-  all:   { label:'All Shift',   period:'08:00 → 07:00 (+1 day)', minH:8,  maxH:31 },
-  day:   { label:'Shift Day',   period:'08:00 → 19:00',          minH:8,  maxH:19 },
-  night: { label:'Shift Night', period:'20:00 → 07:00 (+1 day)', minH:20, maxH:31 },
-};
-function shiftHour(r) { const h=parseDT(r[COL.DT]).getHours(); return h<8?h+24:h; }
-function filterByShift(rows,shift) {
-  const {minH,maxH}=SHIFT_CONFIG[shift];
-  return rows.filter(r=>{const sh=shiftHour(r);return sh>=minH&&sh<=maxH;});
-}
-function applyShiftUI(shift) {
-  document.querySelectorAll('.btn-shift').forEach(btn=>{
-    btn.className='btn-shift';
-    if(btn.dataset.shift===shift) btn.classList.add('active-'+shift);
-  });
-  const bc=document.getElementById('barCard');
-  bc.className='card'+(shift==='all'?'':' shift-'+shift);
-}
-document.querySelectorAll('.btn-shift').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    currentShift=btn.dataset.shift; applyShiftUI(currentShift);
-    const wd=document.getElementById('datePicker').value;
-    if(availableDates.length&&wd) renderForDate(wd);
-  });
-});
-
-/* ══════════ CHART INIT ══════════ */
-Chart.defaults.font.family="'Sarabun',sans-serif";
-
-/* ── ✅ FIX: fluid font size ใน chart plugins ── */
+/* ══════════ FONT SIZE ══════════ */
 function getChartFontSize() {
-  const w = window.innerWidth;
+  var w = window.innerWidth;
   if (w >= 2400) return 13;
   if (w >= 1800) return 11;
   if (w >= 1400) return 10;
   return 9;
 }
 
-const totalLabelPlugin={
-  id:'totalLabel',
-  afterDatasetsDraw(chart){
-    const{ctx,scales:{x,y}}=chart;
-    const ds=chart.data.datasets;
+/* ══════════ SHIFT ══════════ */
+var currentShift = 'all';
+var SHIFT_CONFIG = {
+  all:   { label:'All Shift',   period:'08:00 → 07:00 (+1 day)', minH:8,  maxH:31 },
+  day:   { label:'Shift Day',   period:'08:00 → 19:00',          minH:8,  maxH:19 },
+  night: { label:'Shift Night', period:'20:00 → 07:00 (+1 day)', minH:20, maxH:31 },
+};
+function shiftHour(r) { var h=parseDT(r[COL.DT]).getHours(); return h<8?h+24:h; }
+function filterByShift(rows,shift) {
+  var cfg=SHIFT_CONFIG[shift];
+  return rows.filter(function(r){var sh=shiftHour(r);return sh>=cfg.minH&&sh<=cfg.maxH;});
+}
+function applyShiftUI(shift) {
+  document.querySelectorAll('.btn-shift').forEach(function(btn){
+    btn.className='btn-shift';
+    if(btn.dataset.shift===shift) btn.classList.add('active-'+shift);
+  });
+  var bc=document.getElementById('barCard');
+  bc.className='card'+(shift==='all'?'':' shift-'+shift);
+}
+document.querySelectorAll('.btn-shift').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    currentShift=btn.dataset.shift; applyShiftUI(currentShift);
+    var wd=document.getElementById('datePicker').value;
+    if(availableDates.length&&wd) renderForDate(wd);
+  });
+});
+
+/* ══════════ CHART INIT ══════════ */
+Chart.defaults.font.family="'Sarabun',Arial,sans-serif";
+
+/* ✅ CRITICAL FIX: ไม่ใช้ roundRect() เพราะ LG TV WebOS ไม่รองรับ */
+var totalLabelPlugin = {
+  id: 'totalLabel',
+  afterDatasetsDraw: function(chart) {
+    var ctx = chart.ctx;
+    var scales = chart.scales;
+    var x = scales.x;
+    var y = scales.y;
+    var ds = chart.data.datasets;
     ctx.save();
-    const fs = getChartFontSize();
-    chart.data.labels.forEach((_,i)=>{
-      const total=ds.reduce((s,d)=>s+(Number(d.data[i])||0),0);
-      if(!total) return;
-      const xp=x.getPixelForValue(i), yp=y.getPixelForValue(total);
-      const lbl=total.toLocaleString();
-      ctx.font=`bold ${fs}px 'Chakra Petch',monospace`;
-      const tw=ctx.measureText(lbl).width;
-      const pw=tw+8,ph=fs+6,pr=3,px=xp-pw/2,py=yp-ph-3;
-      ctx.fillStyle='rgba(21,35,126,.95)';
-      ctx.beginPath(); ctx.roundRect(px,py,pw,ph,pr); ctx.fill();
-      ctx.fillStyle='#ffffff'; ctx.textAlign='center'; ctx.textBaseline='bottom';
-      ctx.fillText(lbl,xp,yp-3);
+    var fs = getChartFontSize();
+    chart.data.labels.forEach(function(_, i) {
+      var total = ds.reduce(function(s, d){ return s + (Number(d.data[i]) || 0); }, 0);
+      if (!total) return;
+      var xp = x.getPixelForValue(i);
+      var yp = y.getPixelForValue(total);
+      var lbl = total.toLocaleString();
+      ctx.font = 'bold ' + fs + "px 'Chakra Petch',monospace";
+      var tw = ctx.measureText(lbl).width;
+      var pw = tw + 8;
+      var ph = fs + 6;
+      var pr = 3;
+      var px2 = xp - pw / 2;
+      var py2 = yp - ph - 3;
+      /* ✅ FIX: ใช้ fillRect ธรรมดา แทน roundRect */
+      ctx.fillStyle = 'rgba(21,35,126,.95)';
+      ctx.fillRect(px2, py2, pw, ph);
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(lbl, xp, yp - 3);
     });
     ctx.restore();
   }
 };
 
 function initBarChart(){
-  const ctx=document.getElementById('bcmChart').getContext('2d');
-  const fs = getChartFontSize();
-  bcmChart=new Chart(ctx,{
-    type:'bar', plugins:[totalLabelPlugin],
-    data:{labels:[],datasets:[
-      {label:'BCM CR',data:[],backgroundColor:'#259B24',stack:'s',borderRadius:2},
-      {label:'BWE 1', data:[],backgroundColor:'#7b1fa2',stack:'s',borderRadius:2},
-      {label:'BWE 2', data:[],backgroundColor:'#f48fb1',stack:'s',borderRadius:2},
-    ]},
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      layout:{padding:{top:22}},
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#fff',borderColor:'#dde1e8',borderWidth:1,
-          titleColor:'#1a1f2e',bodyColor:'#374151',
-          titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},
-          bodyFont:{family:"'Sarabun',sans-serif",size:fs+2},padding:8,
+  var ctx = document.getElementById('bcmChart').getContext('2d');
+  var fs = getChartFontSize();
+  bcmChart = new Chart(ctx, {
+    type: 'bar',
+    plugins: [totalLabelPlugin],
+    data: {
+      labels: [],
+      datasets: [
+        { label:'BCM CR', data:[], backgroundColor:'#259B24', stack:'s', borderRadius:2 },
+        { label:'BWE 1',  data:[], backgroundColor:'#7b1fa2', stack:'s', borderRadius:2 },
+        { label:'BWE 2',  data:[], backgroundColor:'#f48fb1', stack:'s', borderRadius:2 },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      layout: { padding: { top:22 } },
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          backgroundColor:'#fff', borderColor:'#dde1e8', borderWidth:1,
+          titleColor:'#1a1f2e', bodyColor:'#374151',
+          titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
+          bodyFont:{ family:"'Sarabun',Arial,sans-serif", size:fs+2 },
+          padding:8,
           callbacks:{
-            label:c=>` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}`,
-            footer:items=>`  Total: ${items.reduce((s,i)=>s+i.parsed.y,0).toLocaleString()}`
+            label:function(c){ return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString(); },
+            footer:function(items){ return '  Total: '+items.reduce(function(s,i){return s+i.parsed.y;},0).toLocaleString(); }
           }
         }
       },
-      scales:{
-        x:{
-          stacked:true,
-          grid:{color:'#e8eaf0'},
-          ticks:{
-            font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},
+      scales: {
+        x: {
+          stacked: true,
+          grid: { color:'#e8eaf0' },
+          ticks: {
+            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
             color:'#1a237e',
             maxRotation:0,
             minRotation:0,
-            /* ✅ FIX: ลด label ให้สมกับ data จริง ไม่ overflow */
             autoSkip:true,
             maxTicksLimit:24,
           }
         },
-        y:{
-          stacked:true, grid:{color:'#e8eaf0'},
-          ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:1000},
+        y: {
+          stacked: true,
+          grid: { color:'#e8eaf0' },
+          ticks: {
+            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
+            color:'#374151',
+            callback:function(v){ return v.toLocaleString(); },
+            stepSize:1000
+          },
           beginAtZero:true, min:0, max:7000
         }
       }
@@ -893,29 +1263,29 @@ function initBarChart(){
 }
 
 function initPieChart(){
-  const canvas = document.getElementById('pieChart');
-  const ctx = canvas.getContext('2d');
-  const fs = getChartFontSize();
-  pieChart=new Chart(ctx,{
-    type:'pie',
-    data:{
-      labels:['BWE 1','BWE 2','CR 1','CR 2','CR 3'],
-      datasets:[{
-        data:[0,0,0,0,0],
-        backgroundColor:[C.bwe1,C.bwe2,C.cr1,C.cr2,C.cr3],
-        borderColor:'#fff', borderWidth:2, hoverOffset:8
+  var canvas = document.getElementById('pieChart');
+  var ctx = canvas.getContext('2d');
+  var fs = getChartFontSize();
+  pieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['BWE 1','BWE 2','CR 1','CR 2','CR 3'],
+      datasets: [{
+        data: [0,0,0,0,0],
+        backgroundColor: [C.bwe1, C.bwe2, C.cr1, C.cr2, C.cr3],
+        borderColor: '#fff', borderWidth:2, hoverOffset:8
       }]
     },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#fff',borderColor:'#dde1e8',borderWidth:1,
-          titleColor:'#1a1f2e',bodyColor:'#374151',
-          titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},
-          callbacks:{label:c=>` ${c.label}: ${c.parsed.toLocaleString()}`}
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          backgroundColor:'#fff', borderColor:'#dde1e8', borderWidth:1,
+          titleColor:'#1a1f2e', bodyColor:'#374151',
+          titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
+          callbacks:{ label:function(c){ return ' '+c.label+': '+c.parsed.toLocaleString(); } }
         }
       }
     }
@@ -923,37 +1293,47 @@ function initPieChart(){
 }
 
 function initPerfChart(){
-  const ctx=document.getElementById('perfChart').getContext('2d');
-  const fs = getChartFontSize();
-  perfChart=new Chart(ctx,{
-    type:'line',
-    data:{labels:[],datasets:[{
-      label:'Performance Main Line',data:[],
-      borderColor:'#ef5350',backgroundColor:'rgba(239,83,80,.08)',
-      borderWidth:2.5,
-      pointBackgroundColor:'#ef5350',pointBorderColor:'#fff',pointBorderWidth:1.5,
-      pointRadius:3,pointHoverRadius:5,
-      tension:0.3,fill:true,
-    }]},
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#fff',borderColor:'#ffcdd2',borderWidth:1,
-          titleColor:'#1a1f2e',bodyColor:'#c62828',
-          titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},
-          bodyFont:{family:"'Sarabun',sans-serif",size:fs+2},padding:8,
-          callbacks:{label:c=>` Performance: ${c.parsed.y.toLocaleString()}`}
+  var ctx = document.getElementById('perfChart').getContext('2d');
+  var fs = getChartFontSize();
+  perfChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Performance Main Line',
+        data: [],
+        borderColor: '#ef5350',
+        backgroundColor: 'rgba(239,83,80,.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#ef5350',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1.5,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        tension: 0.3,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          backgroundColor:'#fff', borderColor:'#ffcdd2', borderWidth:1,
+          titleColor:'#1a1f2e', bodyColor:'#c62828',
+          titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
+          bodyFont:{ family:"'Sarabun',Arial,sans-serif", size:fs+2 },
+          padding:8,
+          callbacks:{ label:function(c){ return ' Performance: '+c.parsed.y.toLocaleString(); } }
         }
       },
-      scales:{
-        x:{
-          grid:{color:'#fce4ec'},
-          ticks:{
-            font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},
+      scales: {
+        x: {
+          grid: { color:'#fce4ec' },
+          ticks: {
+            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
             color:'#1a237e',
             maxRotation:0,
             minRotation:0,
@@ -961,9 +1341,14 @@ function initPerfChart(){
             maxTicksLimit:24,
           }
         },
-        y:{
-          grid:{color:'#fce4ec'},
-          ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:20},
+        y: {
+          grid: { color:'#fce4ec' },
+          ticks: {
+            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
+            color:'#374151',
+            callback:function(v){ return v.toLocaleString(); },
+            stepSize:20
+          },
           beginAtZero:true, min:0, max:160
         }
       }
@@ -972,14 +1357,14 @@ function initPerfChart(){
 }
 
 /* ══════════ RADAR CHARTS ══════════ */
-const DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
-const DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
+var DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
+var DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
-const DT_COL = {
+var DT_COL = {
   MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, SHIFT:7, TYPE:9, TYPEMACHINE:11
 };
 
-const EQUIP_DEF = [
+var EQUIP_DEF = [
   { label:'BWE #1',  key:'Bucket Wheel #1', color:'#6B007B' },
   { label:'BWE #2',  key:'Bucket Wheel #2', color:'#F48FB1' },
   { label:'CR #1',   key:'Crusher #1',      color:'#2baf2b' },
@@ -989,93 +1374,98 @@ const EQUIP_DEF = [
   { label:'System',  key:'System',           color:'#03a9f4' },
 ];
 
-const TYPE_DEF = [
-  { label:'OPT',      key:'OPT',      color:'#5677fc' },
-  { label:'EE',       key:'EE',       color:'#26a69a' },
-  { label:'ME',       key:'ME',       color:'#ff6f00' },
-  { label:'Plan',     key:'Plan',     color:'#00bcd4' },
-  { label:'Uncontrol',key:'Uncontrol',color:'#e91e63' },
+var TYPE_DEF = [
+  { label:'OPT',       key:'OPT',       color:'#5677fc' },
+  { label:'EE',        key:'EE',        color:'#26a69a' },
+  { label:'ME',        key:'ME',        color:'#ff6f00' },
+  { label:'Plan',      key:'Plan',      color:'#00bcd4' },
+  { label:'Uncontrol', key:'Uncontrol', color:'#e91e63' },
 ];
 
-let dtAllRows=[], dtCurrentRows=[], dtActiveFilter='ALL';
+var dtAllRows=[], dtCurrentRows=[], dtActiveFilter='ALL';
 
 function radarOptions() {
-  const fs = getChartFontSize();
+  var fs = getChartFontSize();
   return {
-    responsive:true,
-    maintainAspectRatio:false,
-    plugins:{ legend:{display:false} },
-    scales:{
-      r:{
-        beginAtZero:true,
-        ticks:{
-          font:{family:"'Chakra Petch',monospace",size:fs,weight:'700'},
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend:{ display:false } },
+    scales: {
+      r: {
+        beginAtZero: true,
+        ticks: {
+          font:{ family:"'Chakra Petch',monospace", size:fs, weight:'700' },
           color:'#37474f',
           backdropColor:'rgba(255,255,255,0.75)',
           backdropPadding:2,
           maxTicksLimit:4
         },
-        pointLabels:{
-          font:{family:"'Chakra Petch',monospace",size:fs+1,weight:'800'},
+        pointLabels: {
+          font:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'800' },
           color:'#0d47a1',
           padding:6
         },
-        grid:{ color:'rgba(0,0,0,.15)' },
-        angleLines:{ color:'rgba(0,0,0,.2)' },
+        grid: { color:'rgba(0,0,0,.15)' },
+        angleLines: { color:'rgba(0,0,0,.2)' },
       }
     }
   };
 }
 
 function initRadarEquip() {
-  const ctx=document.getElementById('radarEquipChart').getContext('2d');
-  radarEquipChart=new Chart(ctx,{
-    type:'radar',
-    data:{
-      labels:EQUIP_DEF.map(e=>e.label),
-      datasets:[{
-        label:'Downtime Count',
-        data:new Array(EQUIP_DEF.length).fill(0),
-        backgroundColor:'rgba(21,101,192,.13)', borderColor:'#1565c0', borderWidth:2,
-        pointBackgroundColor:EQUIP_DEF.map(e=>e.color),
+  var ctx = document.getElementById('radarEquipChart').getContext('2d');
+  radarEquipChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: EQUIP_DEF.map(function(e){ return e.label; }),
+      datasets: [{
+        label: 'Downtime Count',
+        data: new Array(EQUIP_DEF.length).fill(0),
+        backgroundColor: 'rgba(21,101,192,.13)',
+        borderColor: '#1565c0', borderWidth:2,
+        pointBackgroundColor: EQUIP_DEF.map(function(e){ return e.color; }),
         pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6,
       }]
     },
-    options:radarOptions()
+    options: radarOptions()
   });
 }
 
 function initRadarType() {
-  const ctx=document.getElementById('radarTypeChart').getContext('2d');
-  radarTypeChart=new Chart(ctx,{
-    type:'radar',
-    data:{
-      labels:TYPE_DEF.map(t=>t.label),
-      datasets:[{
-        label:'Count',
-        data:new Array(TYPE_DEF.length).fill(0),
-        backgroundColor:'rgba(55,71,79,.13)', borderColor:'#546e7a', borderWidth:2,
-        pointBackgroundColor:TYPE_DEF.map(t=>t.color),
+  var ctx = document.getElementById('radarTypeChart').getContext('2d');
+  radarTypeChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: TYPE_DEF.map(function(t){ return t.label; }),
+      datasets: [{
+        label: 'Count',
+        data: new Array(TYPE_DEF.length).fill(0),
+        backgroundColor: 'rgba(55,71,79,.13)',
+        borderColor: '#546e7a', borderWidth:2,
+        pointBackgroundColor: TYPE_DEF.map(function(t){ return t.color; }),
         pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6,
       }]
     },
-    options:radarOptions()
+    options: radarOptions()
   });
 }
 
 async function fetchDowntime() {
   try {
-    const res=await fetch(DT_URL+'&_cb='+Date.now());
-    if(!res.ok) return;
-    const text=await res.text();
-    const rows=Papa.parse(text,{skipEmptyLines:true}).data;
-    dtAllRows=rows.slice(1).filter(r=>{const d=(r[DT_COL.DATE]||'').trim();return d.length>=8;});
+    var res = await fetch(DT_URL+'&_cb='+Date.now());
+    if (!res.ok) return;
+    var text = await res.text();
+    var rows = Papa.parse(text, {skipEmptyLines:true}).data;
+    dtAllRows = rows.slice(1).filter(function(r){
+      var d=(r[DT_COL.DATE]||'').trim();
+      return d.length>=8;
+    });
   } catch(e) { console.warn('MasterDowntime fetch failed:',e); }
 }
 
 function fmtDTTime(s) {
   s=(s||'').trim(); if(!s) return null;
-  let m=s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);
+  var m=s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);
   if(m) return m[1].padStart(2,'0')+':'+m[2];
   m=s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):(\d{2})/);
   if(m) return m[1].padStart(2,'0')+':'+m[2];
@@ -1087,8 +1477,8 @@ function fmtDTTime(s) {
 function normDateG(s) {
   s=(s||'').trim(); if(!s) return '';
   if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  const m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  var m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m) return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
   return s;
 }
 
@@ -1097,144 +1487,146 @@ function escHtml(s) {
 }
 
 function renderDTTable(filterType) {
-  dtActiveFilter=filterType||dtActiveFilter;
-  document.querySelectorAll('.dt-filter-btn').forEach(btn=>{
-    btn.classList.toggle('active',btn.dataset.type===dtActiveFilter);
+  dtActiveFilter = filterType || dtActiveFilter;
+  document.querySelectorAll('.dt-filter-btn').forEach(function(btn){
+    btn.classList.toggle('active', btn.dataset.type===dtActiveFilter);
   });
-  let rows=dtCurrentRows;
-  if(dtActiveFilter!=='ALL') {
-    rows=rows.filter(r=>{const t=(r[DT_COL.TYPE]||'').trim().toUpperCase();return t===dtActiveFilter.toUpperCase();});
+  var rows = dtCurrentRows;
+  if (dtActiveFilter !== 'ALL') {
+    rows = rows.filter(function(r){
+      var t=(r[DT_COL.TYPE]||'').trim().toUpperCase();
+      return t===dtActiveFilter.toUpperCase();
+    });
   }
-  document.getElementById('dtCountBadge').textContent=`${rows.length} records`;
-  const tbody=document.getElementById('dtTableBody');
-  if(!rows.length) {
-    tbody.innerHTML=`<tr><td colspan="7" class="dt-empty">No downtime records for this date${dtActiveFilter!=='ALL'?' / type':''}</td></tr>`;
+  document.getElementById('dtCountBadge').textContent = rows.length+' records';
+  var tbody = document.getElementById('dtTableBody');
+  if (!rows.length) {
+    tbody.innerHTML='<tr><td colspan="7" class="dt-empty">No downtime records for this date'+(dtActiveFilter!=='ALL'?' / type':'')+'</td></tr>';
     return;
   }
-  tbody.innerHTML=rows.map(r=>{
-    const machine=(r[DT_COL.MACHINE]||'').trim();
-    const startT=fmtDTTime(r[DT_COL.START]||'');
-    const endRaw=fmtDTTime(r[DT_COL.END]||'');
-    const desc=(r[DT_COL.DESC]||'').trim()||'—';
-    const typeRaw=(r[DT_COL.TYPE]||'').trim();
-    const duration=(r[DT_COL.DURATION]||'').trim()||'—';
-    const shiftRaw=(r[DT_COL.SHIFT]||'').trim().toLowerCase();
-    const typeClass='type-'+typeRaw;
-    const shiftCell=shiftRaw==='d'
-      ?`<span class="shift-badge shift-badge-d">☀️ Day</span>`
-      :shiftRaw==='n'
-        ?`<span class="shift-badge shift-badge-n">🌙 Night</span>`
-        :`<span style="color:var(--muted);font-size:.65rem;">—</span>`;
-    const endCell=endRaw
-      ?`<span class="time-cell">${escHtml(endRaw)}</span>`
-      :`<span class="end-unknown" title="ยังไม่มีข้อมูล End Time">?</span>`;
-    return `<tr>
-      <td class="machine-cell">${escHtml(machine)}</td>
-      <td>${shiftCell}</td>
-      <td class="time-cell">${escHtml(startT||'—')}</td>
-      <td>${endCell}</td>
-      <td class="desc-cell">${escHtml(desc)}</td>
-      <td><span class="type-badge ${typeClass}">${escHtml(typeRaw)||'—'}</span></td>
-      <td class="dur-cell">${escHtml(duration)}</td>
-    </tr>`;
+  tbody.innerHTML = rows.map(function(r){
+    var machine=(r[DT_COL.MACHINE]||'').trim();
+    var startT=fmtDTTime(r[DT_COL.START]||'');
+    var endRaw=fmtDTTime(r[DT_COL.END]||'');
+    var desc=(r[DT_COL.DESC]||'').trim()||'—';
+    var typeRaw=(r[DT_COL.TYPE]||'').trim();
+    var duration=(r[DT_COL.DURATION]||'').trim()||'—';
+    var shiftRaw=(r[DT_COL.SHIFT]||'').trim().toLowerCase();
+    var typeClass='type-'+typeRaw;
+    var shiftCell=shiftRaw==='d'
+      ? '<span class="shift-badge shift-badge-d">Day</span>'
+      : shiftRaw==='n'
+        ? '<span class="shift-badge shift-badge-n">Night</span>'
+        : '<span style="color:var(--muted);font-size:.65rem;">—</span>';
+    var endCell=endRaw
+      ? '<span class="time-cell">'+escHtml(endRaw)+'</span>'
+      : '<span class="end-unknown" title="No End Time">?</span>';
+    return '<tr>'
+      +'<td class="machine-cell">'+escHtml(machine)+'</td>'
+      +'<td>'+shiftCell+'</td>'
+      +'<td class="time-cell">'+escHtml(startT||'—')+'</td>'
+      +'<td>'+endCell+'</td>'
+      +'<td class="desc-cell">'+escHtml(desc)+'</td>'
+      +'<td><span class="type-badge '+typeClass+'">'+escHtml(typeRaw||'—')+'</span></td>'
+      +'<td class="dur-cell">'+escHtml(duration)+'</td>'
+      +'</tr>';
   }).join('');
 }
 
-document.getElementById('dtFilterWrap').addEventListener('click',e=>{
-  const btn=e.target.closest('.dt-filter-btn');
-  if(!btn) return;
+document.getElementById('dtFilterWrap').addEventListener('click', function(e){
+  var btn = e.target.closest('.dt-filter-btn');
+  if (!btn) return;
   renderDTTable(btn.dataset.type);
 });
 
 function renderRadarForDate(wd) {
-  const rows=dtAllRows.filter(r=>normDateG(r[DT_COL.DATE]||'')===wd);
-  let shiftRows=rows;
-  if(currentShift==='day') shiftRows=rows.filter(r=>(r[DT_COL.SHIFT]||'').trim().toLowerCase()==='d');
-  else if(currentShift==='night') shiftRows=rows.filter(r=>(r[DT_COL.SHIFT]||'').trim().toLowerCase()==='n');
+  var rows = dtAllRows.filter(function(r){ return normDateG(r[DT_COL.DATE]||'')===wd; });
+  var shiftRows = rows;
+  if (currentShift==='day') shiftRows=rows.filter(function(r){ return (r[DT_COL.SHIFT]||'').trim().toLowerCase()==='d'; });
+  else if (currentShift==='night') shiftRows=rows.filter(function(r){ return (r[DT_COL.SHIFT]||'').trim().toLowerCase()==='n'; });
   dtCurrentRows=shiftRows; dtActiveFilter='ALL'; renderDTTable('ALL');
-  const equipCounts=EQUIP_DEF.map(def=>shiftRows.filter(r=>(r[DT_COL.MACHINE]||'').trim()===def.key).length);
+
+  var equipCounts=EQUIP_DEF.map(function(def){ return shiftRows.filter(function(r){ return (r[DT_COL.MACHINE]||'').trim()===def.key; }).length; });
   radarEquipChart.data.datasets[0].data=equipCounts; radarEquipChart.update();
-  document.getElementById('radarEquipLegend').innerHTML=EQUIP_DEF.map((def,i)=>`
-    <div class="radar-legend-item">
-      <div class="radar-legend-left"><div class="radar-legend-dot" style="background:${def.color}"></div><span>${def.label}</span></div>
-      <span class="radar-legend-val">${equipCounts[i]}</span>
-    </div>`).join('');
-  const typeCounts=TYPE_DEF.map(def=>shiftRows.filter(r=>(r[DT_COL.TYPEMACHINE]||'').trim()===def.key).length);
+  document.getElementById('radarEquipLegend').innerHTML=EQUIP_DEF.map(function(def,i){
+    return '<div class="radar-legend-item"><div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div><span class="radar-legend-val">'+equipCounts[i]+'</span></div>';
+  }).join('');
+
+  var typeCounts=TYPE_DEF.map(function(def){ return shiftRows.filter(function(r){ return (r[DT_COL.TYPEMACHINE]||'').trim()===def.key; }).length; });
   radarTypeChart.data.datasets[0].data=typeCounts; radarTypeChart.update();
-  document.getElementById('radarTypeLegend').innerHTML=TYPE_DEF.map((def,i)=>`
-    <div class="radar-legend-item">
-      <div class="radar-legend-left"><div class="radar-legend-dot" style="background:${def.color}"></div><span>${def.label}</span></div>
-      <span class="radar-legend-val">${typeCounts[i]}</span>
-    </div>`).join('');
-  document.getElementById('radarEquipTotal').textContent=`Total: ${equipCounts.reduce((a,b)=>a+b,0)} events`;
-  document.getElementById('radarTypeTotal').textContent=`Total: ${typeCounts.reduce((a,b)=>a+b,0)} events`;
+  document.getElementById('radarTypeLegend').innerHTML=TYPE_DEF.map(function(def,i){
+    return '<div class="radar-legend-item"><div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div><span class="radar-legend-val">'+typeCounts[i]+'</span></div>';
+  }).join('');
+
+  document.getElementById('radarEquipTotal').textContent='Total: '+equipCounts.reduce(function(a,b){return a+b;},0)+' events';
+  document.getElementById('radarTypeTotal').textContent='Total: '+typeCounts.reduce(function(a,b){return a+b;},0)+' events';
 }
 
 async function fetchData(){
   showOverlay('LOADING DATA…'); hideError();
-  let lastErr='';
-  for(const url of CSV_URLS){
-    try{
-      const res=await fetch(url+'&_cb='+Date.now());
-      if(!res.ok){lastErr=`HTTP ${res.status}`;continue;}
-      const text=await res.text();
+  var lastErr='';
+  for (var i=0; i<CSV_URLS.length; i++) {
+    try {
+      var res=await fetch(CSV_URLS[i]+'&_cb='+Date.now());
+      if(!res.ok){lastErr='HTTP '+res.status;continue;}
+      var text=await res.text();
       if(!text||text.trim().length<10){lastErr='Empty';continue;}
       processCSV(text); return true;
-    }catch(e){lastErr=e.message;}
+    } catch(e) { lastErr=e.message; }
   }
-  showOverlay('โหลดข้อมูลไม่สำเร็จ'); showError(`ดึงข้อมูลไม่ได้: ${lastErr}`);
+  showOverlay('Load failed'); showError('Cannot fetch data: '+lastErr);
   return false;
 }
 
-function parseNum(v){return parseFloat((v||'0').replace(/,/g,''))||0;}
+function parseNum(v){ return parseFloat((v||'0').replace(/,/g,''))||0; }
 function parseDT(s){
-  s=(s||'').trim(); if(!s)return new Date(NaN);
-  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
-  if(m)return new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],0);
+  s=(s||'').trim(); if(!s) return new Date(NaN);
+  var m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
+  if(m) return new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],0);
   m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})[,\s]+(\d{1,2}):(\d{2})/);
-  if(m)return new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5],0);
+  if(m) return new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5],0);
   return new Date(NaN);
 }
-function fmtTime(s){const d=parseDT(s);if(!d||isNaN(d))return s;return `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;}
-function toYMD(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function fmtTime(s){ var d=parseDT(s); if(!d||isNaN(d)) return s; return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
+function toYMD(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function getWorkingDate(dtStr){
-  const d=parseDT(dtStr);if(!d||isNaN(d))return null;
-  if(d.getHours()<8){const p=new Date(d);p.setDate(p.getDate()-1);return toYMD(p);}
+  var d=parseDT(dtStr); if(!d||isNaN(d)) return null;
+  if(d.getHours()<8){ var p=new Date(d); p.setDate(p.getDate()-1); return toYMD(p); }
   return toYMD(d);
 }
-function toDisplay(s){const p=s.split('-');return p.length===3?`${p[2]}-${p[1]}-${p[0]}`:s;}
+function toDisplay(s){ var p=s.split('-'); return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s; }
 
 function processCSV(text){
-  const rows=Papa.parse(text,{skipEmptyLines:true}).data;
-  const header=rows[0]||[];
-  allRows=rows.slice(1).filter(r=>{
-    const dt=(r[COL.DT]||'').trim();
-    if(!dt||/date|time/i.test(dt))return false;
+  var rows=Papa.parse(text,{skipEmptyLines:true}).data;
+  var header=rows[0]||[];
+  allRows=rows.slice(1).filter(function(r){
+    var dt=(r[COL.DT]||'').trim();
+    if(!dt||/date|time/i.test(dt)) return false;
     return !isNaN(parseDT(dt));
   });
-  allRows.forEach(r=>{r._wd=getWorkingDate(r[COL.DT]||'');});
-  allRows=allRows.filter(r=>r._wd);
-  const dateSet=new Set(allRows.map(r=>r._wd));
+  allRows.forEach(function(r){ r._wd=getWorkingDate(r[COL.DT]||''); });
+  allRows=allRows.filter(function(r){ return r._wd; });
+  var dateSet=new Set(allRows.map(function(r){ return r._wd; }));
   availableDates=[...dateSet].sort();
-  if(!availableDates.length){showOverlay('ไม่พบข้อมูล');showError(`Header: <code>${header.slice(0,6).join(' | ')}</code>`);return;}
+  if(!availableDates.length){showOverlay('No data');showError('Header: '+header.slice(0,6).join(' | '));return;}
   buildPicker();
   renderForDate(availableDates[availableDates.length-1]);
-  const now=new Date();
-  document.getElementById('lastUpdate').textContent=`Updated: ${now.toLocaleDateString('en-GB')} ${now.toLocaleTimeString('en-GB')}`;
-  document.getElementById('rowCount').textContent=`${allRows.length} rows · ${availableDates.length} dates`;
+  var now=new Date();
+  document.getElementById('lastUpdate').textContent='Updated: '+now.toLocaleDateString('en-GB')+' '+now.toLocaleTimeString('en-GB');
+  document.getElementById('rowCount').textContent=allRows.length+' rows · '+availableDates.length+' dates';
 }
 
 function renderForDate(wd){
-  const allForDate=allRows.filter(r=>r._wd===wd).sort((a,b)=>shiftHour(a)-shiftHour(b));
-  const rows=filterByShift(allForDate,currentShift);
-  const labels=rows.map(r=>fmtTime(r[COL.DT]||''));
-  const dataB=rows.map(r=>parseNum(r[COL.BCM_CR]));
-  const dataCR1=rows.map(r=>parseNum(r[COL.CR1]));
-  const dataCR2=rows.map(r=>parseNum(r[COL.CR2]));
-  const dataCR3=rows.map(r=>parseNum(r[COL.CR3]));
-  const dataH=rows.map(r=>parseNum(r[COL.BWE1]));
-  const dataI=rows.map(r=>parseNum(r[COL.BWE2]));
-  const dataPerf=rows.map(r=>parseNum(r[COL.VALUE]));
+  var allForDate=allRows.filter(function(r){return r._wd===wd;}).sort(function(a,b){return shiftHour(a)-shiftHour(b);});
+  var rows=filterByShift(allForDate,currentShift);
+  var labels=rows.map(function(r){return fmtTime(r[COL.DT]||'');});
+  var dataB=rows.map(function(r){return parseNum(r[COL.BCM_CR]);});
+  var dataCR1=rows.map(function(r){return parseNum(r[COL.CR1]);});
+  var dataCR2=rows.map(function(r){return parseNum(r[COL.CR2]);});
+  var dataCR3=rows.map(function(r){return parseNum(r[COL.CR3]);});
+  var dataH=rows.map(function(r){return parseNum(r[COL.BWE1]);});
+  var dataI=rows.map(function(r){return parseNum(r[COL.BWE2]);});
+  var dataPerf=rows.map(function(r){return parseNum(r[COL.VALUE]);});
 
   bcmChart.data.labels=labels;
   bcmChart.data.datasets[0].data=dataB;
@@ -1246,85 +1638,87 @@ function renderForDate(wd){
   perfChart.data.datasets[0].data=dataPerf;
   perfChart.update();
 
-  const sum=a=>a.reduce((s,v)=>s+v,0);
-  const sBWE1=sum(dataH),sBWE2=sum(dataI),sCR1=sum(dataCR1),sCR2=sum(dataCR2),sCR3=sum(dataCR3);
-  const grand=sBWE1+sBWE2+sCR1+sCR2+sCR3;
+  function sum(a){return a.reduce(function(s,v){return s+v;},0);}
+  var sBWE1=sum(dataH),sBWE2=sum(dataI),sCR1=sum(dataCR1),sCR2=sum(dataCR2),sCR3=sum(dataCR3);
+  var grand=sBWE1+sBWE2+sCR1+sCR2+sCR3;
 
   pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3];
   pieChart.update();
 
-  const pieItems=[
+  var pieItems=[
     {label:'BWE 1',val:sBWE1,color:C.bwe1},
     {label:'BWE 2',val:sBWE2,color:C.bwe2},
     {label:'CR 1', val:sCR1, color:C.cr1},
     {label:'CR 2', val:sCR2, color:C.cr2},
     {label:'CR 3', val:sCR3, color:C.cr3},
   ];
-  document.getElementById('pieLegend').innerHTML=pieItems.map(p=>`
-    <div class="pie-legend-item">
-      <div class="pie-legend-left"><div class="pie-legend-dot" style="background:${p.color}"></div>${p.label}</div>
-      <div>${p.val.toLocaleString()}</div>
-    </div>`).join('');
+  document.getElementById('pieLegend').innerHTML=pieItems.map(function(p){
+    return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'</div></div>';
+  }).join('');
 
   document.getElementById('grandTotal').textContent=grand.toLocaleString();
 
-  function parseHHMM(s){s=(s||'').trim();const m=s.match(/^(\d+):(\d{2})$/);if(!m)return 0;return parseInt(m[1])*60+parseInt(m[2]);}
-  const totalMinutes=rows.reduce((s,r)=>s+parseHHMM(r[COL.HOUR_S3]),0);
-  const th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
-  document.getElementById('clockBox').textContent=`${th}:${tm}`;
+  function parseHHMM(s){s=(s||'').trim();var m=s.match(/^(\d+):(\d{2})$/);if(!m)return 0;return parseInt(m[1])*60+parseInt(m[2]);}
+  var totalMinutes=rows.reduce(function(s,r){return s+parseHHMM(r[COL.HOUR_S3]);},0);
+  var th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
+  document.getElementById('clockBox').textContent=th+':'+tm;
 
-  const totalHoursDecimal=totalMinutes/60;
-  const productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
+  var totalHoursDecimal=totalMinutes/60;
+  var productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
   document.getElementById('productivityBox').textContent=productivity>0?productivity.toLocaleString():'—';
 
-  document.getElementById('rowCount').textContent=`${rows.length} rows · ${allRows.length} total · ${availableDates.length} dates · ${toDisplay(wd)} · ${SHIFT_CONFIG[currentShift].label}`;
+  document.getElementById('rowCount').textContent=rows.length+' rows · '+allRows.length+' total · '+availableDates.length+' dates · '+toDisplay(wd)+' · '+SHIFT_CONFIG[currentShift].label;
   renderRadarForDate(wd);
   hideOverlay(); syncNav();
 }
 
 function buildPicker(){
-  const sel=document.getElementById('datePicker');
+  var sel=document.getElementById('datePicker');
   sel.innerHTML='';
-  availableDates.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=toDisplay(d);sel.appendChild(o);});
+  availableDates.forEach(function(d){
+    var o=document.createElement('option');
+    o.value=d; o.textContent=toDisplay(d);
+    sel.appendChild(o);
+  });
   sel.value=availableDates[availableDates.length-1];
   syncNav();
 }
 function syncNav(){
-  const idx=availableDates.indexOf(document.getElementById('datePicker').value);
+  var idx=availableDates.indexOf(document.getElementById('datePicker').value);
   document.getElementById('btnPrev').disabled=idx<=0;
   document.getElementById('btnNext').disabled=idx>=availableDates.length-1;
 }
-document.getElementById('datePicker').addEventListener('change',e=>renderForDate(e.target.value));
-document.getElementById('btnPrev').addEventListener('click',()=>{
-  const sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value);
+document.getElementById('datePicker').addEventListener('change',function(e){renderForDate(e.target.value);});
+document.getElementById('btnPrev').addEventListener('click',function(){
+  var sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value);
   if(idx>0){sel.value=availableDates[idx-1];renderForDate(sel.value);}
 });
-document.getElementById('btnNext').addEventListener('click',()=>{
-  const sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value);
+document.getElementById('btnNext').addEventListener('click',function(){
+  var sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value);
   if(idx<availableDates.length-1){sel.value=availableDates[idx+1];renderForDate(sel.value);}
 });
-document.getElementById('btnRefresh').addEventListener('click',()=>{
-  fetchData().then(()=>{
-    fetchDowntime().then(()=>{
-      const wd=document.getElementById('datePicker').value;
+document.getElementById('btnRefresh').addEventListener('click',function(){
+  fetchData().then(function(){
+    fetchDowntime().then(function(){
+      var wd=document.getElementById('datePicker').value;
       if(wd) renderRadarForDate(wd);
     });
   });
 });
 
-/* ✅ FIX: Resize observer — rebuild chart font sizes เมื่อ window ขนาดเปลี่ยน */
-let resizeTimer;
-window.addEventListener('resize', () => {
+/* ✅ Resize handler */
+var resizeTimer;
+window.addEventListener('resize', function() {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    const fs = getChartFontSize();
-    [bcmChart, perfChart].forEach(ch => {
+  resizeTimer = setTimeout(function() {
+    var fs = getChartFontSize();
+    [bcmChart, perfChart].forEach(function(ch) {
       if (!ch) return;
       ch.options.scales.x.ticks.font.size = fs;
       ch.options.scales.y.ticks.font.size = fs;
       ch.update('none');
     });
-    [radarEquipChart, radarTypeChart].forEach(ch => {
+    [radarEquipChart, radarTypeChart].forEach(function(ch) {
       if (!ch) return;
       ch.options.scales.r.ticks.font.size = fs;
       ch.options.scales.r.pointLabels.font.size = fs + 1;
@@ -1333,10 +1727,10 @@ window.addEventListener('resize', () => {
   }, 200);
 });
 
-function showOverlay(msg){document.getElementById('overlayMsg').textContent=msg;document.getElementById('overlay').classList.remove('hidden');}
-function hideOverlay(){document.getElementById('overlay').classList.add('hidden');}
-function showError(html){const b=document.getElementById('errorBanner');b.innerHTML='⚠️ '+html;b.style.display='block';}
-function hideError(){document.getElementById('errorBanner').style.display='none';}
+function showOverlay(msg){ document.getElementById('overlayMsg').textContent=msg; document.getElementById('overlay').classList.remove('hidden'); }
+function hideOverlay(){ document.getElementById('overlay').classList.add('hidden'); }
+function showError(html){ var b=document.getElementById('errorBanner');b.innerHTML='Warning: '+html;b.style.display='block'; }
+function hideError(){ document.getElementById('errorBanner').style.display='none'; }
 
 /* ══════════ BOOT ══════════ */
 applyShiftUI('all');
@@ -1345,28 +1739,28 @@ initPieChart();
 initPerfChart();
 initRadarEquip();
 initRadarType();
-fetchData().then(()=>{
-  fetchDowntime().then(()=>{
-    const wd=document.getElementById('datePicker').value;
+fetchData().then(function(){
+  fetchDowntime().then(function(){
+    var wd=document.getElementById('datePicker').value;
     if(wd) renderRadarForDate(wd);
   });
 });
 
 /* ══════════ AUTO-REFRESH (2 min) ══════════ */
 (function(){
-  const INTERVAL=2*60, CIRCUMFERENCE=47.12;
-  let remaining=INTERVAL;
-  const progEl=document.getElementById('countdownProg');
-  const txtEl=document.getElementById('countdownTxt');
-  let lastAdvanceDate=null;
+  var INTERVAL=2*60, CIRCUMFERENCE=47.12;
+  var remaining=INTERVAL;
+  var progEl=document.getElementById('countdownProg');
+  var txtEl=document.getElementById('countdownTxt');
+  var lastAdvanceDate=null;
 
   function doRefresh(){
-    const wd=document.getElementById('datePicker').value;
-    fetchData().then(()=>{
-      fetchDowntime().then(()=>{
-        const sel=document.getElementById('datePicker');
-        if(availableDates.includes(wd)){sel.value=wd;renderForDate(wd);}
-        else{const latest=availableDates[availableDates.length-1];sel.value=latest;renderForDate(latest);}
+    var wd=document.getElementById('datePicker').value;
+    fetchData().then(function(){
+      fetchDowntime().then(function(){
+        var sel=document.getElementById('datePicker');
+        if(availableDates.indexOf(wd)>=0){sel.value=wd;renderForDate(wd);}
+        else{var latest=availableDates[availableDates.length-1];sel.value=latest;renderForDate(latest);}
         if(wd) renderRadarForDate(sel.value);
       });
     });
@@ -1374,10 +1768,10 @@ fetchData().then(()=>{
   }
 
   function advanceToToday(){
-    fetchData().then(()=>{
-      fetchDowntime().then(()=>{
-        const sel=document.getElementById('datePicker');
-        const latest=availableDates[availableDates.length-1];
+    fetchData().then(function(){
+      fetchDowntime().then(function(){
+        var sel=document.getElementById('datePicker');
+        var latest=availableDates[availableDates.length-1];
         if(latest){ sel.value=latest; renderForDate(latest); }
       });
     });
@@ -1385,24 +1779,24 @@ fetchData().then(()=>{
   }
 
   function checkDateAdvance(){
-    const now=new Date(),h=now.getHours(),m=now.getMinutes();
+    var now=new Date(),h=now.getHours(),m=now.getMinutes();
     if(h===7&&m>=10&&m<=20){
-      const todayKey=toYMD(now);
+      var todayKey=toYMD(now);
       if(lastAdvanceDate!==todayKey){lastAdvanceDate=todayKey;advanceToToday();}
     }
   }
 
   function updateUI(){
-    const ratio=remaining/INTERVAL;
+    var ratio=remaining/INTERVAL;
     progEl.style.strokeDashoffset=CIRCUMFERENCE*(1-ratio);
-    const mins=Math.floor(remaining/60),secs=String(remaining%60).padStart(2,'0');
-    txtEl.textContent=`${mins}:${secs}`;
+    var mins=Math.floor(remaining/60),secs=String(remaining%60).padStart(2,'0');
+    txtEl.textContent=mins+':'+secs;
     progEl.style.stroke=remaining<=10?'#ef5350':'#42a5f5';
     txtEl.style.color=remaining<=10?'#ef5350':'#42a5f5';
   }
 
   updateUI();
-  setInterval(()=>{
+  setInterval(function(){
     remaining--;
     if(remaining<=0) doRefresh();
     checkDateAdvance();
