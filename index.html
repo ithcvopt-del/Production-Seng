@@ -33,7 +33,6 @@
 
   /* ── Top Bar ── */
   .top-bar {
-    height: var(--topbar-h);
     background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #1565c0 100%);
     padding: 0 14px;
     display: flex;
@@ -44,7 +43,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    flex-wrap: wrap;
+    height: var(--topbar-h);
     min-height: var(--topbar-h);
   }
   .top-bar-left { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
@@ -150,7 +149,108 @@
   .btn-shift.active-day   { background: linear-gradient(135deg,#f57f17,#ffca28); color:#1a1f2e; }
   .btn-shift.active-night { background: linear-gradient(135deg,#311b92,#7b1fa2); color:#fff; }
 
+  /* ══ MOBILE TOP BAR — 2 rows ══
+     Row 1: Logo + Auto timer
+     Row 2: Shift | Date nav | Refresh
+  ══════════════════════════════════ */
+  @media (max-width: 767px) {
+    .top-bar {
+      height: auto;
+      min-height: unset;
+      padding: 7px 10px 6px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 5px;
+    }
+
+    /* Row 1 */
+    .top-bar-row1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    /* Logo ย่อ — แสดงแค่ชื่อสั้น */
+    .logo-box {
+      font-size: .72rem;
+      letter-spacing: .3px;
+      padding: 4px 8px;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Auto timer เล็ก ไปอยู่ row 1 ขวา */
+    .auto-refresh-wrap {
+      padding: 3px 6px;
+      gap: 4px;
+    }
+    .auto-refresh-label { display: none; } /* ซ่อน label "AUTO" */
+    .countdown-txt { font-size: .72rem; min-width: 28px; }
+
+    /* Row 2 */
+    .top-bar-row2 {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .top-bar-row2::-webkit-scrollbar { display: none; }
+
+    /* ซ่อน label text */
+    .ctrl-label { display: none; }
+
+    /* Shift buttons — ใหญ่ขึ้น จับง่าย */
+    .shift-group { flex-shrink: 0; }
+    .btn-shift {
+      font-size: .72rem;
+      padding: 6px 10px;
+    }
+
+    /* Date nav — ใหญ่ขึ้น */
+    .btn-nav {
+      width: 34px;
+      height: 34px;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    /* Date select */
+    .date-select {
+      font-size: .78rem;
+      padding: 6px 8px;
+      min-width: 100px;
+      flex-shrink: 0;
+    }
+
+    /* Refresh */
+    .btn-refresh {
+      font-size: .72rem;
+      padding: 6px 10px;
+      flex-shrink: 0;
+    }
+  }
+
   /* ── Page wrapper ── */
+  /* Desktop: top-bar-row1 and row2 sit side by side in one line */
+  .top-bar-row1 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .top-bar-row2 {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
   .page {
     padding: 10px 14px 10px;
     display: flex;
@@ -499,13 +599,6 @@
 
   /* Tablet portrait (600–767px) */
   @media (max-width: 767px) {
-    .top-bar {
-      height: auto;
-      padding: 8px 10px;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .controls { width: 100%; justify-content: flex-start; }
     .page { padding: 8px; gap: 8px; }
     .body-row { grid-template-columns: 1fr; }
     .right-col { grid-template-columns: 1fr 1fr; }
@@ -517,7 +610,6 @@
 
   /* Mobile portrait (< 600px) */
   @media (max-width: 599px) {
-    .logo-box { font-size: .72rem; letter-spacing: 0; }
     .right-col { grid-template-columns: 1fr; }
     .bar-chart-wrap { height: 220px; }
     .perf-chart-wrap { height: 140px; }
@@ -529,7 +621,6 @@
     .dt-table thead th { font-size: .68rem; padding: 5px 6px; }
     .dt-table tbody td { padding: 3px 6px; }
     .footer { flex-direction: column; align-items: flex-start; }
-    .ctrl-label { display: none; }
   }
 </style>
 </head>
@@ -537,10 +628,26 @@
 
 <!-- ── Top Bar ── -->
 <div class="top-bar">
-  <div class="top-bar-left">
-    <div class="logo-box">DASHBOARD<span>: </span>Daily Report Production of WL 1</div>
+  <!-- Row 1: Logo + Auto timer -->
+  <div class="top-bar-row1">
+    <div class="top-bar-left">
+      <div class="logo-box">DASHBOARD<span>: </span>Daily Report Production of WL 1</div>
+    </div>
+    <div class="auto-refresh-wrap">
+      <span class="auto-refresh-label">Auto</span>
+      <div class="countdown-ring">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <circle class="track" cx="10" cy="10" r="7.5"/>
+          <circle class="prog"  cx="10" cy="10" r="7.5" id="countdownProg"
+            stroke-dasharray="47.12" stroke-dashoffset="0"/>
+        </svg>
+      </div>
+      <span class="countdown-txt" id="countdownTxt">2:00</span>
+    </div>
   </div>
-  <div class="controls">
+
+  <!-- Row 2: Controls (desktop: inline | mobile: scrollable row) -->
+  <div class="controls top-bar-row2">
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
       <button class="btn-shift active-all" id="btnAll"   data-shift="all">☀️🌙 All</button>
@@ -552,17 +659,6 @@
     <select class="date-select" id="datePicker"><option>Loading…</option></select>
     <button class="btn-nav" id="btnNext" disabled>&#8250;</button>
     <button class="btn-refresh" id="btnRefresh">⟳ Refresh</button>
-    <div class="auto-refresh-wrap">
-      <span class="auto-refresh-label">Auto</span>
-      <div class="countdown-ring">
-        <svg width="20" height="20" viewBox="0 0 20 20">
-          <circle class="track" cx="10" cy="10" r="7.5"/>
-          <circle class="prog"  cx="10" cy="10" r="7.5" id="countdownProg"
-            stroke-dasharray="47.12" stroke-dashoffset="0"/>
-        </svg>
-      </div>
-      <span class="countdown-txt" id="countdownTxt">5:00</span>
-    </div>
   </div>
 </div>
 
