@@ -20,6 +20,18 @@
     --header-bg: #1a237e;
     --header-accent: #42a5f5;
     --topbar-h: 52px;
+
+    /* ── Fluid scale (clamp ให้ทำงานได้ทุกขนาดโดยไม่ต้อง breakpoint เยอะ) ── */
+    --fs-xs:   clamp(.55rem, .8vw,  .78rem);
+    --fs-sm:   clamp(.65rem, .9vw,  .9rem);
+    --fs-base: clamp(.72rem, 1vw,   1rem);
+    --fs-lg:   clamp(.85rem, 1.2vw, 1.2rem);
+    --fs-xl:   clamp(1rem,   1.6vw, 1.8rem);
+    --fs-2xl:  clamp(1.2rem, 2vw,   2.4rem);
+
+    /* chart heights — clamp จะปรับตาม viewport width */
+    --bar-h:  clamp(220px, 28vh, 500px);
+    --perf-h: clamp(140px, 18vh, 320px);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -53,7 +65,7 @@
     border-radius: 7px;
     padding: 4px 10px;
     font-family: 'Chakra Petch', sans-serif;
-    font-size: clamp(.75rem, 1.5vw, 1.1rem);
+    font-size: var(--fs-base);
     font-weight: 700;
     color: #fff;
     letter-spacing: 1px;
@@ -66,7 +78,7 @@
   }
   .ctrl-label {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: .62rem; color: rgba(255,255,255,.55);
+    font-size: var(--fs-xs); color: rgba(255,255,255,.55);
     letter-spacing: 1.2px; text-transform: uppercase; white-space: nowrap;
   }
   .date-select {
@@ -75,7 +87,7 @@
     border-radius: 6px;
     color: #fff;
     font-family: 'Chakra Petch', monospace;
-    font-size: .76rem;
+    font-size: var(--fs-sm);
     padding: 5px 8px;
     cursor: pointer; outline: none;
     min-width: 110px;
@@ -87,7 +99,7 @@
     border: 1px solid rgba(255,255,255,.2);
     border-radius: 6px;
     color: rgba(255,255,255,.8);
-    font-size: .9rem; width: 28px; height: 28px;
+    font-size: var(--fs-base); width: 28px; height: 28px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
@@ -99,7 +111,7 @@
     border-radius: 6px;
     color: var(--header-accent);
     font-family: 'Chakra Petch', monospace;
-    font-size: .66rem; padding: 5px 8px;
+    font-size: var(--fs-xs); padding: 5px 8px;
     cursor: pointer; white-space: nowrap;
   }
   .auto-refresh-wrap {
@@ -112,7 +124,7 @@
   }
   .auto-refresh-label {
     font-family: 'Chakra Petch', monospace;
-    font-size: .6rem; color: rgba(255,255,255,.45);
+    font-size: var(--fs-xs); color: rgba(255,255,255,.45);
     letter-spacing: .8px; text-transform: uppercase;
     white-space: nowrap;
   }
@@ -126,7 +138,7 @@
   }
   .countdown-txt {
     font-family: 'Chakra Petch', monospace;
-    font-size: .64rem; font-weight: 700;
+    font-size: var(--fs-xs); font-weight: 700;
     color: #42a5f5; white-space: nowrap; min-width: 26px;
   }
   .shift-group {
@@ -138,7 +150,7 @@
   }
   .btn-shift {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: .62rem; font-weight: 600; letter-spacing: .3px;
+    font-size: var(--fs-xs); font-weight: 600; letter-spacing: .3px;
     padding: 4px 7px; border-radius: 5px; border: none;
     cursor: pointer; white-space: nowrap;
     color: rgba(255,255,255,.55); background: transparent;
@@ -149,7 +161,6 @@
   .btn-shift.active-day   { background: linear-gradient(135deg,#f57f17,#ffca28); color:#1a1f2e; }
   .btn-shift.active-night { background: linear-gradient(135deg,#311b92,#7b1fa2); color:#fff; }
 
-  /* ── Desktop top-bar rows ── */
   .top-bar-row1 {
     display: flex;
     align-items: center;
@@ -165,31 +176,34 @@
 
   /* ── Page wrapper ── */
   .page {
-    padding: 10px 14px 10px;
+    padding: clamp(6px, 1vh, 14px) clamp(8px, 1.2vw, 16px);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: clamp(6px, 1vh, 10px);
   }
 
-  /* ── Main layout ── */
+  /* ── Main layout ──
+     right-col ใช้ clamp เพื่อปรับขนาดแบบ fluid ตาม viewport
+     ไม่ต้องพึ่ง breakpoint เยอะ
+  */
   .body-row {
     display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 8px;
+    grid-template-columns: 1fr clamp(280px, 24vw, 480px);
+    gap: clamp(6px, 1vw, 10px);
     align-items: start;
   }
 
   .left-col {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: clamp(6px, 1vh, 10px);
     min-width: 0;
   }
 
   .right-col {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: clamp(6px, 1vh, 10px);
     min-width: 0;
   }
 
@@ -199,7 +213,7 @@
     border: 1px solid var(--border);
     border-radius: 10px;
     box-shadow: var(--shadow);
-    padding: 10px 12px 12px;
+    padding: clamp(8px,1vh,12px) clamp(10px,1.2vw,14px) clamp(10px,1.5vh,14px);
     position: relative;
     overflow: hidden;
   }
@@ -213,25 +227,26 @@
   .card.perf-card::before    { background: linear-gradient(90deg,#c62828,#ef5350); }
   .card.dt-table-card::before { background: linear-gradient(90deg,#00695c,#26a69a); }
 
+  /* Chart wrappers — fluid height */
   .bar-chart-wrap {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: var(--bar-h);
   }
 
   .perf-chart-wrap {
     position: relative;
     width: 100%;
-    height: 180px;
+    height: var(--perf-h);
   }
 
   canvas { display: block; }
 
   .card-head {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: .78rem; font-weight: 700;
+    font-size: var(--fs-sm); font-weight: 700;
     color: #0d47a1;
-    margin-bottom: 8px;
+    margin-bottom: clamp(5px, .8vh, 10px);
     display: flex; align-items: center; gap: 6px;
   }
   .card-head.red { color: #b71c1c; }
@@ -248,7 +263,7 @@
     display:flex; gap:10px; flex-wrap:wrap;
     margin-top:6px; justify-content:center;
   }
-  .legend-item { display:flex; align-items:center; gap:4px; font-size:.74rem; color:#1a237e; font-weight:700; }
+  .legend-item { display:flex; align-items:center; gap:4px; font-size:var(--fs-xs); color:#1a237e; font-weight:700; }
   .legend-dot  { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
 
   /* Overlay */
@@ -265,21 +280,21 @@
     border-radius:50%; animation:spin .75s linear infinite;
   }
   @keyframes spin { to{ transform:rotate(360deg); } }
-  .overlay-msg { font-family:'Chakra Petch',sans-serif; font-size:.65rem; color:var(--muted); letter-spacing:1px; }
+  .overlay-msg { font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); color:var(--muted); letter-spacing:1px; }
 
   /* ── Right column — Pie card ── */
-  .pie-card { padding: 8px 12px 12px; }
+  .pie-card { padding: clamp(6px,.8vh,10px) clamp(10px,1.2vw,14px) clamp(10px,1.5vh,14px); }
   .pie-title {
     font-family:'Chakra Petch',sans-serif;
-    font-size:.78rem; font-weight:700;
+    font-size:var(--fs-sm); font-weight:700;
     color:#0d47a1; text-align:center;
-    margin-bottom:6px;
+    margin-bottom:clamp(4px,.6vh,8px);
   }
-  .pie-body { display: flex; gap: 10px; align-items: center; }
+  .pie-body { display: flex; gap: clamp(6px,.8vw,12px); align-items: center; }
 
   .pie-wrap {
-    width: 130px;
-    height: 130px;
+    width: clamp(100px, 12vw, 180px);
+    height: clamp(100px, 12vw, 180px);
     flex-shrink: 0;
     position: relative;
   }
@@ -294,36 +309,37 @@
   .pie-legend { display:flex; flex-direction:column; gap:2px; }
   .pie-legend-item {
     display:flex; align-items:center; justify-content:space-between;
-    font-size:.72rem; color:#1a1f2e; font-weight:700;
+    font-size:var(--fs-xs); color:#1a1f2e; font-weight:700;
     padding:2px 0; border-bottom:1px solid #e8eaf0;
   }
   .pie-legend-left { display:flex; align-items:center; gap:4px; font-weight:700; color:#1a237e; }
   .pie-legend-dot  { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-  .totals-row { display:flex; flex-direction:column; gap:4px; margin-top:6px; padding-top:6px; border-top:1px solid var(--border); }
+  .totals-row { display:flex; flex-direction:column; gap:clamp(3px,.5vh,6px); margin-top:clamp(4px,.6vh,8px); padding-top:clamp(4px,.6vh,8px); border-top:1px solid var(--border); }
   .total-box {
     display:flex; align-items:center; justify-content:space-between;
-    padding:2px 6px; background:#f8f9fc; border-radius:5px; border:1px solid var(--border);
+    padding:clamp(2px,.4vh,5px) clamp(5px,.6vw,8px);
+    background:#f8f9fc; border-radius:5px; border:1px solid var(--border);
   }
-  .total-label { font-family:'Chakra Petch',sans-serif; font-size:.62rem; color:#37474f; letter-spacing:.8px; text-transform:uppercase; font-weight:700; }
-  .total-value { font-family:'Chakra Petch',sans-serif; font-size:1.05rem; font-weight:800; color:#0d47a1; }
-  .clock-box { font-family:'Chakra Petch',monospace; font-size:1.05rem; font-weight:800; color:#004d40; }
-  .productivity-box { font-family:'Chakra Petch',monospace; font-size:1.05rem; font-weight:800; color:#b45309; }
+  .total-label { font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); color:#37474f; letter-spacing:.8px; text-transform:uppercase; font-weight:700; }
+  .total-value { font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xl); font-weight:800; color:#0d47a1; }
+  .clock-box { font-family:'Chakra Petch',monospace; font-size:var(--fs-xl); font-weight:800; color:#004d40; }
+  .productivity-box { font-family:'Chakra Petch',monospace; font-size:var(--fs-xl); font-weight:800; color:#b45309; }
   .total-box.productivity-card { background: linear-gradient(135deg,#fffbeb,#fef3c7); border-color:#fcd34d; }
   .total-box.productivity-card .total-label { color:#92400e; }
 
   /* Radar Cards */
-  .radar-card { padding: 8px 10px 10px; }
+  .radar-card { padding: clamp(6px,.8vh,10px) clamp(8px,1vw,12px) clamp(8px,1.2vh,12px); }
   .radar-card::before { background: linear-gradient(90deg,#1a237e,#42a5f5); }
   .radar-title {
     font-family:'Chakra Petch',sans-serif;
-    font-size:.78rem; font-weight:700;
-    color:#0d47a1; text-align:center; margin-bottom:4px;
+    font-size:var(--fs-sm); font-weight:700;
+    color:#0d47a1; text-align:center; margin-bottom:clamp(3px,.5vh,6px);
   }
-  .radar-body { display:flex; gap:6px; align-items:center; }
+  .radar-body { display:flex; gap:clamp(4px,.6vw,8px); align-items:center; }
   .radar-wrap {
     flex-shrink:0;
-    width:160px;
-    height:160px;
+    width: clamp(120px, 13vw, 220px);
+    height: clamp(120px, 13vw, 220px);
     position: relative;
   }
   .radar-wrap canvas {
@@ -335,30 +351,30 @@
   .radar-legend { flex:1; display:flex; flex-direction:column; gap:3px; min-width:0; }
   .radar-legend-item {
     display:flex; align-items:center; justify-content:space-between;
-    font-size:.71rem; color:#1a1f2e; font-weight:700;
+    font-size:var(--fs-xs); color:#1a1f2e; font-weight:700;
     padding:2px 0; border-bottom:1px solid #e8eaf0;
   }
   .radar-legend-left { display:flex; align-items:center; gap:5px; font-weight:800; color:#0d47a1; overflow:hidden; }
-  .radar-legend-left span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:.71rem; }
+  .radar-legend-left span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:var(--fs-xs); }
   .radar-legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-  .radar-legend-val { font-family:'Chakra Petch',monospace; font-size:.76rem; font-weight:800; color:#0d47a1; min-width:18px; text-align:right; }
-  .radar-total { font-family:'Chakra Petch',monospace; font-size:.68rem; color:#1a237e; font-weight:800; text-align:center; margin-top:4px; }
+  .radar-legend-val { font-family:'Chakra Petch',monospace; font-size:var(--fs-sm); font-weight:800; color:#0d47a1; min-width:18px; text-align:right; }
+  .radar-total { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); color:#1a237e; font-weight:800; text-align:center; margin-top:4px; }
 
   /* Downtime Table */
   .dt-table-header {
     display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:6px; gap:6px; flex-wrap:wrap;
+    margin-bottom:clamp(4px,.6vh,8px); gap:6px; flex-wrap:wrap;
   }
   .dt-count-badge {
     font-family:'Chakra Petch',monospace;
-    font-size:.66rem; font-weight:700; color:#004d40;
+    font-size:var(--fs-xs); font-weight:700; color:#004d40;
     background:rgba(0,77,64,.08); border:1px solid rgba(0,77,64,.25);
     border-radius:20px; padding:2px 10px; white-space:nowrap;
   }
   .dt-filter-wrap { display:flex; gap:3px; align-items:center; flex-wrap:wrap; }
   .dt-filter-btn {
     font-family:'Chakra Petch',sans-serif;
-    font-size:.58rem; font-weight:600;
+    font-size:var(--fs-xs); font-weight:600;
     padding:2px 7px; border-radius:4px; border:1px solid transparent;
     cursor:pointer; background:#f0f2f5; color:var(--muted);
     transition:all .15s; white-space:nowrap;
@@ -375,20 +391,20 @@
 
   .dt-table-wrap {
     overflow-x: auto; overflow-y: auto;
-    max-height: 320px;
+    max-height: clamp(240px, 30vh, 420px);
     border-radius: 6px; border: 1px solid var(--border);
     scrollbar-width: thin; scrollbar-color: #dde1e8 transparent;
   }
   .dt-table-wrap::-webkit-scrollbar { width:4px; height:4px; }
   .dt-table-wrap::-webkit-scrollbar-thumb { background:#dde1e8; border-radius:4px; }
 
-  .dt-table { width:100%; border-collapse:collapse; font-size:.74rem; min-width:580px; }
+  .dt-table { width:100%; border-collapse:collapse; font-size:var(--fs-xs); min-width:580px; }
   .dt-table thead th {
     position:sticky; top:0; z-index:2;
     background:#1a237e; color:#fff;
     font-family:'Chakra Petch',sans-serif;
-    font-size:.75rem; font-weight:700; letter-spacing:.5px;
-    padding:6px 8px; text-align:left; white-space:nowrap;
+    font-size:var(--fs-xs); font-weight:700; letter-spacing:.5px;
+    padding:clamp(4px,.6vh,8px) clamp(6px,.8vw,10px); text-align:left; white-space:nowrap;
     border-right:1px solid rgba(255,255,255,.15);
   }
   .dt-table thead th:last-child { border-right:none; }
@@ -396,14 +412,14 @@
   .dt-table tbody tr:hover { background:#f0f7ff; }
   .dt-table tbody tr:nth-child(even) { background:#fafbfc; }
   .dt-table tbody tr:nth-child(even):hover { background:#f0f7ff; }
-  .dt-table tbody td { padding:4px 8px; color:var(--text); vertical-align:middle; white-space:nowrap; border-right:1px solid #f0f2f5; }
+  .dt-table tbody td { padding:clamp(3px,.5vh,6px) clamp(6px,.8vw,10px); color:var(--text); vertical-align:middle; white-space:nowrap; border-right:1px solid #f0f2f5; }
   .dt-table tbody td:last-child { border-right:none; }
   .dt-table tbody td.desc-cell { white-space:normal; max-width:260px; word-break:break-word; line-height:1.3; }
-  .dt-table .machine-cell { font-family:'Chakra Petch',monospace; font-size:.7rem; font-weight:800; color:#0d47a1; }
-  .dt-table .time-cell { font-family:'Chakra Petch',monospace; font-size:.7rem; color:#263238; font-weight:600; }
-  .dt-table .dur-cell { font-family:'Chakra Petch',monospace; font-size:.7rem; font-weight:800; color:#b71c1c; text-align:right; }
+  .dt-table .machine-cell { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); font-weight:800; color:#0d47a1; }
+  .dt-table .time-cell { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); color:#263238; font-weight:600; }
+  .dt-table .dur-cell { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); font-weight:800; color:#b71c1c; text-align:right; }
 
-  .shift-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:.55rem; font-weight:700; padding:1px 5px; border-radius:3px; letter-spacing:.3px; white-space:nowrap; }
+  .shift-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); font-weight:700; padding:1px 5px; border-radius:3px; letter-spacing:.3px; white-space:nowrap; }
   .shift-badge-d { background:rgba(245,127,23,.15); color:#e65100; border:1px solid rgba(245,127,23,.3); }
   .shift-badge-n { background:rgba(49,27,146,.15); color:#4527a0; border:1px solid rgba(49,27,146,.3); }
 
@@ -421,7 +437,7 @@
     50%      { box-shadow:0 0 0 5px rgba(255,23,68,.12),0 2px 10px rgba(213,0,0,.5); }
   }
 
-  .type-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:.58rem; font-weight:700; padding:1px 6px; border-radius:3px; letter-spacing:.4px; white-space:nowrap; }
+  .type-badge { display:inline-block; font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); font-weight:700; padding:1px 6px; border-radius:3px; letter-spacing:.4px; white-space:nowrap; }
   .type-OPT       { background:rgba(86,119,252,.12); color:#5677fc; border:1px solid rgba(86,119,252,.25); }
   .type-EE        { background:rgba(38,166,154,.12); color:#00796b; border:1px solid rgba(38,166,154,.25); }
   .type-ME        { background:rgba(255,111,0,.12);  color:#e65100; border:1px solid rgba(255,111,0,.25); }
@@ -432,121 +448,24 @@
   .type-Other     { background:rgba(141,110,99,.12); color:#4e342e; border:1px solid rgba(141,110,99,.25); }
   .type-PLAN      { background:rgba(0,188,212,.12);  color:#00838f; border:1px solid rgba(0,188,212,.25); }
 
-  .dt-empty { text-align:center; padding:16px; font-family:'Chakra Petch',sans-serif; font-size:.65rem; color:var(--muted); letter-spacing:1px; }
+  .dt-empty { text-align:center; padding:16px; font-family:'Chakra Petch',sans-serif; font-size:var(--fs-xs); color:var(--muted); letter-spacing:1px; }
 
   /* Footer */
   .footer { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px; }
-  .footer-txt { font-family:'Chakra Petch',monospace; font-size:.6rem; color:#546e7a; font-weight:600; }
+  .footer-txt { font-family:'Chakra Petch',monospace; font-size:var(--fs-xs); color:#546e7a; font-weight:600; }
 
   /* Error */
   #errorBanner {
     display:none;
     background:#fff3f3; border:1px solid #ffcdd2;
     border-radius:7px; padding:7px 12px;
-    font-size:.73rem; color:#c62828; line-height:1.5;
+    font-size:var(--fs-sm); color:#c62828; line-height:1.5;
   }
 
   /* ══════════════════════════════════
      RESPONSIVE BREAKPOINTS
+     ใช้เป็น override เฉพาะจุดที่ clamp ไม่เพียงพอ
   ══════════════════════════════════ */
-
-  /* ── 4K / 55" TV (CSS pixel ≥ 1920px, e.g. 3840×2160 at 2x or browser zoom out) ── */
-  /* จอ 55" 4K มักแสดง CSS pixel ≈ 1920px (devicePixelRatio=2) หรืออาจสูงกว่า */
-  /* ใช้ min-width: 1900px เพื่อครอบจอ 55" ที่ zoom ออก หรือ 1080p fullscreen */
-  @media (min-width: 1900px) {
-    :root { --topbar-h: 64px; }
-
-    .body-row {
-      /* right col ใหญ่ขึ้นตามสัดส่วนจอ */
-      grid-template-columns: 1fr 440px;
-    }
-
-    /* Charts สูงขึ้นเพื่อเต็มจอ */
-    .bar-chart-wrap  { height: 460px; }
-    .perf-chart-wrap { height: 260px; }
-
-    /* ตัวหนังสือใหญ่ขึ้น อ่านง่ายจากระยะไกล */
-    .card-head     { font-size: 1.05rem; }
-    .card-head::before { height: 16px; }
-    .legend-item   { font-size: .9rem; }
-    .legend-dot    { width: 12px; height: 12px; }
-
-    /* Topbar text */
-    .logo-box      { font-size: 1.25rem; padding: 6px 16px; }
-    .ctrl-label    { font-size: .78rem; }
-    .btn-shift     { font-size: .8rem; padding: 6px 12px; }
-    .date-select   { font-size: .92rem; padding: 7px 12px; min-width: 140px; }
-    .btn-nav       { width: 36px; height: 36px; font-size: 1.2rem; }
-    .btn-refresh   { font-size: .82rem; padding: 7px 12px; }
-    .countdown-txt { font-size: .82rem; min-width: 38px; }
-    .countdown-ring { width: 28px; height: 28px; }
-    .countdown-ring svg { width: 28px; height: 28px; }
-
-    /* Pie */
-    .pie-wrap      { width: 200px; height: 200px; }
-    .pie-title     { font-size: 1rem; }
-    .pie-legend-item { font-size: .88rem; }
-    .total-label   { font-size: .78rem; letter-spacing: 1px; }
-    .total-value   { font-size: 1.5rem; }
-    .clock-box     { font-size: 1.5rem; }
-    .productivity-box { font-size: 1.5rem; }
-    .total-box     { padding: 5px 10px; border-radius: 8px; }
-
-    /* Radar */
-    .radar-wrap    { width: 220px; height: 220px; }
-    .radar-title   { font-size: 1rem; }
-    .radar-legend-item { font-size: .85rem; }
-    .radar-legend-val  { font-size: .9rem; }
-    .radar-total   { font-size: .82rem; }
-    .radar-legend-dot  { width: 12px; height: 12px; }
-
-    /* Downtime table */
-    .dt-table-wrap { max-height: 480px; }
-    .dt-table      { font-size: .88rem; }
-    .dt-table thead th { font-size: .9rem; padding: 9px 12px; }
-    .dt-table tbody td { padding: 6px 12px; }
-    .dt-count-badge    { font-size: .8rem; padding: 3px 14px; }
-    .dt-filter-btn     { font-size: .72rem; padding: 4px 10px; }
-    .shift-badge       { font-size: .68rem; padding: 2px 7px; }
-    .type-badge        { font-size: .72rem; padding: 2px 8px; }
-    .machine-cell      { font-size: .85rem !important; }
-    .time-cell         { font-size: .85rem !important; }
-    .dur-cell          { font-size: .85rem !important; }
-
-    /* Footer */
-    .footer-txt    { font-size: .78rem; }
-
-    /* Page padding */
-    .page { padding: 14px 20px 14px; gap: 12px; }
-    .card { padding: 14px 18px 18px; }
-    .card::before { height: 4px; }
-  }
-
-  /* ── จอ 1440–1899px (27"-42" หรือ 4K browser zoom ปกติ) ── */
-  @media (min-width: 1440px) and (max-width: 1899px) {
-    :root { --topbar-h: 56px; }
-    .body-row { grid-template-columns: 1fr 380px; }
-    .bar-chart-wrap  { height: 380px; }
-    .perf-chart-wrap { height: 220px; }
-    .card-head { font-size: .9rem; }
-    .dt-table  { font-size: .8rem; }
-    .dt-table-wrap { max-height: 400px; }
-    .pie-wrap  { width: 165px; height: 165px; }
-    .radar-wrap { width: 195px; height: 195px; }
-    .pie-legend-item  { font-size: .82rem; }
-    .radar-legend-item { font-size: .82rem; }
-    .total-value, .clock-box, .productivity-box { font-size: 1.3rem; }
-    .logo-box  { font-size: 1.15rem; }
-  }
-
-  /* ── 1200–1439px ── */
-  @media (min-width: 1200px) and (max-width: 1439px) {
-    .body-row { grid-template-columns: 1fr 310px; }
-    .bar-chart-wrap  { height: 300px; }
-    .perf-chart-wrap { height: 180px; }
-    .pie-wrap  { width: 130px; height: 130px; }
-    .radar-wrap { width: 155px; height: 155px; }
-  }
 
   /* ── Tablet landscape / small screens (768–1199px) ── */
   @media (max-width: 1199px) {
@@ -556,10 +475,6 @@
       grid-template-columns: 1fr 1fr 1fr;
       gap: 8px;
     }
-    .bar-chart-wrap  { height: 260px; }
-    .perf-chart-wrap { height: 170px; }
-    .pie-wrap  { width: 110px; height: 110px; }
-    .radar-wrap { width: 130px; height: 130px; }
     .pie-body  { flex-direction: column; align-items: flex-start; }
     .radar-body { flex-direction: column; }
   }
@@ -613,25 +528,46 @@
     .page { padding: 8px; gap: 8px; }
     .body-row { grid-template-columns: 1fr; }
     .right-col { grid-template-columns: 1fr 1fr; }
-    .bar-chart-wrap  { height: 240px; }
-    .perf-chart-wrap { height: 150px; }
-    .radar-wrap { width: 120px; height: 120px; }
-    .dt-table-wrap { max-height: 280px; }
   }
 
   /* ── Mobile portrait (< 600px) ── */
   @media (max-width: 599px) {
     .right-col { grid-template-columns: 1fr; }
-    .bar-chart-wrap  { height: 220px; }
-    .perf-chart-wrap { height: 140px; }
     .pie-body  { flex-direction: row; align-items: center; }
-    .pie-wrap  { width: 100px; height: 100px; }
     .radar-body { flex-direction: row; align-items: center; }
-    .radar-wrap { width: 110px; height: 110px; }
     .dt-table  { font-size: .68rem; }
     .dt-table thead th { font-size: .68rem; padding: 5px 6px; }
     .dt-table tbody td { padding: 3px 6px; }
     .footer { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* ── ✅ 4K 55" TV FIX ──
+     จอ 55" 4K ที่ devicePixelRatio=2 จะมี CSS pixel = 1920px
+     ใช้ min-resolution เพื่อจับจอ high-DPI ขนาดใหญ่ด้วย
+  */
+  @media (min-width: 1800px),
+         (min-width: 1400px) and (min-resolution: 1.5dppx) {
+    :root {
+      --topbar-h: 62px;
+      /* เพิ่ม chart height สำหรับจอใหญ่ */
+      --bar-h:  clamp(380px, 32vh, 560px);
+      --perf-h: clamp(240px, 22vh, 380px);
+    }
+
+    .body-row {
+      grid-template-columns: 1fr clamp(360px, 28vw, 520px);
+    }
+
+    /* Topbar */
+    .logo-box      { letter-spacing: 2px; }
+    .btn-nav       { width: 36px; height: 36px; }
+    .date-select   { min-width: 130px; }
+
+    /* Downtime table */
+    .dt-table-wrap { max-height: clamp(300px, 35vh, 500px); }
+
+    /* Footer */
+    .footer { padding-top: 4px; }
   }
 </style>
 </head>
@@ -834,6 +770,12 @@ const C = {
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 let radarEquipChart=null, radarTypeChart=null;
 
+/* ══════════ FLUID FONT SIZE for charts ══════════ */
+function vw(pct) { return window.innerWidth * pct / 100; }
+function chartFontSize(min, pct, max) {
+  return Math.min(max, Math.max(min, vw(pct)));
+}
+
 /* ══════════ SHIFT ══════════ */
 let currentShift = 'all';
 const SHIFT_CONFIG = {
@@ -865,20 +807,30 @@ document.querySelectorAll('.btn-shift').forEach(btn=>{
 /* ══════════ CHART INIT ══════════ */
 Chart.defaults.font.family="'Sarabun',sans-serif";
 
+/* ── ✅ FIX: fluid font size ใน chart plugins ── */
+function getChartFontSize() {
+  const w = window.innerWidth;
+  if (w >= 2400) return 13;
+  if (w >= 1800) return 11;
+  if (w >= 1400) return 10;
+  return 9;
+}
+
 const totalLabelPlugin={
   id:'totalLabel',
   afterDatasetsDraw(chart){
     const{ctx,scales:{x,y}}=chart;
     const ds=chart.data.datasets;
     ctx.save();
+    const fs = getChartFontSize();
     chart.data.labels.forEach((_,i)=>{
       const total=ds.reduce((s,d)=>s+(Number(d.data[i])||0),0);
       if(!total) return;
       const xp=x.getPixelForValue(i), yp=y.getPixelForValue(total);
       const lbl=total.toLocaleString();
-      ctx.font="bold 10px 'Chakra Petch',monospace";
+      ctx.font=`bold ${fs}px 'Chakra Petch',monospace`;
       const tw=ctx.measureText(lbl).width;
-      const pw=tw+8,ph=15,pr=3,px=xp-pw/2,py=yp-ph-3;
+      const pw=tw+8,ph=fs+6,pr=3,px=xp-pw/2,py=yp-ph-3;
       ctx.fillStyle='rgba(21,35,126,.95)';
       ctx.beginPath(); ctx.roundRect(px,py,pw,ph,pr); ctx.fill();
       ctx.fillStyle='#ffffff'; ctx.textAlign='center'; ctx.textBaseline='bottom';
@@ -890,6 +842,7 @@ const totalLabelPlugin={
 
 function initBarChart(){
   const ctx=document.getElementById('bcmChart').getContext('2d');
+  const fs = getChartFontSize();
   bcmChart=new Chart(ctx,{
     type:'bar', plugins:[totalLabelPlugin],
     data:{labels:[],datasets:[
@@ -907,8 +860,8 @@ function initBarChart(){
         tooltip:{
           backgroundColor:'#fff',borderColor:'#dde1e8',borderWidth:1,
           titleColor:'#1a1f2e',bodyColor:'#374151',
-          titleFont:{family:"'Chakra Petch',monospace",size:10,weight:'700'},
-          bodyFont:{family:"'Sarabun',sans-serif",size:11},padding:8,
+          titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},
+          bodyFont:{family:"'Sarabun',sans-serif",size:fs+2},padding:8,
           callbacks:{
             label:c=>` ${c.dataset.label}: ${c.parsed.y.toLocaleString()}`,
             footer:items=>`  Total: ${items.reduce((s,i)=>s+i.parsed.y,0).toLocaleString()}`
@@ -916,10 +869,22 @@ function initBarChart(){
         }
       },
       scales:{
-        x:{stacked:true,grid:{color:'#e8eaf0'},ticks:{font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},color:'#1a237e',maxRotation:0,minRotation:0}},
+        x:{
+          stacked:true,
+          grid:{color:'#e8eaf0'},
+          ticks:{
+            font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},
+            color:'#1a237e',
+            maxRotation:0,
+            minRotation:0,
+            /* ✅ FIX: ลด label ให้สมกับ data จริง ไม่ overflow */
+            autoSkip:true,
+            maxTicksLimit:24,
+          }
+        },
         y:{
           stacked:true, grid:{color:'#e8eaf0'},
-          ticks:{font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:1000},
+          ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:1000},
           beginAtZero:true, min:0, max:7000
         }
       }
@@ -930,6 +895,7 @@ function initBarChart(){
 function initPieChart(){
   const canvas = document.getElementById('pieChart');
   const ctx = canvas.getContext('2d');
+  const fs = getChartFontSize();
   pieChart=new Chart(ctx,{
     type:'pie',
     data:{
@@ -948,7 +914,7 @@ function initPieChart(){
         tooltip:{
           backgroundColor:'#fff',borderColor:'#dde1e8',borderWidth:1,
           titleColor:'#1a1f2e',bodyColor:'#374151',
-          titleFont:{family:"'Chakra Petch',monospace",size:10,weight:'700'},
+          titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},
           callbacks:{label:c=>` ${c.label}: ${c.parsed.toLocaleString()}`}
         }
       }
@@ -958,6 +924,7 @@ function initPieChart(){
 
 function initPerfChart(){
   const ctx=document.getElementById('perfChart').getContext('2d');
+  const fs = getChartFontSize();
   perfChart=new Chart(ctx,{
     type:'line',
     data:{labels:[],datasets:[{
@@ -977,16 +944,26 @@ function initPerfChart(){
         tooltip:{
           backgroundColor:'#fff',borderColor:'#ffcdd2',borderWidth:1,
           titleColor:'#1a1f2e',bodyColor:'#c62828',
-          titleFont:{family:"'Chakra Petch',monospace",size:10,weight:'700'},
-          bodyFont:{family:"'Sarabun',sans-serif",size:11},padding:8,
+          titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},
+          bodyFont:{family:"'Sarabun',sans-serif",size:fs+2},padding:8,
           callbacks:{label:c=>` Performance: ${c.parsed.y.toLocaleString()}`}
         }
       },
       scales:{
-        x:{grid:{color:'#fce4ec'},ticks:{font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},color:'#1a237e',maxRotation:0,minRotation:0}},
+        x:{
+          grid:{color:'#fce4ec'},
+          ticks:{
+            font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},
+            color:'#1a237e',
+            maxRotation:0,
+            minRotation:0,
+            autoSkip:true,
+            maxTicksLimit:24,
+          }
+        },
         y:{
           grid:{color:'#fce4ec'},
-          ticks:{font:{family:"'Chakra Petch',monospace",size:10,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:20},
+          ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#374151',callback:v=>v.toLocaleString(),stepSize:20},
           beginAtZero:true, min:0, max:160
         }
       }
@@ -1023,6 +1000,7 @@ const TYPE_DEF = [
 let dtAllRows=[], dtCurrentRows=[], dtActiveFilter='ALL';
 
 function radarOptions() {
+  const fs = getChartFontSize();
   return {
     responsive:true,
     maintainAspectRatio:false,
@@ -1030,8 +1008,18 @@ function radarOptions() {
     scales:{
       r:{
         beginAtZero:true,
-        ticks:{ font:{family:"'Chakra Petch',monospace",size:9,weight:'700'}, color:'#37474f', backdropColor:'rgba(255,255,255,0.75)', backdropPadding:2, maxTicksLimit:4 },
-        pointLabels:{ font:{family:"'Chakra Petch',monospace",size:10,weight:'800'}, color:'#0d47a1', padding:6 },
+        ticks:{
+          font:{family:"'Chakra Petch',monospace",size:fs,weight:'700'},
+          color:'#37474f',
+          backdropColor:'rgba(255,255,255,0.75)',
+          backdropPadding:2,
+          maxTicksLimit:4
+        },
+        pointLabels:{
+          font:{family:"'Chakra Petch',monospace",size:fs+1,weight:'800'},
+          color:'#0d47a1',
+          padding:6
+        },
         grid:{ color:'rgba(0,0,0,.15)' },
         angleLines:{ color:'rgba(0,0,0,.2)' },
       }
@@ -1322,6 +1310,27 @@ document.getElementById('btnRefresh').addEventListener('click',()=>{
       if(wd) renderRadarForDate(wd);
     });
   });
+});
+
+/* ✅ FIX: Resize observer — rebuild chart font sizes เมื่อ window ขนาดเปลี่ยน */
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const fs = getChartFontSize();
+    [bcmChart, perfChart].forEach(ch => {
+      if (!ch) return;
+      ch.options.scales.x.ticks.font.size = fs;
+      ch.options.scales.y.ticks.font.size = fs;
+      ch.update('none');
+    });
+    [radarEquipChart, radarTypeChart].forEach(ch => {
+      if (!ch) return;
+      ch.options.scales.r.ticks.font.size = fs;
+      ch.options.scales.r.pointLabels.font.size = fs + 1;
+      ch.update('none');
+    });
+  }, 200);
 });
 
 function showOverlay(msg){document.getElementById('overlayMsg').textContent=msg;document.getElementById('overlay').classList.remove('hidden');}
