@@ -1217,14 +1217,16 @@ fetchData().then(()=>{
     remaining=INTERVAL;
   }
 
-  function advanceToToday(){
-    const now=new Date();
-    let target=new Date(now);
-    if(now.getHours()<8) target.setDate(target.getDate()-1);
-    const targetYMD=toYMD(target);
-    const sel=document.getElementById('datePicker');
-    if(availableDates.includes(targetYMD)&&sel.value!==targetYMD){sel.value=targetYMD;renderForDate(targetYMD);}
-    else doRefresh();
+function advanceToToday(){
+    // ดึงข้อมูลใหม่แล้วกระโดดไปวันที่ล่าสุดใน spreadsheet เสมอ
+    fetchData().then(()=>{
+      fetchDowntime().then(()=>{
+        const sel=document.getElementById('datePicker');
+        const latest=availableDates[availableDates.length-1];
+        if(latest){ sel.value=latest; renderForDate(latest); }
+      });
+    });
+    remaining=INTERVAL;
   }
 
   function checkDateAdvance(){
