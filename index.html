@@ -990,9 +990,9 @@ function renderDTTable(filterType) {
     var shiftRaw=(r[DT_COL.SHIFT]||'').trim().toLowerCase();
     var typeClass='type-'+typeRaw;
     var shiftCell=shiftRaw==='d'
-      ? '<span class="shift-badge shift-badge-d">Day</span>'
+      ? '<span class="shift-badge shift-badge-d">☀️Day</span>'
       : shiftRaw==='n'
-        ? '<span class="shift-badge shift-badge-n">Night</span>'
+        ? '<span class="shift-badge shift-badge-n">🌙Night</span>'
         : '<span style="color:var(--muted);font-size:.65rem;">—</span>';
     var endCell=endRaw
       ? '<span class="time-cell">'+escHtml(endRaw)+'</span>'
