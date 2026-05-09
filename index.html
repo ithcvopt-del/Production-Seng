@@ -8,14 +8,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-  /* ══════════════════════════════════
-     LG TV WebOS FIX:
-     1. ไม่ใช้ clamp() — ใช้ px คงที่ + media query แทน
-     2. ไม่ใช้ min() / max() CSS functions
-     3. ไม่ใช้ aspect-ratio
-     4. ใช้ height คงที่บน chart wrappers
-  ══════════════════════════════════ */
-
   :root {
     --bg:           #f0f2f5;
     --card:         #ffffff;
@@ -29,7 +21,6 @@
     --header-accent:#42a5f5;
     --topbar-h:     52px;
 
-    /* ── ✅ FIXED: ไม่ใช้ clamp() ── */
     --fs-xs:   0.72rem;
     --fs-sm:   0.82rem;
     --fs-base: 0.92rem;
@@ -50,7 +41,6 @@
     min-height: 100vh;
   }
 
-  /* ── Top Bar ── */
   .top-bar {
     background: #1a237e;
     background: -webkit-linear-gradient(135deg, #1a237e 0%, #283593 60%, #1565c0 100%);
@@ -268,7 +258,6 @@
     flex-wrap: wrap;
   }
 
-  /* ── Page wrapper ── */
   .page {
     padding: 10px 12px;
     display: -webkit-box;
@@ -281,7 +270,6 @@
     gap: 8px;
   }
 
-  /* ── Main layout ── */
   .body-row {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -307,6 +295,7 @@
     min-width: 0;
   }
 
+  /* ✅ CHANGE 1: Right column wider 340→400px */
   .right-col {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -316,13 +305,12 @@
     -ms-flex-direction: column;
     flex-direction: column;
     gap: 8px;
-    width: 340px;
+    width: 400px;
     -ms-flex-negative: 0;
     flex-shrink: 0;
     min-width: 0;
   }
 
-  /* ── Card ── */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -349,7 +337,6 @@
   .card.perf-card::before    { background: -webkit-linear-gradient(90deg,#c62828,#ef5350); background: linear-gradient(90deg,#c62828,#ef5350); }
   .card.dt-table-card::before { background: -webkit-linear-gradient(90deg,#00695c,#26a69a); background: linear-gradient(90deg,#00695c,#26a69a); }
 
-  /* ✅ FIXED: ใช้ height คงที่ ไม่ใช้ clamp */
   .bar-chart-wrap {
     position: relative;
     width: 100%;
@@ -419,7 +406,6 @@
   }
   .legend-dot { width: 9px; height: 9px; border-radius: 50%; -ms-flex-negative: 0; flex-shrink: 0; }
 
-  /* Overlay */
   .overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -454,7 +440,6 @@
   @keyframes spin { to { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
   .overlay-msg { font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-xs); color: var(--muted); letter-spacing: 1px; }
 
-  /* ── Right column — Pie card ── */
   .pie-card { padding: 8px 12px 12px; }
   .pie-title {
     font-family: 'Chakra Petch', Arial, sans-serif;
@@ -501,6 +486,8 @@
     min-width: 0;
   }
   .pie-legend { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; gap: 2px; }
+
+  /* ✅ CHANGE 2: pie legend font smaller (0.68rem → 0.63rem) */
   .pie-legend-item {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -511,7 +498,7 @@
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
-    font-size: var(--fs-xs);
+    font-size: 0.63rem;
     color: #1a1f2e;
     font-weight: 700;
     padding: 2px 0;
@@ -564,7 +551,6 @@
   .total-box.productivity-card { background: #fffbeb; border-color: #fcd34d; }
   .total-box.productivity-card .total-label { color: #92400e; }
 
-  /* Radar Cards */
   .radar-card { padding: 8px 10px 10px; }
   .radar-card::before { background: -webkit-linear-gradient(90deg,#1a237e,#42a5f5); background: linear-gradient(90deg,#1a237e,#42a5f5); }
   .radar-title {
@@ -587,8 +573,8 @@
   .radar-wrap {
     -ms-flex-negative: 0;
     flex-shrink: 0;
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     position: relative;
   }
   .radar-wrap canvas {
@@ -611,6 +597,8 @@
     gap: 3px;
     min-width: 0;
   }
+
+  /* ✅ CHANGE 3: radar legend font smaller */
   .radar-legend-item {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -621,7 +609,7 @@
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
-    font-size: var(--fs-xs);
+    font-size: 0.63rem;
     color: #1a1f2e;
     font-weight: 700;
     padding: 2px 0;
@@ -639,12 +627,11 @@
     color: #0d47a1;
     overflow: hidden;
   }
-  .radar-legend-left span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--fs-xs); }
+  .radar-legend-left span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.63rem; }
   .radar-legend-dot { width: 9px; height: 9px; border-radius: 50%; -ms-flex-negative: 0; flex-shrink: 0; }
   .radar-legend-val { font-family: 'Chakra Petch', monospace; font-size: var(--fs-sm); font-weight: 800; color: #0d47a1; min-width: 18px; text-align: right; }
   .radar-total { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); color: #1a237e; font-weight: 800; text-align: center; margin-top: 4px; }
 
-  /* Downtime Table */
   .dt-table-header {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -795,7 +782,6 @@
 
   .dt-empty { text-align: center; padding: 16px; font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-xs); color: var(--muted); letter-spacing: 1px; }
 
-  /* Footer */
   .footer {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -812,7 +798,6 @@
   }
   .footer-txt { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); color: #546e7a; font-weight: 600; }
 
-  /* Error */
   #errorBanner {
     display: none;
     background: #fff3f3;
@@ -823,10 +808,6 @@
     color: #c62828;
     line-height: 1.5;
   }
-
-  /* ══════════════════════════════════
-     RESPONSIVE BREAKPOINTS
-  ══════════════════════════════════ */
 
   /* ── Large TV / 4K ── */
   @media (min-width: 1800px) {
@@ -841,9 +822,10 @@
       --bar-h:  420px;
       --perf-h: 280px;
     }
-    .right-col { width: 420px; }
+    /* ✅ wider at 4K too */
+    .right-col { width: 500px; }
     .pie-wrap  { width: 180px; height: 180px; }
-    .radar-wrap { width: 190px; height: 190px; }
+    .radar-wrap { width: 200px; height: 200px; }
     .dt-table-wrap { max-height: 400px; }
   }
 
@@ -853,9 +835,10 @@
       --bar-h:  380px;
       --perf-h: 240px;
     }
-    .right-col { width: 380px; }
+    /* ✅ wider at standard desktop too */
+    .right-col { width: 440px; }
     .pie-wrap  { width: 160px; height: 160px; }
-    .radar-wrap { width: 170px; height: 170px; }
+    .radar-wrap { width: 180px; height: 180px; }
   }
 
   /* ── Tablet landscape ── */
@@ -929,7 +912,6 @@
 </head>
 <body>
 
-<!-- ── Top Bar ── -->
 <div class="top-bar">
   <div class="top-bar-row1">
     <div class="top-bar-left">
@@ -963,17 +945,14 @@
   </div>
 </div>
 
-<!-- ── Page ── -->
 <div class="page">
 
   <div id="errorBanner"></div>
 
   <div class="body-row">
 
-    <!-- Left -->
     <div class="left-col">
 
-      <!-- Bar chart -->
       <div class="card" id="barCard">
         <div class="overlay" id="overlay">
           <div class="spinner"></div>
@@ -990,7 +969,6 @@
         </div>
       </div>
 
-      <!-- Performance chart -->
       <div class="card perf-card">
         <div class="card-head red">Performance Main Line S3</div>
         <div class="perf-chart-wrap">
@@ -1001,7 +979,6 @@
         </div>
       </div>
 
-      <!-- Downtime Table -->
       <div class="card dt-table-card">
         <div class="dt-table-header">
           <div class="card-head teal" style="margin:0;">Downtime Detail</div>
@@ -1039,10 +1016,8 @@
       </div>
     </div>
 
-    <!-- Right column -->
     <div class="right-col">
 
-      <!-- Pie -->
       <div class="card pie-card">
         <div class="pie-title">Total Production of Each Machine</div>
         <div class="pie-body">
@@ -1069,7 +1044,6 @@
         </div>
       </div>
 
-      <!-- Radar 1 -->
       <div class="card radar-card" id="radarEquipCard">
         <div class="radar-title">Downtime of Equipment</div>
         <div class="radar-body">
@@ -1083,7 +1057,6 @@
         </div>
       </div>
 
-      <!-- Radar 2 -->
       <div class="card radar-card" id="radarTypeCard">
         <div class="radar-title">Type of Downtime</div>
         <div class="radar-body">
@@ -1108,7 +1081,6 @@
 </div>
 
 <script>
-/* ══════════ CONFIG ══════════ */
 const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 const CSV_URLS = [ BASE + '?gid=1971585139&single=true&output=csv' ];
 const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11, VALUE:23 };
@@ -1124,7 +1096,6 @@ const C = {
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 let radarEquipChart=null, radarTypeChart=null;
 
-/* ══════════ FONT SIZE ══════════ */
 function getChartFontSize() {
   var w = window.innerWidth;
   if (w >= 2400) return 13;
@@ -1133,7 +1104,6 @@ function getChartFontSize() {
   return 9;
 }
 
-/* ══════════ SHIFT ══════════ */
 var currentShift = 'all';
 var SHIFT_CONFIG = {
   all:   { label:'All Shift',   period:'08:00 → 07:00 (+1 day)', minH:8,  maxH:31 },
@@ -1161,10 +1131,8 @@ document.querySelectorAll('.btn-shift').forEach(function(btn){
   });
 });
 
-/* ══════════ CHART INIT ══════════ */
 Chart.defaults.font.family="'Sarabun',Arial,sans-serif";
 
-/* ✅ CRITICAL FIX: ไม่ใช้ roundRect() เพราะ LG TV WebOS ไม่รองรับ */
 var totalLabelPlugin = {
   id: 'totalLabel',
   afterDatasetsDraw: function(chart) {
@@ -1185,10 +1153,8 @@ var totalLabelPlugin = {
       var tw = ctx.measureText(lbl).width;
       var pw = tw + 8;
       var ph = fs + 6;
-      var pr = 3;
       var px2 = xp - pw / 2;
       var py2 = yp - ph - 3;
-      /* ✅ FIX: ใช้ fillRect ธรรมดา แทน roundRect */
       ctx.fillStyle = 'rgba(21,35,126,.95)';
       ctx.fillRect(px2, py2, pw, ph);
       ctx.fillStyle = '#ffffff';
@@ -1356,7 +1322,6 @@ function initPerfChart(){
   });
 }
 
-/* ══════════ RADAR CHARTS ══════════ */
 var DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 var DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
@@ -1384,6 +1349,7 @@ var TYPE_DEF = [
 
 var dtAllRows=[], dtCurrentRows=[], dtActiveFilter='ALL';
 
+/* ✅ CHANGE 4: radarOptions — pointLabels font size reduced (fs-1) & padding increased */
 function radarOptions() {
   var fs = getChartFontSize();
   return {
@@ -1401,9 +1367,10 @@ function radarOptions() {
           maxTicksLimit:4
         },
         pointLabels: {
-          font:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'800' },
+          /* ✅ ลด font size จาก fs+1 → fs-1 เพื่อป้องกันชื่อบัง chart */
+          font:{ family:"'Chakra Petch',monospace", size:fs-1, weight:'700' },
           color:'#0d47a1',
-          padding:6
+          padding:8
         },
         grid: { color:'rgba(0,0,0,.15)' },
         angleLines: { color:'rgba(0,0,0,.2)' },
@@ -1706,7 +1673,6 @@ document.getElementById('btnRefresh').addEventListener('click',function(){
   });
 });
 
-/* ✅ Resize handler */
 var resizeTimer;
 window.addEventListener('resize', function() {
   clearTimeout(resizeTimer);
@@ -1721,7 +1687,8 @@ window.addEventListener('resize', function() {
     [radarEquipChart, radarTypeChart].forEach(function(ch) {
       if (!ch) return;
       ch.options.scales.r.ticks.font.size = fs;
-      ch.options.scales.r.pointLabels.font.size = fs + 1;
+      /* ✅ sync resize: fs-1 ให้ตรงกับ radarOptions */
+      ch.options.scales.r.pointLabels.font.size = fs - 1;
       ch.update('none');
     });
   }, 200);
@@ -1732,7 +1699,6 @@ function hideOverlay(){ document.getElementById('overlay').classList.add('hidden
 function showError(html){ var b=document.getElementById('errorBanner');b.innerHTML='Warning: '+html;b.style.display='block'; }
 function hideError(){ document.getElementById('errorBanner').style.display='none'; }
 
-/* ══════════ BOOT ══════════ */
 applyShiftUI('all');
 initBarChart();
 initPieChart();
@@ -1746,7 +1712,6 @@ fetchData().then(function(){
   });
 });
 
-/* ══════════ AUTO-REFRESH (2 min) ══════════ */
 (function(){
   var INTERVAL=2*60, CIRCUMFERENCE=47.12;
   var remaining=INTERVAL;
