@@ -975,8 +975,8 @@ function updateDonut(grandTotal) {
   var remaining = Math.max(0, 100 - pctClamped);
 
   /* Arc colour: green if >=100%, orange if >=70%, red if <70% */
-  var arcColor = pct >= 85 ? '#2e7d32' : pct >= 55 ? '#ff9800' : '#ef5350';
-  var arcBorder = pct >= 85 ? '#2e7d32' : pct >= 55 ? '#ff9800' : '#ef5350';
+  var arcColor = pct >= 80 ? '#2e7d32' : pct >= 55 ? '#ff9800' : '#ef5350';
+  var arcBorder = pct >= 80 ? '#2e7d32' : pct >= 55 ? '#ff9800' : '#ef5350';
 
   donutChart.data.datasets[0].data = [pctClamped, remaining];
   donutChart.data.datasets[0].backgroundColor = [arcColor, 'rgba(0,0,0,.07)'];
