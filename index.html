@@ -538,20 +538,20 @@
             <div class="pie-legend" id="pieLegend"></div>
             <div class="totals-row">
               <div class="total-box">
-                <div class="total-label" style="color:#0d47a1;">total production</div>
+                <div class="total-label" style="color:#0d47a1;">total production:</div>
                 <div class="total-value" id="grandTotal">—</div>
               </div>
               <div class="total-box">
-                <div class="total-label" style="color:#004d40;">working hour s3</div>
+                <div class="total-label" style="color:#004d40;">working hour s3 :</div>
                 <div class="clock-box" id="clockBox">—</div>
               </div>
               <div class="total-box productivity-card">
-                <div class="total-label">productivity</div>
+                <div class="total-label">productivity:</div>
                 <div class="productivity-box" id="productivityBox">—</div>
               </div>
               <!-- ① TARGET BOX (orange, same style as Target 4,800 BCM/Hr. dashed line) -->
               <div class="total-box target-card">
-                <div class="total-label" style="font-size: 0.75rem;">🎯 target</div>
+                <div class="total-label" style="font-size: 0.75rem;">target:</div>
                 <div class="target-value" id="targetBox">115,200 BCM/Day</div>
               </div>
             </div>
@@ -748,7 +748,7 @@ var targetLinePlugin = {
     ctx.setLineDash([8, 4]);
     ctx.stroke();
     ctx.setLineDash([]);
-    var label = 'Target 4,800 BCM/Hr.';
+    var label = '🎯Target 4,800 BCM/Hr.';
     ctx.font = 'bold ' + (fs + 1) + "px 'Chakra Petch',monospace";
     var tw = ctx.measureText(label).width;
     var bw = tw + 10;
