@@ -235,6 +235,77 @@
   .productivity-box { font-family: 'Chakra Petch', monospace; font-size: 1.05rem; font-weight: 800; color: #b45309; }
   .total-box.productivity-card { background: #fffbeb; border-color: #fcd34d; }
   .total-box.productivity-card .total-label { color: #92400e; }
+
+  /* ── TARGET BOX (orange, matching Target 4,800 BCM/Hr. line) ── */
+  .total-box.target-card {
+    background: rgba(255,152,0,.08);
+    border-color: rgba(255,152,0,.45);
+    border-width: 1px;
+    border-style: dashed;
+  }
+  .total-box.target-card .total-label { color: #e65100; }
+  .target-value {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.88rem;
+    font-weight: 900;
+    color: #ff9800;
+    white-space: nowrap;
+  }
+
+  /* ── DONUT SECTION ── */
+  .donut-section {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .donut-inner {
+    display: flex; gap: 10px; align-items: center;
+  }
+  .donut-wrap {
+    position: relative; width: 110px; height: 110px; flex-shrink: 0;
+  }
+  .donut-wrap canvas {
+    position: absolute; top: 0; left: 0;
+    width: 100% !important; height: 100% !important;
+  }
+  .donut-center {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center; pointer-events: none;
+  }
+  .donut-pct {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 1.15rem; font-weight: 900; color: #ff9800;
+    line-height: 1;
+  }
+  .donut-sub {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.62rem; color: var(--muted); letter-spacing: .5px;
+  }
+  .donut-info {
+    flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 0;
+  }
+  .donut-title {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: var(--fs-xs); font-weight: 700;
+    color: #ff9800; text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+  .donut-stat {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: var(--fs-xs); padding: 2px 0; border-bottom: 1px solid #f0f2f5;
+  }
+  .donut-stat-label { font-family: 'Chakra Petch', Arial, sans-serif; font-weight: 700; color: var(--muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: .5px; }
+  .donut-stat-val   { font-family: 'Chakra Petch', monospace; font-weight: 800; color: #1a237e; font-size: var(--fs-xs); }
+  .donut-stat-val.orange { color: #ff9800; }
+  .donut-stat-val.green  { color: #2e7d32; }
+  .donut-stat-val.red    { color: #c62828; }
+  .donut-remaining {
+    margin-top: 3px;
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.68rem; color: var(--muted); text-align: right;
+  }
+
   .radar-card { padding: 8px 10px 10px; }
   .radar-card::before { background: linear-gradient(90deg,#1a237e,#42a5f5); }
   .radar-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-sm); font-weight: 700; color: #0d47a1; text-align: center; margin-bottom: 5px; }
@@ -307,6 +378,7 @@
     .pie-wrap  { width: 180px; height: 180px; }
     .radar-wrap { width: 190px; height: 190px; }
     .dt-table-wrap { max-height: 400px; }
+    .donut-wrap { width: 130px; height: 130px; }
   }
   @media (min-width: 1400px) and (max-width: 1799px) {
     :root { --bar-h: 380px; --perf-h: 240px; }
@@ -455,7 +527,7 @@
 
     <!-- Right column -->
     <div class="right-col">
-      <!-- Pie -->
+      <!-- Pie + Donut card -->
       <div class="card pie-card">
         <div class="pie-title">Total Production of Each Machine</div>
         <div class="pie-body">
@@ -476,6 +548,39 @@
               <div class="total-box productivity-card">
                 <div class="total-label">productivity</div>
                 <div class="productivity-box" id="productivityBox">—</div>
+              </div>
+              <!-- ① TARGET BOX (orange, same style as Target 4,800 BCM/Hr. dashed line) -->
+              <div class="total-box target-card">
+                <div class="total-label">🎯 target</div>
+                <div class="target-value" id="targetBox">115,200 BCM/Day</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ③④ DONUT ACHIEVEMENT CHART -->
+        <div class="donut-section">
+          <div class="donut-inner">
+            <div class="donut-wrap">
+              <canvas id="donutChart"></canvas>
+              <div class="donut-center">
+                <div class="donut-pct" id="donutPct">—%</div>
+                <div class="donut-sub">Achievement</div>
+              </div>
+            </div>
+            <div class="donut-info">
+              <div class="donut-title">🎯 Target Achievement</div>
+              <div class="donut-stat">
+                <span class="donut-stat-label">Actual</span>
+                <span class="donut-stat-val" id="donutActual">—</span>
+              </div>
+              <div class="donut-stat">
+                <span class="donut-stat-label">Target</span>
+                <span class="donut-stat-val orange" id="donutTarget">—</span>
+              </div>
+              <div class="donut-stat">
+                <span class="donut-stat-label">Gap</span>
+                <span class="donut-stat-val" id="donutGap">—</span>
               </div>
             </div>
           </div>
@@ -533,7 +638,7 @@ const C = {
 };
 
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
-let radarEquipChart=null, radarTypeChart=null;
+let radarEquipChart=null, radarTypeChart=null, donutChart=null;
 
 /* ══════════ FONT SIZE ══════════ */
 function getChartFontSize() {
@@ -551,6 +656,19 @@ var SHIFT_CONFIG = {
   day:   { label:'Shift Day',   period:'08:00 → 19:00',          minH:8,  maxH:19 },
   night: { label:'Shift Night', period:'20:00 → 07:00 (+1 day)', minH:20, maxH:31 },
 };
+
+/* ② Target values by shift */
+function getShiftTarget() {
+  return currentShift === 'all' ? 115200 : 57600;
+}
+function getShiftTargetLabel() {
+  return currentShift === 'all' ? '115,200 BCM/Day' : '57,600 BCM/Shift';
+}
+
+function updateTargetBox() {
+  document.getElementById('targetBox').textContent = getShiftTargetLabel();
+}
+
 function shiftHour(r) { var h=parseDT(r[COL.DT]).getHours(); return h<8?h+24:h; }
 function filterByShift(rows,shift) {
   var cfg=SHIFT_CONFIG[shift];
@@ -566,7 +684,9 @@ function applyShiftUI(shift) {
 }
 document.querySelectorAll('.btn-shift').forEach(function(btn){
   btn.addEventListener('click',function(){
-    currentShift=btn.dataset.shift; applyShiftUI(currentShift);
+    currentShift=btn.dataset.shift;
+    applyShiftUI(currentShift);
+    updateTargetBox();
     var wd=document.getElementById('datePicker').value;
     if(availableDates.length&&wd) renderForDate(wd);
   });
@@ -609,7 +729,7 @@ var totalLabelPlugin = {
   }
 };
 
-/* ══════════ PLUGIN: Target line at 4,800 BCM/Hr. — สี #ff9800 ══════════ */
+/* ══════════ PLUGIN: Target line at 4,800 BCM/Hr. ══════════ */
 var targetLinePlugin = {
   id: 'targetLine',
   afterDatasetsDraw: function(chart) {
@@ -619,10 +739,7 @@ var targetLinePlugin = {
     var TARGET = 4800;
     var yPixel = yAxis.getPixelForValue(TARGET);
     var fs = getChartFontSize();
-
     ctx.save();
-
-    /* เส้นประ */
     ctx.beginPath();
     ctx.moveTo(xAxis.left, yPixel);
     ctx.lineTo(xAxis.right, yPixel);
@@ -631,8 +748,6 @@ var targetLinePlugin = {
     ctx.setLineDash([8, 4]);
     ctx.stroke();
     ctx.setLineDash([]);
-
-    /* กล่องป้าย */
     var label = 'Target 4,800 BCM/Hr.';
     ctx.font = 'bold ' + (fs + 1) + "px 'Chakra Petch',monospace";
     var tw = ctx.measureText(label).width;
@@ -640,40 +755,31 @@ var targetLinePlugin = {
     var bh = fs + 8;
     var bx = xAxis.left + 8;
     var by = yPixel - bh - 3;
-
-    /* พื้นหลังกล่อง */
     ctx.fillStyle = 'rgba(255,152,0,0.15)';
     ctx.fillRect(bx, by, bw, bh);
-
-    /* ขอบกล่อง */
     ctx.strokeStyle = '#ff9800';
     ctx.lineWidth = 1;
     ctx.strokeRect(bx, by, bw, bh);
-
-    /* ข้อความ */
     ctx.fillStyle = '#5677fc';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'bottom';
     ctx.fillText(label, bx + 5, yPixel - 4);
-
     ctx.restore();
   }
 };
 
-/* ══════════ PLUGIN: "BCM/Hr." label เหนือ 7,000 บน Y-axis ══════════ */
+/* ══════════ PLUGIN: "BCM/Hr." label ══════════ */
 var bcmLabelPlugin = {
   id: 'bcmLabel',
   afterDraw: function(chart) {
     var ctx = chart.ctx;
     var yAxis = chart.scales.y;
     var fs = getChartFontSize();
-
     ctx.save();
     ctx.font = 'bold ' + fs + "px 'Chakra Petch',monospace";
     ctx.fillStyle = '#5677fc';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'bottom';
-    /* วางข้อความที่ขอบซ้ายสุดของ Y-axis บนสุด */
     ctx.fillText('BCM/Hr.', yAxis.left - 2, yAxis.top + fs + 1);
     ctx.restore();
   }
@@ -830,6 +936,65 @@ function initPerfChart(){
       }
     }
   });
+}
+
+/* ══════════ DONUT CHART (Achievement %) ══════════ */
+function initDonutChart() {
+  var ctx = document.getElementById('donutChart').getContext('2d');
+  donutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [0, 100],
+        backgroundColor: ['#ff9800', 'rgba(0,0,0,.08)'],
+        borderColor:     ['#ff9800', 'rgba(0,0,0,.06)'],
+        borderWidth: 1.5,
+        hoverOffset: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '72%',
+      rotation: -90,
+      circumference: 360,
+      animation: { animateRotate: true, duration: 700 },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false }
+      }
+    }
+  });
+}
+
+/* Update donut with grand total vs target */
+function updateDonut(grandTotal) {
+  var target = getShiftTarget();
+  var pct = target > 0 ? (grandTotal / target * 100) : 0;
+  var pctClamped = Math.min(pct, 100);
+  var remaining = Math.max(0, 100 - pctClamped);
+
+  /* Arc colour: green if >=100%, orange if >=70%, red if <70% */
+  var arcColor = pct >= 100 ? '#2e7d32' : pct >= 70 ? '#ff9800' : '#ef5350';
+  var arcBorder = pct >= 100 ? '#2e7d32' : pct >= 70 ? '#ff9800' : '#ef5350';
+
+  donutChart.data.datasets[0].data = [pctClamped, remaining];
+  donutChart.data.datasets[0].backgroundColor = [arcColor, 'rgba(0,0,0,.07)'];
+  donutChart.data.datasets[0].borderColor = [arcBorder, 'rgba(0,0,0,.05)'];
+  donutChart.update();
+
+  /* Center text */
+  var pctEl = document.getElementById('donutPct');
+  pctEl.textContent = pct.toFixed(1) + '%';
+  pctEl.style.color = arcColor;
+
+  /* Side stats */
+  var gap = grandTotal - target;
+  document.getElementById('donutActual').textContent  = grandTotal.toLocaleString() + ' BCM';
+  document.getElementById('donutTarget').textContent  = target.toLocaleString() + ' BCM';
+  var gapEl = document.getElementById('donutGap');
+  gapEl.textContent = (gap >= 0 ? '+' : '') + gap.toLocaleString() + ' BCM';
+  gapEl.className = 'donut-stat-val ' + (gap >= 0 ? 'green' : 'red');
 }
 
 /* ══════════ RADAR CHARTS ══════════ */
@@ -1143,6 +1308,12 @@ function renderForDate(wd){
   var productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
   document.getElementById('productivityBox').textContent=productivity>0?productivity.toLocaleString():'—';
 
+  /* ① Update Target box label */
+  updateTargetBox();
+
+  /* ③④ Update Donut chart */
+  updateDonut(grand);
+
   document.getElementById('rowCount').textContent=rows.length+' rows · '+allRows.length+' total · '+availableDates.length+' dates · '+toDisplay(wd)+' · '+SHIFT_CONFIG[currentShift].label;
   renderRadarForDate(wd);
   hideOverlay(); syncNav();
@@ -1215,6 +1386,7 @@ initPieChart();
 initPerfChart();
 initRadarEquip();
 initRadarType();
+initDonutChart();
 fetchData().then(function(){
   fetchDowntime().then(function(){
     var wd=document.getElementById('datePicker').value;
