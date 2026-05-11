@@ -246,9 +246,9 @@
   .total-box.target-card .total-label { color: #ff9800; }
   .target-value {
     font-family: 'Chakra Petch', monospace;
-    font-size: 0.88rem;
+    font-size: 0.92rem;
     font-weight: 900;
-    color: #ff9800;
+    color: #ff5722;
     white-space: nowrap;
   }
 
@@ -975,8 +975,8 @@ function updateDonut(grandTotal) {
   var remaining = Math.max(0, 100 - pctClamped);
 
   /* Arc colour: green if >=100%, orange if >=70%, red if <70% */
-  var arcColor = pct >= 100 ? '#2e7d32' : pct >= 70 ? '#ff9800' : '#ef5350';
-  var arcBorder = pct >= 100 ? '#2e7d32' : pct >= 70 ? '#ff9800' : '#ef5350';
+  var arcColor = pct >= 85 ? '#2e7d32' : pct >= 55 ? '#ff9800' : '#ef5350';
+  var arcBorder = pct >= 85 ? '#2e7d32' : pct >= 55 ? '#ff9800' : '#ef5350';
 
   donutChart.data.datasets[0].data = [pctClamped, remaining];
   donutChart.data.datasets[0].backgroundColor = [arcColor, 'rgba(0,0,0,.07)'];
