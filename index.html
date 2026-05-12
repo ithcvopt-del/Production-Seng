@@ -235,8 +235,6 @@
   .productivity-box { font-family: 'Chakra Petch', monospace; font-size: 1.05rem; font-weight: 800; color: #b45309; }
   .total-box.productivity-card { background: #fffbeb; border-color: #fcd34d; }
   .total-box.productivity-card .total-label { color: #b45309; }
-
-  /* ── TARGET BOX (orange, matching Target 4,800 BCM/Hr. line) ── */
   .total-box.target-card {
     background: rgba(255,152,0,.08);
     border-color: rgba(255,152,0,.45);
@@ -251,8 +249,6 @@
     color: #ff5722;
     white-space: nowrap;
   }
-
-  /* ── DONUT SECTION ── */
   .donut-section {
     margin-top: 10px;
     padding-top: 10px;
@@ -305,7 +301,6 @@
     font-family: 'Chakra Petch', monospace;
     font-size: 0.68rem; color: var(--muted); text-align: right;
   }
-
   .radar-card { padding: 8px 10px 10px; }
   .radar-card::before { background: linear-gradient(90deg,#1a237e,#42a5f5); }
   .radar-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-sm); font-weight: 700; color: #0d47a1; text-align: center; margin-bottom: 5px; }
@@ -371,6 +366,234 @@
   .footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; }
   .footer-txt { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); color: #546e7a; font-weight: 600; }
   #errorBanner { display: none; background: #fff3f3; border: 1px solid #ffcdd2; border-radius: 7px; padding: 7px 12px; font-size: var(--fs-sm); color: #c62828; line-height: 1.5; }
+
+  /* ══════════ MACHINE NAME FILTER HEADER ══════════ */
+  .th-machine-filter {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: background .15s;
+  }
+  .th-machine-filter:hover { background: #283593 !important; }
+  .th-machine-inner {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .th-filter-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px; height: 16px;
+    border-radius: 3px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.25);
+    font-size: 9px;
+    flex-shrink: 0;
+    transition: all .15s;
+  }
+  .th-filter-icon.has-filter {
+    background: #42a5f5;
+    border-color: #42a5f5;
+    color: #fff;
+    box-shadow: 0 0 6px rgba(66,165,245,.6);
+  }
+  .th-filter-icon svg { width: 9px; height: 9px; }
+
+  /* ══════════ MACHINE FILTER POPUP ══════════ */
+  #machineFilterPopup {
+    position: fixed;
+    z-index: 9999;
+    background: #fff;
+    border: 1.5px solid #90caf9;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 8px rgba(0,0,0,.1);
+    padding: 0;
+    min-width: 230px;
+    max-width: 280px;
+    display: none;
+    overflow: hidden;
+    animation: popupIn .18s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popupIn {
+    from { opacity: 0; transform: translateY(-8px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+  }
+  #machineFilterPopup.show { display: block; }
+
+  .mfp-header {
+    background: linear-gradient(135deg,#1a237e,#1565c0);
+    padding: 8px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 6px;
+  }
+  .mfp-title {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    color: #fff; letter-spacing: .8px;
+    text-transform: uppercase;
+  }
+  .mfp-close {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 13px; font-weight: 700;
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; line-height: 1;
+    transition: background .15s;
+    flex-shrink: 0;
+  }
+  .mfp-close:hover { background: rgba(255,255,255,.3); }
+
+  .mfp-search-wrap {
+    padding: 8px 10px 6px;
+    border-bottom: 1px solid #e8eaf0;
+  }
+  .mfp-search {
+    width: 100%;
+    border: 1px solid #90caf9;
+    border-radius: 5px;
+    padding: 4px 8px;
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.72rem;
+    color: #1a1f2e;
+    outline: none;
+    background: #f8f9fc;
+    transition: border-color .15s;
+  }
+  .mfp-search:focus { border-color: #1565c0; background: #fff; }
+  .mfp-search::placeholder { color: #b0b8c4; }
+
+  .mfp-actions {
+    padding: 5px 10px;
+    display: flex; gap: 4px;
+    border-bottom: 1px solid #e8eaf0;
+  }
+  .mfp-action-btn {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.68rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .13s;
+    letter-spacing: .4px;
+  }
+  .mfp-action-btn.select-all {
+    background: #e3f2fd; color: #1565c0; border-color: #90caf9;
+  }
+  .mfp-action-btn.select-all:hover { background: #1565c0; color: #fff; }
+  .mfp-action-btn.clear-all {
+    background: #fce4ec; color: #c62828; border-color: #ef9a9a;
+  }
+  .mfp-action-btn.clear-all:hover { background: #c62828; color: #fff; }
+
+  .mfp-list {
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 4px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #dde1e8 transparent;
+  }
+  .mfp-list::-webkit-scrollbar { width: 4px; }
+  .mfp-list::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 4px; }
+
+  .mfp-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background .12s;
+    border-bottom: 1px solid #f5f6f8;
+  }
+  .mfp-item:last-child { border-bottom: none; }
+  .mfp-item:hover { background: #e8f0fe; }
+  .mfp-item.checked { background: #e3f2fd; }
+
+  .mfp-checkbox {
+    width: 14px; height: 14px;
+    border: 1.5px solid #90caf9;
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: #fff;
+    transition: all .12s;
+  }
+  .mfp-item.checked .mfp-checkbox {
+    background: #1565c0;
+    border-color: #1565c0;
+  }
+  .mfp-checkmark {
+    display: none;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .mfp-item.checked .mfp-checkmark { display: block; }
+
+  .mfp-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .mfp-label {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.72rem; font-weight: 700;
+    color: #0d47a1;
+    flex: 1;
+  }
+  .mfp-item:not(.checked) .mfp-label { color: #546e7a; }
+  .mfp-count {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.65rem; font-weight: 700;
+    color: #90a4ae;
+    background: #f0f2f5;
+    border-radius: 10px;
+    padding: 0px 5px;
+    min-width: 20px;
+    text-align: center;
+  }
+  .mfp-item.checked .mfp-count {
+    background: #1565c0;
+    color: #fff;
+  }
+
+  .mfp-footer {
+    padding: 6px 12px;
+    border-top: 1px solid #e8eaf0;
+    background: #f8f9fc;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .mfp-apply-btn {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.72rem; font-weight: 700;
+    padding: 4px 14px; border-radius: 5px;
+    border: none; cursor: pointer;
+    background: linear-gradient(135deg,#1565c0,#42a5f5);
+    color: #fff; letter-spacing: .5px;
+    transition: opacity .15s;
+  }
+  .mfp-apply-btn:hover { opacity: .88; }
+  .mfp-status {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.65rem; color: #78909c;
+    font-weight: 600;
+  }
+
+  /* Active filter indicator badge on Machine Name column header */
+  .machine-filter-active-badge {
+    display: none;
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.62rem; font-weight: 700;
+    background: #42a5f5; color: #fff;
+    border-radius: 10px; padding: 0 5px;
+    min-width: 16px; text-align: center;
+    line-height: 1.5;
+  }
+  .machine-filter-active-badge.show { display: inline-block; }
 
   @media (min-width: 1800px) {
     :root { --topbar-h: 62px; --fs-xs: 0.85rem; --fs-sm: 0.95rem; --fs-base: 1.05rem; --fs-lg: 1.2rem; --fs-xl: 1.6rem; --fs-2xl: 2rem; --bar-h: 420px; --perf-h: 280px; }
@@ -452,6 +675,26 @@
   </div>
 </div>
 
+<!-- ── Machine Name Filter Popup ── -->
+<div id="machineFilterPopup">
+  <div class="mfp-header">
+    <span class="mfp-title">🏭 Filter Machine Name</span>
+    <div class="mfp-close" id="mfpClose">✕</div>
+  </div>
+  <div class="mfp-search-wrap">
+    <input class="mfp-search" id="mfpSearch" type="text" placeholder="Search machine…" autocomplete="off">
+  </div>
+  <div class="mfp-actions">
+    <button class="mfp-action-btn select-all" id="mfpSelectAll">☑ Select All</button>
+    <button class="mfp-action-btn clear-all" id="mfpClearAll">✕ Clear All</button>
+  </div>
+  <div class="mfp-list" id="mfpList"></div>
+  <div class="mfp-footer">
+    <span class="mfp-status" id="mfpStatus">All selected</span>
+    <button class="mfp-apply-btn" id="mfpApply">Apply Filter</button>
+  </div>
+</div>
+
 <!-- ── Page ── -->
 <div class="page">
   <div id="errorBanner"></div>
@@ -508,7 +751,18 @@
           <table class="dt-table">
             <thead>
               <tr>
-                <th>Machine Name</th>
+                <!-- ★ Clickable Machine Name header ★ -->
+                <th class="th-machine-filter" id="thMachineName" title="Click to filter by Machine Name">
+                  <div class="th-machine-inner">
+                    <span>Machine Name</span>
+                    <span class="machine-filter-active-badge" id="machineActiveBadge">0</span>
+                    <span class="th-filter-icon" id="thFilterIcon">
+                      <svg viewBox="0 0 10 10" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.5 2h9l-3.5 4v3l-2-1V6L0.5 2z"/>
+                      </svg>
+                    </span>
+                  </div>
+                </th>
                 <th>Shift</th>
                 <th>Start Time</th>
                 <th>End Time</th>
@@ -549,7 +803,6 @@
                 <div class="total-label">productivity:</div>
                 <div class="productivity-box" id="productivityBox">—</div>
               </div>
-              <!-- ① TARGET BOX (orange, same style as Target 4,800 BCM/Hr. dashed line) -->
               <div class="total-box target-card">
                 <div class="total-label" style="font-size: 0.75rem;">target:</div>
                 <div class="target-value" id="targetBox">115,200 BCM/Day</div>
@@ -557,8 +810,6 @@
             </div>
           </div>
         </div>
-
-        <!-- ③④ DONUT ACHIEVEMENT CHART -->
         <div class="donut-section">
           <div class="donut-inner">
             <div class="donut-wrap">
@@ -640,6 +891,169 @@ const C = {
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 let radarEquipChart=null, radarTypeChart=null, donutChart=null;
 
+/* ══════════ MACHINE NAME FILTER STATE ══════════ */
+/* The canonical machine list to show in the popup */
+var MACHINE_DEF = [
+  { label: 'Bucket Wheel #1', color: '#6B007B' },
+  { label: 'Bucket Wheel #2', color: '#F48FB1' },
+  { label: 'Crusher #1',      color: '#2baf2b' },
+  { label: 'Crusher #2',      color: '#72D572' },
+  { label: 'Crusher #3',      color: '#CDDC39' },
+  { label: 'Spreader',        color: '#4db6ac' },
+  { label: 'System',          color: '#03a9f4' },
+];
+
+/* selectedMachines: null = show ALL; Set of label strings = show only those */
+var selectedMachines = null; /* null = no filter (all) */
+var pendingMachines  = null; /* temp state while popup is open */
+
+/* ══════════ POPUP BUILD & LOGIC ══════════ */
+function getMachineCounts(rows) {
+  var counts = {};
+  MACHINE_DEF.forEach(function(m){ counts[m.label] = 0; });
+  rows.forEach(function(r){
+    var name = (r[DT_COL.MACHINE]||'').trim();
+    if (counts.hasOwnProperty(name)) counts[name]++;
+  });
+  return counts;
+}
+
+function buildMfpList(searchVal, tempSelected) {
+  var list = document.getElementById('mfpList');
+  var counts = getMachineCounts(dtCurrentRows);
+  var q = (searchVal||'').toLowerCase().trim();
+  list.innerHTML = '';
+
+  MACHINE_DEF.forEach(function(m){
+    if (q && m.label.toLowerCase().indexOf(q) === -1) return;
+    var isChecked = tempSelected === null || tempSelected.has(m.label);
+    var div = document.createElement('div');
+    div.className = 'mfp-item' + (isChecked ? ' checked' : '');
+    div.dataset.machine = m.label;
+    div.innerHTML =
+      '<div class="mfp-checkbox"><span class="mfp-checkmark">✓</span></div>' +
+      '<div class="mfp-dot" style="background:' + m.color + '"></div>' +
+      '<span class="mfp-label">' + escHtml(m.label) + '</span>' +
+      '<span class="mfp-count">' + (counts[m.label] || 0) + '</span>';
+    div.addEventListener('click', function(){
+      /* Toggle this machine in pendingMachines */
+      if (pendingMachines === null) {
+        /* Was "all" → now deselect just this one */
+        pendingMachines = new Set(MACHINE_DEF.map(function(x){ return x.label; }));
+        pendingMachines.delete(m.label);
+      } else {
+        if (pendingMachines.has(m.label)) pendingMachines.delete(m.label);
+        else pendingMachines.add(m.label);
+        /* If all selected → revert to null (all) */
+        if (pendingMachines.size === MACHINE_DEF.length) pendingMachines = null;
+      }
+      buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
+      updateMfpStatus(pendingMachines);
+    });
+    list.appendChild(div);
+  });
+}
+
+function updateMfpStatus(tempSelected) {
+  var el = document.getElementById('mfpStatus');
+  if (tempSelected === null) {
+    el.textContent = 'All machines selected';
+  } else {
+    el.textContent = tempSelected.size + ' / ' + MACHINE_DEF.length + ' selected';
+  }
+}
+
+function openMachinePopup(anchorEl) {
+  pendingMachines = selectedMachines === null ? null
+    : new Set(selectedMachines);
+
+  var popup = document.getElementById('machineFilterPopup');
+  var rect  = anchorEl.getBoundingClientRect();
+
+  /* Position below the header cell, left-aligned */
+  var top  = rect.bottom + 4;
+  var left = rect.left;
+
+  /* Keep inside viewport */
+  var popW = 250;
+  if (left + popW > window.innerWidth - 8) left = window.innerWidth - popW - 8;
+  if (top + 380 > window.innerHeight)       top  = rect.top - 380 - 4;
+
+  popup.style.top  = top + 'px';
+  popup.style.left = left + 'px';
+
+  document.getElementById('mfpSearch').value = '';
+  buildMfpList('', pendingMachines);
+  updateMfpStatus(pendingMachines);
+  popup.classList.add('show');
+}
+
+function closeMachinePopup() {
+  document.getElementById('machineFilterPopup').classList.remove('show');
+}
+
+function applyMachineFilter() {
+  selectedMachines = pendingMachines;
+  updateMachineFilterUI();
+  renderDTTable(dtActiveFilter);
+  closeMachinePopup();
+}
+
+function updateMachineFilterUI() {
+  var badge = document.getElementById('machineActiveBadge');
+  var icon  = document.getElementById('thFilterIcon');
+  if (selectedMachines === null) {
+    badge.classList.remove('show');
+    icon.classList.remove('has-filter');
+  } else {
+    badge.textContent = selectedMachines.size;
+    badge.classList.add('show');
+    icon.classList.add('has-filter');
+  }
+}
+
+/* Popup event wiring */
+document.getElementById('thMachineName').addEventListener('click', function(e){
+  e.stopPropagation();
+  var popup = document.getElementById('machineFilterPopup');
+  if (popup.classList.contains('show')) { closeMachinePopup(); return; }
+  openMachinePopup(this);
+});
+
+document.getElementById('mfpClose').addEventListener('click', function(e){
+  e.stopPropagation();
+  closeMachinePopup();
+});
+
+document.getElementById('mfpApply').addEventListener('click', function(e){
+  e.stopPropagation();
+  applyMachineFilter();
+});
+
+document.getElementById('mfpSelectAll').addEventListener('click', function(e){
+  e.stopPropagation();
+  pendingMachines = null;
+  buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
+  updateMfpStatus(pendingMachines);
+});
+
+document.getElementById('mfpClearAll').addEventListener('click', function(e){
+  e.stopPropagation();
+  pendingMachines = new Set(); /* empty = nothing */
+  buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
+  updateMfpStatus(pendingMachines);
+});
+
+document.getElementById('mfpSearch').addEventListener('input', function(){
+  buildMfpList(this.value, pendingMachines);
+});
+document.getElementById('mfpSearch').addEventListener('click', function(e){ e.stopPropagation(); });
+document.getElementById('mfpList').addEventListener('click', function(e){ e.stopPropagation(); });
+document.getElementById('machineFilterPopup').addEventListener('click', function(e){ e.stopPropagation(); });
+
+/* Close popup when clicking outside */
+document.addEventListener('click', function(){ closeMachinePopup(); });
+
 /* ══════════ FONT SIZE ══════════ */
 function getChartFontSize() {
   var w = window.innerWidth;
@@ -657,7 +1071,6 @@ var SHIFT_CONFIG = {
   night: { label:'Shift Night', period:'20:00 → 07:00 (+1 day)', minH:20, maxH:31 },
 };
 
-/* ② Target values by shift */
 function getShiftTarget() {
   return currentShift === 'all' ? 115200 : 57600;
 }
@@ -785,7 +1198,7 @@ var bcmLabelPlugin = {
   }
 };
 
-/* ══════════ INIT BAR CHART ══════════ */
+/* ══════════ INIT CHARTS ══════════ */
 function initBarChart(){
   var ctx = document.getElementById('bcmChart').getContext('2d');
   var fs = getChartFontSize();
@@ -938,7 +1351,6 @@ function initPerfChart(){
   });
 }
 
-/* ══════════ DONUT CHART (Achievement %) ══════════ */
 function initDonutChart() {
   var ctx = document.getElementById('donutChart').getContext('2d');
   donutChart = new Chart(ctx, {
@@ -967,28 +1379,20 @@ function initDonutChart() {
   });
 }
 
-/* Update donut with grand total vs target */
 function updateDonut(grandTotal) {
   var target = getShiftTarget();
   var pct = target > 0 ? (grandTotal / target * 100) : 0;
   var pctClamped = Math.min(pct, 100);
   var remaining = Math.max(0, 100 - pctClamped);
-
-  /* Arc colour: green if >=100%, orange if >=70%, red if <70% */
   var arcColor = pct >= 80 ? '#00FF00' : pct >= 55 ? '#ff9800' : '#ef5350';
-  var arcBorder = pct >= 80 ? '#00FF00' : pct >= 55 ? '#ff9800' : '#ef5350';
-
+  var arcBorder = arcColor;
   donutChart.data.datasets[0].data = [pctClamped, remaining];
   donutChart.data.datasets[0].backgroundColor = [arcColor, 'rgba(0,0,0,.07)'];
   donutChart.data.datasets[0].borderColor = [arcBorder, 'rgba(0,0,0,.05)'];
   donutChart.update();
-
-  /* Center text */
   var pctEl = document.getElementById('donutPct');
   pctEl.textContent = pct.toFixed(1) + '%';
   pctEl.style.color = arcColor;
-
-  /* Side stats */
   var gap = grandTotal - target;
   document.getElementById('donutActual').textContent  = grandTotal.toLocaleString() + ' BCM';
   document.getElementById('donutTarget').textContent  = target.toLocaleString() + ' BCM';
@@ -1127,22 +1531,36 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+/* ══════════ RENDER DT TABLE (with machine filter) ══════════ */
 function renderDTTable(filterType) {
   dtActiveFilter = filterType || dtActiveFilter;
+
+  /* Update Type filter buttons */
   document.querySelectorAll('.dt-filter-btn').forEach(function(btn){
     btn.classList.toggle('active', btn.dataset.type===dtActiveFilter);
   });
+
   var rows = dtCurrentRows;
+
+  /* ── Apply Machine Name filter ── */
+  if (selectedMachines !== null) {
+    rows = rows.filter(function(r){
+      return selectedMachines.has((r[DT_COL.MACHINE]||'').trim());
+    });
+  }
+
+  /* ── Apply Type filter ── */
   if (dtActiveFilter !== 'ALL') {
     rows = rows.filter(function(r){
       var t=(r[DT_COL.TYPE]||'').trim().toUpperCase();
       return t===dtActiveFilter.toUpperCase();
     });
   }
+
   document.getElementById('dtCountBadge').textContent = rows.length+' records';
   var tbody = document.getElementById('dtTableBody');
   if (!rows.length) {
-    tbody.innerHTML='<tr><td colspan="7" class="dt-empty">No downtime records for this date'+(dtActiveFilter!=='ALL'?' / type':'')+'</td></tr>';
+    tbody.innerHTML='<tr><td colspan="7" class="dt-empty">No downtime records for this date'+(dtActiveFilter!=='ALL'?' / type':'')+(selectedMachines!==null?' / machine':'')+'</td></tr>';
     return;
   }
   tbody.innerHTML = rows.map(function(r){
@@ -1185,7 +1603,12 @@ function renderRadarForDate(wd) {
   var shiftRows = rows;
   if (currentShift==='day') shiftRows=rows.filter(function(r){ return (r[DT_COL.SHIFT]||'').trim().toLowerCase()==='d'; });
   else if (currentShift==='night') shiftRows=rows.filter(function(r){ return (r[DT_COL.SHIFT]||'').trim().toLowerCase()==='n'; });
-  dtCurrentRows=shiftRows; dtActiveFilter='ALL'; renderDTTable('ALL');
+  dtCurrentRows = shiftRows;
+  dtActiveFilter = 'ALL';
+  /* Reset machine filter when date changes */
+  selectedMachines = null;
+  updateMachineFilterUI();
+  renderDTTable('ALL');
 
   var equipCounts=EQUIP_DEF.map(function(def){ return shiftRows.filter(function(r){ return (r[DT_COL.MACHINE]||'').trim()===def.key; }).length; });
   radarEquipChart.data.datasets[0].data=equipCounts; radarEquipChart.update();
@@ -1308,10 +1731,7 @@ function renderForDate(wd){
   var productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
   document.getElementById('productivityBox').textContent=productivity>0?productivity.toLocaleString():'—';
 
-  /* ① Update Target box label */
   updateTargetBox();
-
-  /* ③④ Update Donut chart */
   updateDonut(grand);
 
   document.getElementById('rowCount').textContent=rows.length+' rows · '+allRows.length+' total · '+availableDates.length+' dates · '+toDisplay(wd)+' · '+SHIFT_CONFIG[currentShift].label;
@@ -1371,6 +1791,9 @@ window.addEventListener('resize', function() {
       ch.options.scales.r.pointLabels.font.size = fs + 1;
       ch.update('none');
     });
+    /* Reposition popup if open */
+    var popup = document.getElementById('machineFilterPopup');
+    if (popup.classList.contains('show')) closeMachinePopup();
   }, 200);
 });
 
