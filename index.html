@@ -367,7 +367,6 @@
   .footer-txt { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); color: #546e7a; font-weight: 600; }
   #errorBanner { display: none; background: #fff3f3; border: 1px solid #ffcdd2; border-radius: 7px; padding: 7px 12px; font-size: var(--fs-sm); color: #c62828; line-height: 1.5; }
 
-  /* ══════════ MACHINE NAME FILTER HEADER ══════════ */
   .th-machine-filter {
     cursor: pointer;
     user-select: none;
@@ -400,7 +399,6 @@
   }
   .th-filter-icon svg { width: 9px; height: 9px; }
 
-  /* ══════════ MACHINE FILTER POPUP ══════════ */
   #machineFilterPopup {
     position: fixed;
     z-index: 9999;
@@ -583,7 +581,6 @@
     font-weight: 600;
   }
 
-  /* Active filter indicator badge on Machine Name column header */
   .machine-filter-active-badge {
     display: none;
     font-family: 'Chakra Petch', monospace;
@@ -641,7 +638,6 @@
 </head>
 <body>
 
-<!-- ── Top Bar ── -->
 <div class="top-bar">
   <div class="top-bar-row1">
     <div class="top-bar-left">
@@ -675,7 +671,6 @@
   </div>
 </div>
 
-<!-- ── Machine Name Filter Popup ── -->
 <div id="machineFilterPopup">
   <div class="mfp-header">
     <span class="mfp-title">🏭 Filter Machine Name</span>
@@ -695,14 +690,11 @@
   </div>
 </div>
 
-<!-- ── Page ── -->
 <div class="page">
   <div id="errorBanner"></div>
 
   <div class="body-row">
-    <!-- Left -->
     <div class="left-col">
-      <!-- Bar chart -->
       <div class="card" id="barCard">
         <div class="overlay" id="overlay">
           <div class="spinner"></div>
@@ -730,7 +722,6 @@
         </div>
       </div>
 
-      <!-- Downtime Table -->
       <div class="card dt-table-card">
         <div class="dt-table-header">
           <div class="card-head teal" style="margin:0;">Downtime Detail</div>
@@ -751,7 +742,6 @@
           <table class="dt-table">
             <thead>
               <tr>
-                <!-- ★ Clickable Machine Name header ★ -->
                 <th class="th-machine-filter" id="thMachineName" title="Click to filter by Machine Name">
                   <div class="th-machine-inner">
                     <span>Machine Name</span>
@@ -779,9 +769,7 @@
       </div>
     </div>
 
-    <!-- Right column -->
     <div class="right-col">
-      <!-- Pie + Donut card -->
       <div class="card pie-card">
         <div class="pie-title">Total Production of Each Machine</div>
         <div class="pie-body">
@@ -838,7 +826,6 @@
         </div>
       </div>
 
-      <!-- Radar 1 -->
       <div class="card radar-card" id="radarEquipCard">
         <div class="radar-title">Downtime of Equipment</div>
         <div class="radar-body">
@@ -852,7 +839,6 @@
         </div>
       </div>
 
-      <!-- Radar 2 -->
       <div class="card radar-card" id="radarTypeCard">
         <div class="radar-title">Type of Downtime</div>
         <div class="radar-body">
@@ -892,7 +878,6 @@ let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 let radarEquipChart=null, radarTypeChart=null, donutChart=null;
 
 /* ══════════ MACHINE NAME FILTER STATE ══════════ */
-/* The canonical machine list to show in the popup */
 var MACHINE_DEF = [
   { label: 'Bucket Wheel #1', color: '#6B007B' },
   { label: 'Bucket Wheel #2', color: '#F48FB1' },
@@ -903,9 +888,8 @@ var MACHINE_DEF = [
   { label: 'System',          color: '#03a9f4' },
 ];
 
-/* selectedMachines: null = show ALL; Set of label strings = show only those */
-var selectedMachines = null; /* null = no filter (all) */
-var pendingMachines  = null; /* temp state while popup is open */
+var selectedMachines = null;
+var pendingMachines  = null;
 
 /* ══════════ POPUP BUILD & LOGIC ══════════ */
 function getMachineCounts(rows) {
@@ -936,15 +920,12 @@ function buildMfpList(searchVal, tempSelected) {
       '<span class="mfp-label">' + escHtml(m.label) + '</span>' +
       '<span class="mfp-count">' + (counts[m.label] || 0) + '</span>';
     div.addEventListener('click', function(){
-      /* Toggle this machine in pendingMachines */
       if (pendingMachines === null) {
-        /* Was "all" → now deselect just this one */
         pendingMachines = new Set(MACHINE_DEF.map(function(x){ return x.label; }));
         pendingMachines.delete(m.label);
       } else {
         if (pendingMachines.has(m.label)) pendingMachines.delete(m.label);
         else pendingMachines.add(m.label);
-        /* If all selected → revert to null (all) */
         if (pendingMachines.size === MACHINE_DEF.length) pendingMachines = null;
       }
       buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
@@ -964,24 +945,16 @@ function updateMfpStatus(tempSelected) {
 }
 
 function openMachinePopup(anchorEl) {
-  pendingMachines = selectedMachines === null ? null
-    : new Set(selectedMachines);
-
+  pendingMachines = selectedMachines === null ? null : new Set(selectedMachines);
   var popup = document.getElementById('machineFilterPopup');
   var rect  = anchorEl.getBoundingClientRect();
-
-  /* Position below the header cell, left-aligned */
   var top  = rect.bottom + 4;
   var left = rect.left;
-
-  /* Keep inside viewport */
   var popW = 250;
   if (left + popW > window.innerWidth - 8) left = window.innerWidth - popW - 8;
   if (top + 380 > window.innerHeight)       top  = rect.top - 380 - 4;
-
   popup.style.top  = top + 'px';
   popup.style.left = left + 'px';
-
   document.getElementById('mfpSearch').value = '';
   buildMfpList('', pendingMachines);
   updateMfpStatus(pendingMachines);
@@ -1012,7 +985,6 @@ function updateMachineFilterUI() {
   }
 }
 
-/* Popup event wiring */
 document.getElementById('thMachineName').addEventListener('click', function(e){
   e.stopPropagation();
   var popup = document.getElementById('machineFilterPopup');
@@ -1039,7 +1011,7 @@ document.getElementById('mfpSelectAll').addEventListener('click', function(e){
 
 document.getElementById('mfpClearAll').addEventListener('click', function(e){
   e.stopPropagation();
-  pendingMachines = new Set(); /* empty = nothing */
+  pendingMachines = new Set();
   buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
   updateMfpStatus(pendingMachines);
 });
@@ -1050,8 +1022,6 @@ document.getElementById('mfpSearch').addEventListener('input', function(){
 document.getElementById('mfpSearch').addEventListener('click', function(e){ e.stopPropagation(); });
 document.getElementById('mfpList').addEventListener('click', function(e){ e.stopPropagation(); });
 document.getElementById('machineFilterPopup').addEventListener('click', function(e){ e.stopPropagation(); });
-
-/* Close popup when clicking outside */
 document.addEventListener('click', function(){ closeMachinePopup(); });
 
 /* ══════════ FONT SIZE ══════════ */
@@ -1323,7 +1293,10 @@ function initPerfChart(){
           titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
           bodyFont:{ family:"'Sarabun',Arial,sans-serif", size:fs+2 },
           padding:8,
-          callbacks:{ label:function(c){ return ' Performance: '+c.parsed.y.toLocaleString(); } }
+          callbacks:{
+            /* ★ แก้ตรงนี้: เปลี่ยนจาก 'Performance' เป็น 'Motor Current of Line S3' ★ */
+            label:function(c){ return ' Motor Current of Line S3: '+c.parsed.y.toLocaleString(); }
+          }
         }
       },
       scales: {
@@ -1531,25 +1504,18 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ══════════ RENDER DT TABLE (with machine filter) ══════════ */
 function renderDTTable(filterType) {
   dtActiveFilter = filterType || dtActiveFilter;
-
-  /* Update Type filter buttons */
   document.querySelectorAll('.dt-filter-btn').forEach(function(btn){
     btn.classList.toggle('active', btn.dataset.type===dtActiveFilter);
   });
 
   var rows = dtCurrentRows;
-
-  /* ── Apply Machine Name filter ── */
   if (selectedMachines !== null) {
     rows = rows.filter(function(r){
       return selectedMachines.has((r[DT_COL.MACHINE]||'').trim());
     });
   }
-
-  /* ── Apply Type filter ── */
   if (dtActiveFilter !== 'ALL') {
     rows = rows.filter(function(r){
       var t=(r[DT_COL.TYPE]||'').trim().toUpperCase();
@@ -1605,7 +1571,6 @@ function renderRadarForDate(wd) {
   else if (currentShift==='night') shiftRows=rows.filter(function(r){ return (r[DT_COL.SHIFT]||'').trim().toLowerCase()==='n'; });
   dtCurrentRows = shiftRows;
   dtActiveFilter = 'ALL';
-  /* Reset machine filter when date changes */
   selectedMachines = null;
   updateMachineFilterUI();
   renderDTTable('ALL');
@@ -1773,7 +1738,6 @@ document.getElementById('btnRefresh').addEventListener('click',function(){
   });
 });
 
-/* Resize handler */
 var resizeTimer;
 window.addEventListener('resize', function() {
   clearTimeout(resizeTimer);
@@ -1791,7 +1755,6 @@ window.addEventListener('resize', function() {
       ch.options.scales.r.pointLabels.font.size = fs + 1;
       ch.update('none');
     });
-    /* Reposition popup if open */
     var popup = document.getElementById('machineFilterPopup');
     if (popup.classList.contains('show')) closeMachinePopup();
   }, 200);
