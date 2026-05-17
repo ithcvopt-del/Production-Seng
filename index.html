@@ -1111,7 +1111,7 @@ Chart.defaults.font.family="'Sarabun',Arial,sans-serif";
 /* ══════════ PLUGIN: Total label on top of stacked bars ══════════ */
 var totalLabelPlugin = {
   id: 'totalLabel',
-  afterDatasetsDraw: function(chart) {
+  afterRender: function(chart) {
     var ctx = chart.ctx;
     var scales = chart.scales;
     var x = scales.x;
@@ -1145,7 +1145,7 @@ var totalLabelPlugin = {
 /* ══════════ PLUGIN: Target line at 4,800 BCM/Hr. ══════════ */
 var targetLinePlugin = {
   id: 'targetLine',
-  afterDatasetsDraw: function(chart) {
+  afterDraw: function(chart) {
     var ctx = chart.ctx;
     var yAxis = chart.scales.y;
     var xAxis = chart.scales.x;
