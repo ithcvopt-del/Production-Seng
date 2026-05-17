@@ -249,25 +249,58 @@
     color: #ff5722;
     white-space: nowrap;
   }
-  .donut-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
-  .donut-inner { display: flex; gap: 10px; align-items: center; }
-  .donut-wrap { position: relative; width: 110px; height: 110px; flex-shrink: 0; }
-  .donut-wrap canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; }
+  .donut-section {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .donut-inner {
+    display: flex; gap: 10px; align-items: center;
+  }
+  .donut-wrap {
+    position: relative; width: 110px; height: 110px; flex-shrink: 0;
+  }
+  .donut-wrap canvas {
+    position: absolute; top: 0; left: 0;
+    width: 100% !important; height: 100% !important;
+  }
   .donut-center {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     text-align: center; pointer-events: none;
   }
-  .donut-pct { font-family: 'Chakra Petch', monospace; font-size: 1.15rem; font-weight: 900; color: #ff9800; line-height: 1; }
-  .donut-sub { font-family: 'Chakra Petch', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: .5px; }
-  .donut-info { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-  .donut-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-xs); font-weight: 700; color: #ff9800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
-  .donut-stat { display: flex; align-items: center; justify-content: space-between; font-size: var(--fs-xs); padding: 2px 0; border-bottom: 1px solid #f0f2f5; }
+  .donut-pct {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 1.15rem; font-weight: 900; color: #ff9800;
+    line-height: 1;
+  }
+  .donut-sub {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.62rem; color: var(--muted); letter-spacing: .5px;
+  }
+  .donut-info {
+    flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 0;
+  }
+  .donut-title {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: var(--fs-xs); font-weight: 700;
+    color: #ff9800; text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+  .donut-stat {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: var(--fs-xs); padding: 2px 0; border-bottom: 1px solid #f0f2f5;
+  }
   .donut-stat-label { font-family: 'Chakra Petch', Arial, sans-serif; font-weight: 700; color: var(--muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: .5px; }
   .donut-stat-val   { font-family: 'Chakra Petch', monospace; font-weight: 800; color: #1a237e; font-size: var(--fs-xs); }
   .donut-stat-val.orange { color: #ff9800; }
   .donut-stat-val.green  { color: #2e7d32; }
   .donut-stat-val.red    { color: #c62828; }
+  .donut-remaining {
+    margin-top: 3px;
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.68rem; color: var(--muted); text-align: right;
+  }
   .radar-card { padding: 8px 10px 10px; }
   .radar-card::before { background: linear-gradient(90deg,#1a237e,#42a5f5); }
   .radar-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-sm); font-weight: 700; color: #0d47a1; text-align: center; margin-bottom: 5px; }
@@ -275,7 +308,11 @@
   .radar-wrap { flex-shrink: 0; width: 150px; height: 150px; position: relative; }
   .radar-wrap canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; }
   .radar-legend { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-  .radar-legend-item { display: flex; align-items: center; justify-content: space-between; font-size: var(--fs-xs); color: #1a1f2e; font-weight: 700; padding: 2px 0; border-bottom: 1px solid #e8eaf0; }
+  .radar-legend-item {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: var(--fs-xs); color: #1a1f2e; font-weight: 700;
+    padding: 2px 0; border-bottom: 1px solid #e8eaf0;
+  }
   .radar-legend-left { display: flex; align-items: center; gap: 5px; font-weight: 800; color: #0d47a1; overflow: hidden; }
   .radar-legend-left span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--fs-xs); }
   .radar-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
@@ -329,74 +366,282 @@
   .footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; }
   .footer-txt { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); color: #546e7a; font-weight: 600; }
   #errorBanner { display: none; background: #fff3f3; border: 1px solid #ffcdd2; border-radius: 7px; padding: 7px 12px; font-size: var(--fs-sm); color: #c62828; line-height: 1.5; }
-  .th-machine-filter { cursor: pointer; user-select: none; position: relative; transition: background .15s; }
+
+  /* ══════════ MACHINE NAME FILTER HEADER ══════════ */
+  .th-machine-filter {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: background .15s;
+  }
   .th-machine-filter:hover { background: #283593 !important; }
-  .th-machine-inner { display: flex; align-items: center; gap: 5px; }
-  .th-filter-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 3px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); font-size: 9px; flex-shrink: 0; transition: all .15s; }
-  .th-filter-icon.has-filter { background: #42a5f5; border-color: #42a5f5; color: #fff; box-shadow: 0 0 6px rgba(66,165,245,.6); }
+  .th-machine-inner {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .th-filter-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px; height: 16px;
+    border-radius: 3px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.25);
+    font-size: 9px;
+    flex-shrink: 0;
+    transition: all .15s;
+  }
+  .th-filter-icon.has-filter {
+    background: #42a5f5;
+    border-color: #42a5f5;
+    color: #fff;
+    box-shadow: 0 0 6px rgba(66,165,245,.6);
+  }
   .th-filter-icon svg { width: 9px; height: 9px; }
-  #machineFilterPopup { position: fixed; z-index: 9999; background: #fff; border: 1.5px solid #90caf9; border-radius: 10px; box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 8px rgba(0,0,0,.1); padding: 0; min-width: 230px; max-width: 280px; display: none; overflow: hidden; animation: popupIn .18s cubic-bezier(.34,1.56,.64,1); }
-  @keyframes popupIn { from { opacity: 0; transform: translateY(-8px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  /* ══════════ MACHINE FILTER POPUP ══════════ */
+  #machineFilterPopup {
+    position: fixed;
+    z-index: 9999;
+    background: #fff;
+    border: 1.5px solid #90caf9;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 8px rgba(0,0,0,.1);
+    padding: 0;
+    min-width: 230px;
+    max-width: 280px;
+    display: none;
+    overflow: hidden;
+    animation: popupIn .18s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popupIn {
+    from { opacity: 0; transform: translateY(-8px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+  }
   #machineFilterPopup.show { display: block; }
-  .mfp-header { background: linear-gradient(135deg,#1a237e,#1565c0); padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-  .mfp-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.75rem; font-weight: 700; color: #fff; letter-spacing: .8px; text-transform: uppercase; }
-  .mfp-close { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); border-radius: 4px; color: #fff; font-size: 13px; font-weight: 700; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; line-height: 1; transition: background .15s; flex-shrink: 0; }
+
+  .mfp-header {
+    background: linear-gradient(135deg,#1a237e,#1565c0);
+    padding: 8px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 6px;
+  }
+  .mfp-title {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    color: #fff; letter-spacing: .8px;
+    text-transform: uppercase;
+  }
+  .mfp-close {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 13px; font-weight: 700;
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; line-height: 1;
+    transition: background .15s;
+    flex-shrink: 0;
+  }
   .mfp-close:hover { background: rgba(255,255,255,.3); }
-  .mfp-search-wrap { padding: 8px 10px 6px; border-bottom: 1px solid #e8eaf0; }
-  .mfp-search { width: 100%; border: 1px solid #90caf9; border-radius: 5px; padding: 4px 8px; font-family: 'Chakra Petch', monospace; font-size: 0.72rem; color: #1a1f2e; outline: none; background: #f8f9fc; transition: border-color .15s; }
+
+  .mfp-search-wrap {
+    padding: 8px 10px 6px;
+    border-bottom: 1px solid #e8eaf0;
+  }
+  .mfp-search {
+    width: 100%;
+    border: 1px solid #90caf9;
+    border-radius: 5px;
+    padding: 4px 8px;
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.72rem;
+    color: #1a1f2e;
+    outline: none;
+    background: #f8f9fc;
+    transition: border-color .15s;
+  }
   .mfp-search:focus { border-color: #1565c0; background: #fff; }
   .mfp-search::placeholder { color: #b0b8c4; }
-  .mfp-actions { padding: 5px 10px; display: flex; gap: 4px; border-bottom: 1px solid #e8eaf0; }
-  .mfp-action-btn { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; transition: all .13s; letter-spacing: .4px; }
-  .mfp-action-btn.select-all { background: #e3f2fd; color: #1565c0; border-color: #90caf9; }
+
+  .mfp-actions {
+    padding: 5px 10px;
+    display: flex; gap: 4px;
+    border-bottom: 1px solid #e8eaf0;
+  }
+  .mfp-action-btn {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.68rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .13s;
+    letter-spacing: .4px;
+  }
+  .mfp-action-btn.select-all {
+    background: #e3f2fd; color: #1565c0; border-color: #90caf9;
+  }
   .mfp-action-btn.select-all:hover { background: #1565c0; color: #fff; }
-  .mfp-action-btn.clear-all { background: #fce4ec; color: #c62828; border-color: #ef9a9a; }
+  .mfp-action-btn.clear-all {
+    background: #fce4ec; color: #c62828; border-color: #ef9a9a;
+  }
   .mfp-action-btn.clear-all:hover { background: #c62828; color: #fff; }
-  .mfp-list { max-height: 240px; overflow-y: auto; padding: 4px 0; scrollbar-width: thin; scrollbar-color: #dde1e8 transparent; }
+
+  .mfp-list {
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 4px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #dde1e8 transparent;
+  }
   .mfp-list::-webkit-scrollbar { width: 4px; }
   .mfp-list::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 4px; }
-  .mfp-item { display: flex; align-items: center; gap: 8px; padding: 5px 12px; cursor: pointer; transition: background .12s; border-bottom: 1px solid #f5f6f8; }
+
+  .mfp-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background .12s;
+    border-bottom: 1px solid #f5f6f8;
+  }
   .mfp-item:last-child { border-bottom: none; }
   .mfp-item:hover { background: #e8f0fe; }
   .mfp-item.checked { background: #e3f2fd; }
-  .mfp-checkbox { width: 14px; height: 14px; border: 1.5px solid #90caf9; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #fff; transition: all .12s; }
-  .mfp-item.checked .mfp-checkbox { background: #1565c0; border-color: #1565c0; }
-  .mfp-checkmark { display: none; color: #fff; font-size: 9px; font-weight: 900; line-height: 1; }
+
+  .mfp-checkbox {
+    width: 14px; height: 14px;
+    border: 1.5px solid #90caf9;
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: #fff;
+    transition: all .12s;
+  }
+  .mfp-item.checked .mfp-checkbox {
+    background: #1565c0;
+    border-color: #1565c0;
+  }
+  .mfp-checkmark {
+    display: none;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 900;
+    line-height: 1;
+  }
   .mfp-item.checked .mfp-checkmark { display: block; }
-  .mfp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .mfp-label { font-family: 'Chakra Petch', monospace; font-size: 0.72rem; font-weight: 700; color: #0d47a1; flex: 1; }
+
+  .mfp-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .mfp-label {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.72rem; font-weight: 700;
+    color: #0d47a1;
+    flex: 1;
+  }
   .mfp-item:not(.checked) .mfp-label { color: #546e7a; }
-  .mfp-count { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; font-weight: 700; color: #90a4ae; background: #f0f2f5; border-radius: 10px; padding: 0px 5px; min-width: 20px; text-align: center; }
-  .mfp-item.checked .mfp-count { background: #1565c0; color: #fff; }
-  .mfp-footer { padding: 6px 12px; border-top: 1px solid #e8eaf0; background: #f8f9fc; display: flex; align-items: center; justify-content: space-between; }
-  .mfp-apply-btn { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.72rem; font-weight: 700; padding: 4px 14px; border-radius: 5px; border: none; cursor: pointer; background: linear-gradient(135deg,#1565c0,#42a5f5); color: #fff; letter-spacing: .5px; transition: opacity .15s; }
+  .mfp-count {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.65rem; font-weight: 700;
+    color: #90a4ae;
+    background: #f0f2f5;
+    border-radius: 10px;
+    padding: 0px 5px;
+    min-width: 20px;
+    text-align: center;
+  }
+  .mfp-item.checked .mfp-count {
+    background: #1565c0;
+    color: #fff;
+  }
+
+  .mfp-footer {
+    padding: 6px 12px;
+    border-top: 1px solid #e8eaf0;
+    background: #f8f9fc;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .mfp-apply-btn {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.72rem; font-weight: 700;
+    padding: 4px 14px; border-radius: 5px;
+    border: none; cursor: pointer;
+    background: linear-gradient(135deg,#1565c0,#42a5f5);
+    color: #fff; letter-spacing: .5px;
+    transition: opacity .15s;
+  }
   .mfp-apply-btn:hover { opacity: .88; }
-  .mfp-status { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; color: #78909c; font-weight: 600; }
-  .machine-filter-active-badge { display: none; font-family: 'Chakra Petch', monospace; font-size: 0.62rem; font-weight: 700; background: #42a5f5; color: #fff; border-radius: 10px; padding: 0 5px; min-width: 16px; text-align: center; line-height: 1.5; }
+  .mfp-status {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.65rem; color: #78909c;
+    font-weight: 600;
+  }
+
+  /* Active filter indicator badge on Machine Name column header */
+  .machine-filter-active-badge {
+    display: none;
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.62rem; font-weight: 700;
+    background: #42a5f5; color: #fff;
+    border-radius: 10px; padding: 0 5px;
+    min-width: 16px; text-align: center;
+    line-height: 1.5;
+  }
   .machine-filter-active-badge.show { display: inline-block; }
+
   @media (min-width: 1800px) {
     :root { --topbar-h: 62px; --fs-xs: 0.85rem; --fs-sm: 0.95rem; --fs-base: 1.05rem; --fs-lg: 1.2rem; --fs-xl: 1.6rem; --fs-2xl: 2rem; --bar-h: 420px; --perf-h: 280px; }
-    .right-col { width: 420px; } .pie-wrap { width: 180px; height: 180px; } .radar-wrap { width: 190px; height: 190px; } .dt-table-wrap { max-height: 400px; } .donut-wrap { width: 130px; height: 130px; }
+    .right-col { width: 420px; }
+    .pie-wrap  { width: 180px; height: 180px; }
+    .radar-wrap { width: 190px; height: 190px; }
+    .dt-table-wrap { max-height: 400px; }
+    .donut-wrap { width: 130px; height: 130px; }
   }
   @media (min-width: 1400px) and (max-width: 1799px) {
     :root { --bar-h: 380px; --perf-h: 240px; }
-    .right-col { width: 380px; } .pie-wrap { width: 160px; height: 160px; } .radar-wrap { width: 170px; height: 170px; }
+    .right-col { width: 380px; }
+    .pie-wrap  { width: 160px; height: 160px; }
+    .radar-wrap { width: 170px; height: 170px; }
   }
-  @media (max-width: 1199px) { .body-row { flex-wrap: wrap; } .left-col { width: 100%; } .right-col { width: 100%; flex-direction: row; flex-wrap: wrap; } .right-col > .card { flex: 1 1 280px; } }
+  @media (max-width: 1199px) {
+    .body-row { flex-wrap: wrap; }
+    .left-col { width: 100%; }
+    .right-col { width: 100%; flex-direction: row; flex-wrap: wrap; }
+    .right-col > .card { flex: 1 1 280px; }
+  }
   @media (max-width: 767px) {
     .top-bar { height: auto; min-height: unset; padding: 7px 10px 6px; flex-direction: column; align-items: stretch; gap: 5px; }
     .top-bar-row1 { justify-content: space-between; }
     .logo-box { font-size: .72rem; padding: 4px 8px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-    .auto-refresh-label { display: none; } .top-bar-row2 { flex-wrap: nowrap; overflow-x: auto; } .ctrl-label { display: none; }
-    .btn-shift { font-size: .72rem; padding: 6px 10px; } .btn-nav { width: 34px; height: 34px; font-size: 1.1rem; flex-shrink: 0; }
-    .date-select { font-size: .78rem; padding: 6px 8px; min-width: 100px; flex-shrink: 0; } .btn-refresh { font-size: .72rem; padding: 6px 10px; flex-shrink: 0; }
-    .page { padding: 8px; gap: 8px; } .body-row { flex-wrap: wrap; } .right-col { width: 100%; flex-direction: row; flex-wrap: wrap; }
+    .auto-refresh-label { display: none; }
+    .top-bar-row2 { flex-wrap: nowrap; overflow-x: auto; }
+    .ctrl-label { display: none; }
+    .btn-shift { font-size: .72rem; padding: 6px 10px; }
+    .btn-nav   { width: 34px; height: 34px; font-size: 1.1rem; flex-shrink: 0; }
+    .date-select { font-size: .78rem; padding: 6px 8px; min-width: 100px; flex-shrink: 0; }
+    .btn-refresh { font-size: .72rem; padding: 6px 10px; flex-shrink: 0; }
+    .page { padding: 8px; gap: 8px; }
+    .body-row { flex-wrap: wrap; }
+    .right-col { width: 100%; flex-direction: row; flex-wrap: wrap; }
   }
-  @media (max-width: 599px) { .right-col { flex-direction: column; } .dt-table { font-size: .68rem; } .dt-table thead th { font-size: .68rem; padding: 5px 6px; } .dt-table tbody td { padding: 3px 6px; } .footer { flex-direction: column; align-items: flex-start; } }
+  @media (max-width: 599px) {
+    .right-col { flex-direction: column; }
+    .dt-table  { font-size: .68rem; }
+    .dt-table thead th { font-size: .68rem; padding: 5px 6px; }
+    .dt-table tbody td { padding: 3px 6px; }
+    .footer { flex-direction: column; align-items: flex-start; }
+  }
 </style>
 </head>
 <body>
 
+<!-- ── Top Bar ── -->
 <div class="top-bar">
   <div class="top-bar-row1">
     <div class="top-bar-left">
@@ -407,12 +652,14 @@
       <div class="countdown-ring">
         <svg width="20" height="20" viewBox="0 0 20 20">
           <circle class="track" cx="10" cy="10" r="7.5"/>
-          <circle class="prog"  cx="10" cy="10" r="7.5" id="countdownProg" stroke-dasharray="47.12" stroke-dashoffset="0"/>
+          <circle class="prog"  cx="10" cy="10" r="7.5" id="countdownProg"
+            stroke-dasharray="47.12" stroke-dashoffset="0"/>
         </svg>
       </div>
       <span class="countdown-txt" id="countdownTxt">2:00</span>
     </div>
   </div>
+
   <div class="controls top-bar-row2">
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
@@ -428,6 +675,7 @@
   </div>
 </div>
 
+<!-- ── Machine Name Filter Popup ── -->
 <div id="machineFilterPopup">
   <div class="mfp-header">
     <span class="mfp-title">🏭 Filter Machine Name</span>
@@ -447,30 +695,42 @@
   </div>
 </div>
 
+<!-- ── Page ── -->
 <div class="page">
   <div id="errorBanner"></div>
+
   <div class="body-row">
+    <!-- Left -->
     <div class="left-col">
+      <!-- Bar chart -->
       <div class="card" id="barCard">
         <div class="overlay" id="overlay">
           <div class="spinner"></div>
           <div class="overlay-msg" id="overlayMsg">LOADING DATA…</div>
         </div>
         <div class="card-head">Machine Production Per Hour</div>
-        <div class="bar-chart-wrap"><canvas id="bcmChart"></canvas></div>
+        <div class="bar-chart-wrap">
+          <canvas id="bcmChart"></canvas>
+        </div>
         <div class="legend">
           <div class="legend-item"><div class="legend-dot" style="background:#2e7d32"></div>BCM CR</div>
           <div class="legend-item"><div class="legend-dot" style="background:#7b1fa2"></div>BWE 1</div>
           <div class="legend-item"><div class="legend-dot" style="background:#f48fb1"></div>BWE 2</div>
         </div>
       </div>
+
+      <!-- Performance chart -->
       <div class="card perf-card">
         <div class="card-head red">Performance Main Line S3</div>
-        <div class="perf-chart-wrap"><canvas id="perfChart"></canvas></div>
+        <div class="perf-chart-wrap">
+          <canvas id="perfChart"></canvas>
+        </div>
         <div class="legend">
           <div class="legend-item"><div class="legend-dot" style="background:#ef5350"></div>Motor Current of Line S3</div>
         </div>
       </div>
+
+      <!-- Downtime Table -->
       <div class="card dt-table-card">
         <div class="dt-table-header">
           <div class="card-head teal" style="margin:0;">Downtime Detail</div>
@@ -491,16 +751,24 @@
           <table class="dt-table">
             <thead>
               <tr>
+                <!-- ★ Clickable Machine Name header ★ -->
                 <th class="th-machine-filter" id="thMachineName" title="Click to filter by Machine Name">
                   <div class="th-machine-inner">
                     <span>Machine Name</span>
                     <span class="machine-filter-active-badge" id="machineActiveBadge">0</span>
                     <span class="th-filter-icon" id="thFilterIcon">
-                      <svg viewBox="0 0 10 10" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0.5 2h9l-3.5 4v3l-2-1V6L0.5 2z"/></svg>
+                      <svg viewBox="0 0 10 10" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.5 2h9l-3.5 4v3l-2-1V6L0.5 2z"/>
+                      </svg>
                     </span>
                   </div>
                 </th>
-                <th>Shift</th><th>Start Time</th><th>End Time</th><th>Description</th><th>Type</th><th style="text-align:right;">Duration</th>
+                <th>Shift</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th style="text-align:right;">Duration</th>
               </tr>
             </thead>
             <tbody id="dtTableBody">
@@ -511,18 +779,34 @@
       </div>
     </div>
 
+    <!-- Right column -->
     <div class="right-col">
+      <!-- Pie + Donut card -->
       <div class="card pie-card">
         <div class="pie-title">Total Production of Each Machine</div>
         <div class="pie-body">
-          <div class="pie-wrap"><canvas id="pieChart"></canvas></div>
+          <div class="pie-wrap">
+            <canvas id="pieChart"></canvas>
+          </div>
           <div class="pie-right">
             <div class="pie-legend" id="pieLegend"></div>
             <div class="totals-row">
-              <div class="total-box"><div class="total-label" style="color:#0d47a1;">total production:</div><div class="total-value" id="grandTotal">—</div></div>
-              <div class="total-box"><div class="total-label" style="color:#004d40;">working hour s3 :</div><div class="clock-box" id="clockBox">—</div></div>
-              <div class="total-box productivity-card"><div class="total-label">productivity:</div><div class="productivity-box" id="productivityBox">—</div></div>
-              <div class="total-box target-card"><div class="total-label" style="font-size:0.75rem;">target:</div><div class="target-value" id="targetBox">115,200 BCM/Day</div></div>
+              <div class="total-box">
+                <div class="total-label" style="color:#0d47a1;">total production:</div>
+                <div class="total-value" id="grandTotal">—</div>
+              </div>
+              <div class="total-box">
+                <div class="total-label" style="color:#004d40;">working hour s3 :</div>
+                <div class="clock-box" id="clockBox">—</div>
+              </div>
+              <div class="total-box productivity-card">
+                <div class="total-label">productivity:</div>
+                <div class="productivity-box" id="productivityBox">—</div>
+              </div>
+              <div class="total-box target-card">
+                <div class="total-label" style="font-size: 0.75rem;">target:</div>
+                <div class="target-value" id="targetBox">115,200 BCM/Day</div>
+              </div>
             </div>
           </div>
         </div>
@@ -530,31 +814,51 @@
           <div class="donut-inner">
             <div class="donut-wrap">
               <canvas id="donutChart"></canvas>
-              <div class="donut-center"><div class="donut-pct" id="donutPct">—%</div><div class="donut-sub">Achievement</div></div>
+              <div class="donut-center">
+                <div class="donut-pct" id="donutPct">—%</div>
+                <div class="donut-sub">Achievement</div>
+              </div>
             </div>
             <div class="donut-info">
               <div class="donut-title">🎯 Target Achievement</div>
-              <div class="donut-stat"><span class="donut-stat-label">Actual</span><span class="donut-stat-val" id="donutActual">—</span></div>
-              <div class="donut-stat"><span class="donut-stat-label">Target</span><span class="donut-stat-val orange" id="donutTarget">—</span></div>
-              <div class="donut-stat"><span class="donut-stat-label">Gap</span><span class="donut-stat-val" id="donutGap">—</span></div>
+              <div class="donut-stat">
+                <span class="donut-stat-label">Actual</span>
+                <span class="donut-stat-val" id="donutActual">—</span>
+              </div>
+              <div class="donut-stat">
+                <span class="donut-stat-label">Target</span>
+                <span class="donut-stat-val orange" id="donutTarget">—</span>
+              </div>
+              <div class="donut-stat">
+                <span class="donut-stat-label">Gap</span>
+                <span class="donut-stat-val" id="donutGap">—</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Radar 1 -->
       <div class="card radar-card" id="radarEquipCard">
         <div class="radar-title">Downtime of Equipment</div>
         <div class="radar-body">
-          <div class="radar-wrap"><canvas id="radarEquipChart"></canvas></div>
+          <div class="radar-wrap">
+            <canvas id="radarEquipChart"></canvas>
+          </div>
           <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;">
             <div class="radar-legend" id="radarEquipLegend"></div>
             <div class="radar-total" id="radarEquipTotal">Total: — events</div>
           </div>
         </div>
       </div>
+
+      <!-- Radar 2 -->
       <div class="card radar-card" id="radarTypeCard">
         <div class="radar-title">Type of Downtime</div>
         <div class="radar-body">
-          <div class="radar-wrap"><canvas id="radarTypeChart"></canvas></div>
+          <div class="radar-wrap">
+            <canvas id="radarTypeChart"></canvas>
+          </div>
           <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;">
             <div class="radar-legend" id="radarTypeLegend"></div>
             <div class="radar-total" id="radarTypeTotal">Total: — events</div>
@@ -563,6 +867,7 @@
       </div>
     </div>
   </div>
+
   <div class="footer">
     <div class="footer-txt" id="rowCount"></div>
     <div class="footer-txt" id="lastUpdate"></div>
@@ -570,26 +875,39 @@
 </div>
 
 <script>
+/* ══════════ CONFIG ══════════ */
 const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 const CSV_URLS = [ BASE + '?gid=1971585139&single=true&output=csv' ];
 const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11, VALUE:23 };
-const C = { bwe1:'#6B007B', bwe2:'#F48FB1', cr1:'#2baf2b', cr2:'#72D572', cr3:'#CDDC39' };
+
+const C = {
+  bwe1: '#6B007B',
+  bwe2: '#F48FB1',
+  cr1:  '#2baf2b',
+  cr2:  '#72D572',
+  cr3:  '#CDDC39'
+};
 
 let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 let radarEquipChart=null, radarTypeChart=null, donutChart=null;
 
+/* ══════════ MACHINE NAME FILTER STATE ══════════ */
+/* The canonical machine list to show in the popup */
 var MACHINE_DEF = [
-  { label:'Bucket Wheel #1', color:'#6B007B' },
-  { label:'Bucket Wheel #2', color:'#F48FB1' },
-  { label:'Crusher #1',      color:'#2baf2b' },
-  { label:'Crusher #2',      color:'#72D572' },
-  { label:'Crusher #3',      color:'#CDDC39' },
-  { label:'Spreader',        color:'#4db6ac' },
-  { label:'System',          color:'#03a9f4' },
+  { label: 'Bucket Wheel #1', color: '#6B007B' },
+  { label: 'Bucket Wheel #2', color: '#F48FB1' },
+  { label: 'Crusher #1',      color: '#2baf2b' },
+  { label: 'Crusher #2',      color: '#72D572' },
+  { label: 'Crusher #3',      color: '#CDDC39' },
+  { label: 'Spreader',        color: '#4db6ac' },
+  { label: 'System',          color: '#03a9f4' },
 ];
-var selectedMachines = null;
-var pendingMachines  = null;
 
+/* selectedMachines: null = show ALL; Set of label strings = show only those */
+var selectedMachines = null; /* null = no filter (all) */
+var pendingMachines  = null; /* temp state while popup is open */
+
+/* ══════════ POPUP BUILD & LOGIC ══════════ */
 function getMachineCounts(rows) {
   var counts = {};
   MACHINE_DEF.forEach(function(m){ counts[m.label] = 0; });
@@ -605,6 +923,7 @@ function buildMfpList(searchVal, tempSelected) {
   var counts = getMachineCounts(dtCurrentRows);
   var q = (searchVal||'').toLowerCase().trim();
   list.innerHTML = '';
+
   MACHINE_DEF.forEach(function(m){
     if (q && m.label.toLowerCase().indexOf(q) === -1) return;
     var isChecked = tempSelected === null || tempSelected.has(m.label);
@@ -617,12 +936,15 @@ function buildMfpList(searchVal, tempSelected) {
       '<span class="mfp-label">' + escHtml(m.label) + '</span>' +
       '<span class="mfp-count">' + (counts[m.label] || 0) + '</span>';
     div.addEventListener('click', function(){
+      /* Toggle this machine in pendingMachines */
       if (pendingMachines === null) {
+        /* Was "all" → now deselect just this one */
         pendingMachines = new Set(MACHINE_DEF.map(function(x){ return x.label; }));
         pendingMachines.delete(m.label);
       } else {
         if (pendingMachines.has(m.label)) pendingMachines.delete(m.label);
         else pendingMachines.add(m.label);
+        /* If all selected → revert to null (all) */
         if (pendingMachines.size === MACHINE_DEF.length) pendingMachines = null;
       }
       buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
@@ -634,26 +956,41 @@ function buildMfpList(searchVal, tempSelected) {
 
 function updateMfpStatus(tempSelected) {
   var el = document.getElementById('mfpStatus');
-  if (tempSelected === null) { el.textContent = 'All machines selected'; }
-  else { el.textContent = tempSelected.size + ' / ' + MACHINE_DEF.length + ' selected'; }
+  if (tempSelected === null) {
+    el.textContent = 'All machines selected';
+  } else {
+    el.textContent = tempSelected.size + ' / ' + MACHINE_DEF.length + ' selected';
+  }
 }
 
 function openMachinePopup(anchorEl) {
-  pendingMachines = selectedMachines === null ? null : new Set(selectedMachines);
+  pendingMachines = selectedMachines === null ? null
+    : new Set(selectedMachines);
+
   var popup = document.getElementById('machineFilterPopup');
   var rect  = anchorEl.getBoundingClientRect();
-  var top = rect.bottom + 4, left = rect.left;
+
+  /* Position below the header cell, left-aligned */
+  var top  = rect.bottom + 4;
+  var left = rect.left;
+
+  /* Keep inside viewport */
   var popW = 250;
   if (left + popW > window.innerWidth - 8) left = window.innerWidth - popW - 8;
-  if (top + 380 > window.innerHeight) top = rect.top - 380 - 4;
-  popup.style.top = top + 'px'; popup.style.left = left + 'px';
+  if (top + 380 > window.innerHeight)       top  = rect.top - 380 - 4;
+
+  popup.style.top  = top + 'px';
+  popup.style.left = left + 'px';
+
   document.getElementById('mfpSearch').value = '';
   buildMfpList('', pendingMachines);
   updateMfpStatus(pendingMachines);
   popup.classList.add('show');
 }
 
-function closeMachinePopup() { document.getElementById('machineFilterPopup').classList.remove('show'); }
+function closeMachinePopup() {
+  document.getElementById('machineFilterPopup').classList.remove('show');
+}
 
 function applyMachineFilter() {
   selectedMachines = pendingMachines;
@@ -665,39 +1002,68 @@ function applyMachineFilter() {
 function updateMachineFilterUI() {
   var badge = document.getElementById('machineActiveBadge');
   var icon  = document.getElementById('thFilterIcon');
-  if (selectedMachines === null) { badge.classList.remove('show'); icon.classList.remove('has-filter'); }
-  else { badge.textContent = selectedMachines.size; badge.classList.add('show'); icon.classList.add('has-filter'); }
+  if (selectedMachines === null) {
+    badge.classList.remove('show');
+    icon.classList.remove('has-filter');
+  } else {
+    badge.textContent = selectedMachines.size;
+    badge.classList.add('show');
+    icon.classList.add('has-filter');
+  }
 }
 
+/* Popup event wiring */
 document.getElementById('thMachineName').addEventListener('click', function(e){
   e.stopPropagation();
   var popup = document.getElementById('machineFilterPopup');
   if (popup.classList.contains('show')) { closeMachinePopup(); return; }
   openMachinePopup(this);
 });
-document.getElementById('mfpClose').addEventListener('click', function(e){ e.stopPropagation(); closeMachinePopup(); });
-document.getElementById('mfpApply').addEventListener('click', function(e){ e.stopPropagation(); applyMachineFilter(); });
+
+document.getElementById('mfpClose').addEventListener('click', function(e){
+  e.stopPropagation();
+  closeMachinePopup();
+});
+
+document.getElementById('mfpApply').addEventListener('click', function(e){
+  e.stopPropagation();
+  applyMachineFilter();
+});
+
 document.getElementById('mfpSelectAll').addEventListener('click', function(e){
-  e.stopPropagation(); pendingMachines = null;
+  e.stopPropagation();
+  pendingMachines = null;
   buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
   updateMfpStatus(pendingMachines);
 });
+
 document.getElementById('mfpClearAll').addEventListener('click', function(e){
-  e.stopPropagation(); pendingMachines = new Set();
+  e.stopPropagation();
+  pendingMachines = new Set(); /* empty = nothing */
   buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
   updateMfpStatus(pendingMachines);
 });
-document.getElementById('mfpSearch').addEventListener('input', function(){ buildMfpList(this.value, pendingMachines); });
+
+document.getElementById('mfpSearch').addEventListener('input', function(){
+  buildMfpList(this.value, pendingMachines);
+});
 document.getElementById('mfpSearch').addEventListener('click', function(e){ e.stopPropagation(); });
 document.getElementById('mfpList').addEventListener('click', function(e){ e.stopPropagation(); });
 document.getElementById('machineFilterPopup').addEventListener('click', function(e){ e.stopPropagation(); });
+
+/* Close popup when clicking outside */
 document.addEventListener('click', function(){ closeMachinePopup(); });
 
+/* ══════════ FONT SIZE ══════════ */
 function getChartFontSize() {
   var w = window.innerWidth;
-  if (w >= 2400) return 13; if (w >= 1800) return 11; if (w >= 1400) return 10; return 9;
+  if (w >= 2400) return 13;
+  if (w >= 1800) return 11;
+  if (w >= 1400) return 10;
+  return 9;
 }
 
+/* ══════════ SHIFT ══════════ */
 var currentShift = 'all';
 var SHIFT_CONFIG = {
   all:   { label:'All Shift',   period:'08:00 → 07:00 (+1 day)', minH:8,  maxH:31 },
@@ -705,9 +1071,17 @@ var SHIFT_CONFIG = {
   night: { label:'Shift Night', period:'20:00 → 07:00 (+1 day)', minH:20, maxH:31 },
 };
 
-function getShiftTarget() { return currentShift === 'all' ? 115200 : 57600; }
-function getShiftTargetLabel() { return currentShift === 'all' ? '115,200 BCM/Day' : '57,600 BCM/Shift'; }
-function updateTargetBox() { document.getElementById('targetBox').textContent = getShiftTargetLabel(); }
+function getShiftTarget() {
+  return currentShift === 'all' ? 115200 : 57600;
+}
+function getShiftTargetLabel() {
+  return currentShift === 'all' ? '115,200 BCM/Day' : '57,600 BCM/Shift';
+}
+
+function updateTargetBox() {
+  document.getElementById('targetBox').textContent = getShiftTargetLabel();
+}
+
 function shiftHour(r) { var h=parseDT(r[COL.DT]).getHours(); return h<8?h+24:h; }
 function filterByShift(rows,shift) {
   var cfg=SHIFT_CONFIG[shift];
@@ -723,22 +1097,55 @@ function applyShiftUI(shift) {
 }
 document.querySelectorAll('.btn-shift').forEach(function(btn){
   btn.addEventListener('click',function(){
-    currentShift=btn.dataset.shift; applyShiftUI(currentShift); updateTargetBox();
+    currentShift=btn.dataset.shift;
+    applyShiftUI(currentShift);
+    updateTargetBox();
     var wd=document.getElementById('datePicker').value;
     if(availableDates.length&&wd) renderForDate(wd);
   });
 });
 
+/* ══════════ CHART.JS DEFAULTS ══════════ */
 Chart.defaults.font.family="'Sarabun',Arial,sans-serif";
 
-/* ══════════════════════════════════════════════════════════════
-   PLUGIN: Target line at 4,800 BCM/Hr.
-   ใช้ afterDraw → วาดก่อนกล่องตัวเลข (แก้จาก afterDatasetsDraw)
-   บรรทัดที่แก้: id: 'targetLine'  →  afterDraw  ← แก้ตรงนี้
-   ══════════════════════════════════════════════════════════════ */
+/* ══════════ PLUGIN: Total label on top of stacked bars ══════════ */
+var totalLabelPlugin = {
+  id: 'totalLabel',
+  afterRender: function(chart) {
+    var ctx = chart.ctx;
+    var scales = chart.scales;
+    var x = scales.x;
+    var y = scales.y;
+    var ds = chart.data.datasets;
+    ctx.save();
+    var fs = getChartFontSize();
+    chart.data.labels.forEach(function(_, i) {
+      var total = ds.reduce(function(s, d){ return s + (Number(d.data[i]) || 0); }, 0);
+      if (!total) return;
+      var xp = x.getPixelForValue(i);
+      var yp = y.getPixelForValue(total);
+      var lbl = total.toLocaleString();
+      ctx.font = 'bold ' + fs + "px 'Chakra Petch',monospace";
+      var tw = ctx.measureText(lbl).width;
+      var pw = tw + 8;
+      var ph = fs + 6;
+      var px2 = xp - pw / 2;
+      var py2 = yp - ph - 3;
+      ctx.fillStyle = 'rgba(21,35,126,.95)';
+      ctx.fillRect(px2, py2, pw, ph);
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(lbl, xp, yp - 3);
+    });
+    ctx.restore();
+  }
+};
+
+/* ══════════ PLUGIN: Target line at 4,800 BCM/Hr. ══════════ */
 var targetLinePlugin = {
   id: 'targetLine',
-  afterDraw: function(chart) {                          /* ✅ แก้จาก afterDatasetsDraw → afterDraw */
+  afterDraw: function(chart) {
     var ctx = chart.ctx;
     var yAxis = chart.scales.y;
     var xAxis = chart.scales.x;
@@ -757,8 +1164,10 @@ var targetLinePlugin = {
     var label = '🎯Target 4,800 BCM/Hr.';
     ctx.font = 'bold ' + (fs + 1) + "px 'Chakra Petch',monospace";
     var tw = ctx.measureText(label).width;
-    var bw = tw + 10, bh = fs + 8;
-    var bx = xAxis.left + 8, by = yPixel - bh - 3;
+    var bw = tw + 10;
+    var bh = fs + 8;
+    var bx = xAxis.left + 8;
+    var by = yPixel - bh - 3;
     ctx.fillStyle = 'rgba(255,152,0,0.15)';
     ctx.fillRect(bx, by, bw, bh);
     ctx.strokeStyle = '#ff9800';
@@ -772,42 +1181,7 @@ var targetLinePlugin = {
   }
 };
 
-/* ══════════════════════════════════════════════════════════════
-   PLUGIN: Total label on top of stacked bars
-   ใช้ afterRender → วาดทีหลังสุด ทับเส้น target (แก้จาก afterDatasetsDraw)
-   บรรทัดที่แก้: id: 'totalLabel'  →  afterRender  ← แก้ตรงนี้
-   ══════════════════════════════════════════════════════════════ */
-var totalLabelPlugin = {
-  id: 'totalLabel',
-  afterRender: function(chart) {                        /* ✅ แก้จาก afterDatasetsDraw → afterRender */
-    var ctx = chart.ctx;
-    var scales = chart.scales;
-    var x = scales.x, y = scales.y;
-    var ds = chart.data.datasets;
-    ctx.save();
-    var fs = getChartFontSize();
-    chart.data.labels.forEach(function(_, i) {
-      var total = ds.reduce(function(s, d){ return s + (Number(d.data[i]) || 0); }, 0);
-      if (!total) return;
-      var xp = x.getPixelForValue(i);
-      var yp = y.getPixelForValue(total);
-      var lbl = total.toLocaleString();
-      ctx.font = 'bold ' + fs + "px 'Chakra Petch',monospace";
-      var tw = ctx.measureText(lbl).width;
-      var pw = tw + 8, ph = fs + 6;
-      var px2 = xp - pw / 2, py2 = yp - ph - 3;
-      ctx.fillStyle = 'rgba(21,35,126,.95)';
-      ctx.fillRect(px2, py2, pw, ph);
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'bottom';
-      ctx.fillText(lbl, xp, yp - 3);
-    });
-    ctx.restore();
-  }
-};
-
-/* PLUGIN: BCM/Hr. label */
+/* ══════════ PLUGIN: "BCM/Hr." label ══════════ */
 var bcmLabelPlugin = {
   id: 'bcmLabel',
   afterDraw: function(chart) {
@@ -824,12 +1198,13 @@ var bcmLabelPlugin = {
   }
 };
 
+/* ══════════ INIT CHARTS ══════════ */
 function initBarChart(){
   var ctx = document.getElementById('bcmChart').getContext('2d');
   var fs = getChartFontSize();
   bcmChart = new Chart(ctx, {
     type: 'bar',
-    plugins: [targetLinePlugin, totalLabelPlugin, bcmLabelPlugin],  /* targetLine ก่อน totalLabel */
+    plugins: [totalLabelPlugin, targetLinePlugin, bcmLabelPlugin],
     data: {
       labels: [],
       datasets: [
@@ -839,7 +1214,8 @@ function initBarChart(){
       ]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true,
+      maintainAspectRatio: false,
       interaction: { mode:'index', intersect:false },
       layout: { padding: { top:32 } },
       plugins: {
@@ -857,8 +1233,27 @@ function initBarChart(){
         }
       },
       scales: {
-        x: { stacked:true, grid:{color:'#e8eaf0'}, ticks:{ font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'}, color:'#1a237e', maxRotation:0, minRotation:0, autoSkip:true, maxTicksLimit:24 } },
-        y: { stacked:true, grid:{color:'#e8eaf0'}, ticks:{ font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'}, color:'#374151', callback:function(v){return v.toLocaleString();}, stepSize:1000 }, beginAtZero:true, min:0, max:7000 }
+        x: {
+          stacked: true,
+          grid: { color:'#e8eaf0' },
+          ticks: {
+            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
+            color:'#1a237e',
+            maxRotation:0, minRotation:0,
+            autoSkip:true, maxTicksLimit:24,
+          }
+        },
+        y: {
+          stacked: true,
+          grid: { color:'#e8eaf0' },
+          ticks: {
+            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
+            color:'#374151',
+            callback:function(v){ return v.toLocaleString(); },
+            stepSize:1000
+          },
+          beginAtZero:true, min:0, max:7000
+        }
       }
     }
   });
@@ -870,8 +1265,27 @@ function initPieChart(){
   var fs = getChartFontSize();
   pieChart = new Chart(ctx, {
     type: 'pie',
-    data: { labels:['BWE 1','BWE 2','CR 1','CR 2','CR 3'], datasets:[{ data:[0,0,0,0,0], backgroundColor:[C.bwe1,C.bwe2,C.cr1,C.cr2,C.cr3], borderColor:'#fff', borderWidth:2, hoverOffset:8 }] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#fff', borderColor:'#dde1e8', borderWidth:1, titleColor:'#1a1f2e', bodyColor:'#374151', titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'}, callbacks:{label:function(c){return ' '+c.label+': '+c.parsed.toLocaleString();}} } } }
+    data: {
+      labels: ['BWE 1','BWE 2','CR 1','CR 2','CR 3'],
+      datasets: [{
+        data: [0,0,0,0,0],
+        backgroundColor: [C.bwe1, C.bwe2, C.cr1, C.cr2, C.cr3],
+        borderColor: '#fff', borderWidth:2, hoverOffset:8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          backgroundColor:'#fff', borderColor:'#dde1e8', borderWidth:1,
+          titleColor:'#1a1f2e', bodyColor:'#374151',
+          titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
+          callbacks:{ label:function(c){ return ' '+c.label+': '+c.parsed.toLocaleString(); } }
+        }
+      }
+    }
   });
 }
 
@@ -880,13 +1294,58 @@ function initPerfChart(){
   var fs = getChartFontSize();
   perfChart = new Chart(ctx, {
     type: 'line',
-    data: { labels:[], datasets:[{ label:'Performance Main Line', data:[], borderColor:'#ef5350', backgroundColor:'rgba(239,83,80,.08)', borderWidth:2.5, pointBackgroundColor:'#ef5350', pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:3, pointHoverRadius:5, tension:0.3, fill:true }] },
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Performance Main Line',
+        data: [],
+        borderColor: '#ef5350',
+        backgroundColor: 'rgba(239,83,80,.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#ef5350',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1.5,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        tension: 0.3,
+        fill: true,
+      }]
+    },
     options: {
-      responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
-      plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'#fff', borderColor:'#ffcdd2', borderWidth:1, titleColor:'#1a1f2e', bodyColor:'#c62828', titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'}, bodyFont:{family:"'Sarabun',Arial,sans-serif",size:fs+2}, padding:8, callbacks:{label:function(c){return ' Performance: '+c.parsed.y.toLocaleString();}} } },
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          backgroundColor:'#fff', borderColor:'#ffcdd2', borderWidth:1,
+          titleColor:'#1a1f2e', bodyColor:'#c62828',
+          titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
+          bodyFont:{ family:"'Sarabun',Arial,sans-serif", size:fs+2 },
+          padding:8,
+          callbacks:{ label:function(c){ return ' Performance: '+c.parsed.y.toLocaleString(); } }
+        }
+      },
       scales: {
-        x: { grid:{color:'#fce4ec'}, ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#1a237e',maxRotation:0,minRotation:0,autoSkip:true,maxTicksLimit:24} },
-        y: { grid:{color:'#fce4ec'}, ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#374151',callback:function(v){return v.toLocaleString();},stepSize:20}, beginAtZero:true, min:0, max:160 }
+        x: {
+          grid: { color:'#fce4ec' },
+          ticks: {
+            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
+            color:'#1a237e',
+            maxRotation:0, minRotation:0,
+            autoSkip:true, maxTicksLimit:24,
+          }
+        },
+        y: {
+          grid: { color:'#fce4ec' },
+          ticks: {
+            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
+            color:'#374151',
+            callback:function(v){ return v.toLocaleString(); },
+            stepSize:20
+          },
+          beginAtZero:true, min:0, max:160
+        }
       }
     }
   });
@@ -896,8 +1355,27 @@ function initDonutChart() {
   var ctx = document.getElementById('donutChart').getContext('2d');
   donutChart = new Chart(ctx, {
     type: 'doughnut',
-    data: { datasets:[{ data:[0,100], backgroundColor:['#ff9800','rgba(0,0,0,.08)'], borderColor:['#ff9800','rgba(0,0,0,.06)'], borderWidth:1.5, hoverOffset:4 }] },
-    options: { responsive:true, maintainAspectRatio:false, cutout:'72%', rotation:-90, circumference:360, animation:{animateRotate:true,duration:700}, plugins:{legend:{display:false},tooltip:{enabled:false}} }
+    data: {
+      datasets: [{
+        data: [0, 100],
+        backgroundColor: ['#ff9800', 'rgba(0,0,0,.08)'],
+        borderColor:     ['#ff9800', 'rgba(0,0,0,.06)'],
+        borderWidth: 1.5,
+        hoverOffset: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '72%',
+      rotation: -90,
+      circumference: 360,
+      animation: { animateRotate: true, duration: 700 },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false }
+      }
+    }
   });
 }
 
@@ -907,23 +1385,30 @@ function updateDonut(grandTotal) {
   var pctClamped = Math.min(pct, 100);
   var remaining = Math.max(0, 100 - pctClamped);
   var arcColor = pct >= 80 ? '#00FF00' : pct >= 55 ? '#ff9800' : '#ef5350';
+  var arcBorder = arcColor;
   donutChart.data.datasets[0].data = [pctClamped, remaining];
   donutChart.data.datasets[0].backgroundColor = [arcColor, 'rgba(0,0,0,.07)'];
-  donutChart.data.datasets[0].borderColor = [arcColor, 'rgba(0,0,0,.05)'];
+  donutChart.data.datasets[0].borderColor = [arcBorder, 'rgba(0,0,0,.05)'];
   donutChart.update();
   var pctEl = document.getElementById('donutPct');
-  pctEl.textContent = pct.toFixed(1) + '%'; pctEl.style.color = arcColor;
+  pctEl.textContent = pct.toFixed(1) + '%';
+  pctEl.style.color = arcColor;
   var gap = grandTotal - target;
-  document.getElementById('donutActual').textContent = grandTotal.toLocaleString() + ' BCM';
-  document.getElementById('donutTarget').textContent = target.toLocaleString() + ' BCM';
+  document.getElementById('donutActual').textContent  = grandTotal.toLocaleString() + ' BCM';
+  document.getElementById('donutTarget').textContent  = target.toLocaleString() + ' BCM';
   var gapEl = document.getElementById('donutGap');
   gapEl.textContent = (gap >= 0 ? '+' : '') + gap.toLocaleString() + ' BCM';
   gapEl.className = 'donut-stat-val ' + (gap >= 0 ? 'green' : 'red');
 }
 
+/* ══════════ RADAR CHARTS ══════════ */
 var DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 var DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
-var DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, SHIFT:7, TYPE:9, TYPEMACHINE:11 };
+
+var DT_COL = {
+  MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, SHIFT:7, TYPE:9, TYPEMACHINE:11
+};
+
 var EQUIP_DEF = [
   { label:'BWE 1',  key:'Bucket Wheel #1', color:'#6B007B' },
   { label:'BWE 2',  key:'Bucket Wheel #2', color:'#F48FB1' },
@@ -933,6 +1418,7 @@ var EQUIP_DEF = [
   { label:'SPD',    key:'Spreader',         color:'#4db6ac' },
   { label:'System', key:'System',           color:'#03a9f4' },
 ];
+
 var TYPE_DEF = [
   { label:'OPT',       key:'OPT',       color:'#5677fc' },
   { label:'EE',        key:'EE',        color:'#26a69a' },
@@ -940,21 +1426,73 @@ var TYPE_DEF = [
   { label:'Plan',      key:'Plan',      color:'#00bcd4' },
   { label:'Uncontrol', key:'Uncontrol', color:'#e91e63' },
 ];
+
 var dtAllRows=[], dtCurrentRows=[], dtActiveFilter='ALL';
 
 function radarOptions() {
   var fs = getChartFontSize();
-  return { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ r:{ beginAtZero:true, ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'700'},color:'#37474f',backdropColor:'rgba(255,255,255,0.75)',backdropPadding:2,maxTicksLimit:4}, pointLabels:{font:{family:"'Chakra Petch',monospace",size:fs+1,weight:'800'},color:'#0d47a1',padding:6}, grid:{color:'rgba(0,0,0,.15)'}, angleLines:{color:'rgba(0,0,0,.2)'} } } };
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend:{ display:false } },
+    scales: {
+      r: {
+        beginAtZero: true,
+        ticks: {
+          font:{ family:"'Chakra Petch',monospace", size:fs, weight:'700' },
+          color:'#37474f',
+          backdropColor:'rgba(255,255,255,0.75)',
+          backdropPadding:2,
+          maxTicksLimit:4
+        },
+        pointLabels: {
+          font:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'800' },
+          color:'#0d47a1',
+          padding:6
+        },
+        grid: { color:'rgba(0,0,0,.15)' },
+        angleLines: { color:'rgba(0,0,0,.2)' },
+      }
+    }
+  };
 }
 
 function initRadarEquip() {
   var ctx = document.getElementById('radarEquipChart').getContext('2d');
-  radarEquipChart = new Chart(ctx, { type:'radar', data:{ labels:EQUIP_DEF.map(function(e){return e.label;}), datasets:[{ label:'Downtime Count', data:new Array(EQUIP_DEF.length).fill(0), backgroundColor:'rgba(21,101,192,.13)', borderColor:'#1565c0', borderWidth:2, pointBackgroundColor:EQUIP_DEF.map(function(e){return e.color;}), pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6 }] }, options:radarOptions() });
+  radarEquipChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: EQUIP_DEF.map(function(e){ return e.label; }),
+      datasets: [{
+        label: 'Downtime Count',
+        data: new Array(EQUIP_DEF.length).fill(0),
+        backgroundColor: 'rgba(21,101,192,.13)',
+        borderColor: '#1565c0', borderWidth:2,
+        pointBackgroundColor: EQUIP_DEF.map(function(e){ return e.color; }),
+        pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6,
+      }]
+    },
+    options: radarOptions()
+  });
 }
 
 function initRadarType() {
   var ctx = document.getElementById('radarTypeChart').getContext('2d');
-  radarTypeChart = new Chart(ctx, { type:'radar', data:{ labels:TYPE_DEF.map(function(t){return t.label;}), datasets:[{ label:'Count', data:new Array(TYPE_DEF.length).fill(0), backgroundColor:'rgba(55,71,79,.13)', borderColor:'#546e7a', borderWidth:2, pointBackgroundColor:TYPE_DEF.map(function(t){return t.color;}), pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6 }] }, options:radarOptions() });
+  radarTypeChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: TYPE_DEF.map(function(t){ return t.label; }),
+      datasets: [{
+        label: 'Count',
+        data: new Array(TYPE_DEF.length).fill(0),
+        backgroundColor: 'rgba(55,71,79,.13)',
+        borderColor: '#546e7a', borderWidth:2,
+        pointBackgroundColor: TYPE_DEF.map(function(t){ return t.color; }),
+        pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6,
+      }]
+    },
+    options: radarOptions()
+  });
 }
 
 async function fetchDowntime() {
@@ -963,15 +1501,21 @@ async function fetchDowntime() {
     if (!res.ok) return;
     var text = await res.text();
     var rows = Papa.parse(text, {skipEmptyLines:true}).data;
-    dtAllRows = rows.slice(1).filter(function(r){ var d=(r[DT_COL.DATE]||'').trim(); return d.length>=8; });
+    dtAllRows = rows.slice(1).filter(function(r){
+      var d=(r[DT_COL.DATE]||'').trim();
+      return d.length>=8;
+    });
   } catch(e) { console.warn('MasterDowntime fetch failed:',e); }
 }
 
 function fmtDTTime(s) {
   s=(s||'').trim(); if(!s) return null;
-  var m=s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/); if(m) return m[1].padStart(2,'0')+':'+m[2];
-  m=s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):(\d{2})/); if(m) return m[1].padStart(2,'0')+':'+m[2];
-  m=s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/); if(m) return m[1].padStart(2,'0')+':'+m[2];
+  var m=s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);
+  if(m) return m[1].padStart(2,'0')+':'+m[2];
+  m=s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):(\d{2})/);
+  if(m) return m[1].padStart(2,'0')+':'+m[2];
+  m=s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+  if(m) return m[1].padStart(2,'0')+':'+m[2];
   return null;
 }
 
@@ -983,14 +1527,36 @@ function normDateG(s) {
   return s;
 }
 
-function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
+/* ══════════ RENDER DT TABLE (with machine filter) ══════════ */
 function renderDTTable(filterType) {
   dtActiveFilter = filterType || dtActiveFilter;
-  document.querySelectorAll('.dt-filter-btn').forEach(function(btn){ btn.classList.toggle('active', btn.dataset.type===dtActiveFilter); });
+
+  /* Update Type filter buttons */
+  document.querySelectorAll('.dt-filter-btn').forEach(function(btn){
+    btn.classList.toggle('active', btn.dataset.type===dtActiveFilter);
+  });
+
   var rows = dtCurrentRows;
-  if (selectedMachines !== null) { rows = rows.filter(function(r){ return selectedMachines.has((r[DT_COL.MACHINE]||'').trim()); }); }
-  if (dtActiveFilter !== 'ALL') { rows = rows.filter(function(r){ var t=(r[DT_COL.TYPE]||'').trim().toUpperCase(); return t===dtActiveFilter.toUpperCase(); }); }
+
+  /* ── Apply Machine Name filter ── */
+  if (selectedMachines !== null) {
+    rows = rows.filter(function(r){
+      return selectedMachines.has((r[DT_COL.MACHINE]||'').trim());
+    });
+  }
+
+  /* ── Apply Type filter ── */
+  if (dtActiveFilter !== 'ALL') {
+    rows = rows.filter(function(r){
+      var t=(r[DT_COL.TYPE]||'').trim().toUpperCase();
+      return t===dtActiveFilter.toUpperCase();
+    });
+  }
+
   document.getElementById('dtCountBadge').textContent = rows.length+' records';
   var tbody = document.getElementById('dtTableBody');
   if (!rows.length) {
@@ -1005,27 +1571,57 @@ function renderDTTable(filterType) {
     var typeRaw=(r[DT_COL.TYPE]||'').trim();
     var duration=(r[DT_COL.DURATION]||'').trim()||'—';
     var shiftRaw=(r[DT_COL.SHIFT]||'').trim().toLowerCase();
-    var shiftCell=shiftRaw==='d'?'<span class="shift-badge shift-badge-d">☀️Day</span>':shiftRaw==='n'?'<span class="shift-badge shift-badge-n">🌙Night</span>':'<span style="color:var(--muted);font-size:.65rem;">—</span>';
-    var endCell=endRaw?'<span class="time-cell">'+escHtml(endRaw)+'</span>':'<span class="end-unknown" title="No End Time">?</span>';
-    return '<tr><td class="machine-cell">'+escHtml(machine)+'</td><td>'+shiftCell+'</td><td class="time-cell">'+escHtml(startT||'—')+'</td><td>'+endCell+'</td><td class="desc-cell">'+escHtml(desc)+'</td><td><span class="type-badge type-'+typeRaw+'">'+escHtml(typeRaw||'—')+'</span></td><td class="dur-cell">'+escHtml(duration)+'</td></tr>';
+    var typeClass='type-'+typeRaw;
+    var shiftCell=shiftRaw==='d'
+      ? '<span class="shift-badge shift-badge-d">☀️Day</span>'
+      : shiftRaw==='n'
+        ? '<span class="shift-badge shift-badge-n">🌙Night</span>'
+        : '<span style="color:var(--muted);font-size:.65rem;">—</span>';
+    var endCell=endRaw
+      ? '<span class="time-cell">'+escHtml(endRaw)+'</span>'
+      : '<span class="end-unknown" title="No End Time">?</span>';
+    return '<tr>'
+      +'<td class="machine-cell">'+escHtml(machine)+'</td>'
+      +'<td>'+shiftCell+'</td>'
+      +'<td class="time-cell">'+escHtml(startT||'—')+'</td>'
+      +'<td>'+endCell+'</td>'
+      +'<td class="desc-cell">'+escHtml(desc)+'</td>'
+      +'<td><span class="type-badge '+typeClass+'">'+escHtml(typeRaw||'—')+'</span></td>'
+      +'<td class="dur-cell">'+escHtml(duration)+'</td>'
+      +'</tr>';
   }).join('');
 }
 
-document.getElementById('dtFilterWrap').addEventListener('click', function(e){ var btn=e.target.closest('.dt-filter-btn'); if(!btn) return; renderDTTable(btn.dataset.type); });
+document.getElementById('dtFilterWrap').addEventListener('click', function(e){
+  var btn = e.target.closest('.dt-filter-btn');
+  if (!btn) return;
+  renderDTTable(btn.dataset.type);
+});
 
 function renderRadarForDate(wd) {
   var rows = dtAllRows.filter(function(r){ return normDateG(r[DT_COL.DATE]||'')===wd; });
   var shiftRows = rows;
   if (currentShift==='day') shiftRows=rows.filter(function(r){ return (r[DT_COL.SHIFT]||'').trim().toLowerCase()==='d'; });
   else if (currentShift==='night') shiftRows=rows.filter(function(r){ return (r[DT_COL.SHIFT]||'').trim().toLowerCase()==='n'; });
-  dtCurrentRows = shiftRows; dtActiveFilter = 'ALL';
-  selectedMachines = null; updateMachineFilterUI(); renderDTTable('ALL');
+  dtCurrentRows = shiftRows;
+  dtActiveFilter = 'ALL';
+  /* Reset machine filter when date changes */
+  selectedMachines = null;
+  updateMachineFilterUI();
+  renderDTTable('ALL');
+
   var equipCounts=EQUIP_DEF.map(function(def){ return shiftRows.filter(function(r){ return (r[DT_COL.MACHINE]||'').trim()===def.key; }).length; });
   radarEquipChart.data.datasets[0].data=equipCounts; radarEquipChart.update();
-  document.getElementById('radarEquipLegend').innerHTML=EQUIP_DEF.map(function(def,i){ return '<div class="radar-legend-item"><div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div><span class="radar-legend-val">'+equipCounts[i]+'</span></div>'; }).join('');
+  document.getElementById('radarEquipLegend').innerHTML=EQUIP_DEF.map(function(def,i){
+    return '<div class="radar-legend-item"><div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div><span class="radar-legend-val">'+equipCounts[i]+'</span></div>';
+  }).join('');
+
   var typeCounts=TYPE_DEF.map(function(def){ return shiftRows.filter(function(r){ return (r[DT_COL.TYPEMACHINE]||'').trim()===def.key; }).length; });
   radarTypeChart.data.datasets[0].data=typeCounts; radarTypeChart.update();
-  document.getElementById('radarTypeLegend').innerHTML=TYPE_DEF.map(function(def,i){ return '<div class="radar-legend-item"><div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div><span class="radar-legend-val">'+typeCounts[i]+'</span></div>'; }).join('');
+  document.getElementById('radarTypeLegend').innerHTML=TYPE_DEF.map(function(def,i){
+    return '<div class="radar-legend-item"><div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div><span class="radar-legend-val">'+typeCounts[i]+'</span></div>';
+  }).join('');
+
   document.getElementById('radarEquipTotal').textContent='Total: '+equipCounts.reduce(function(a,b){return a+b;},0)+' events';
   document.getElementById('radarTypeTotal').textContent='Total: '+typeCounts.reduce(function(a,b){return a+b;},0)+' events';
 }
@@ -1042,7 +1638,8 @@ async function fetchData(){
       processCSV(text); return true;
     } catch(e) { lastErr=e.message; }
   }
-  showOverlay('Load failed'); showError('Cannot fetch data: '+lastErr); return false;
+  showOverlay('Load failed'); showError('Cannot fetch data: '+lastErr);
+  return false;
 }
 
 function parseNum(v){ return parseFloat((v||'0').replace(/,/g,''))||0; }
@@ -1056,19 +1653,28 @@ function parseDT(s){
 }
 function fmtTime(s){ var d=parseDT(s); if(!d||isNaN(d)) return s; return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
 function toYMD(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function getWorkingDate(dtStr){ var d=parseDT(dtStr); if(!d||isNaN(d)) return null; if(d.getHours()<8){var p=new Date(d);p.setDate(p.getDate()-1);return toYMD(p);} return toYMD(d); }
+function getWorkingDate(dtStr){
+  var d=parseDT(dtStr); if(!d||isNaN(d)) return null;
+  if(d.getHours()<8){ var p=new Date(d); p.setDate(p.getDate()-1); return toYMD(p); }
+  return toYMD(d);
+}
 function toDisplay(s){ var p=s.split('-'); return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s; }
 
 function processCSV(text){
   var rows=Papa.parse(text,{skipEmptyLines:true}).data;
   var header=rows[0]||[];
-  allRows=rows.slice(1).filter(function(r){ var dt=(r[COL.DT]||'').trim(); if(!dt||/date|time/i.test(dt)) return false; return !isNaN(parseDT(dt)); });
+  allRows=rows.slice(1).filter(function(r){
+    var dt=(r[COL.DT]||'').trim();
+    if(!dt||/date|time/i.test(dt)) return false;
+    return !isNaN(parseDT(dt));
+  });
   allRows.forEach(function(r){ r._wd=getWorkingDate(r[COL.DT]||''); });
   allRows=allRows.filter(function(r){ return r._wd; });
   var dateSet=new Set(allRows.map(function(r){ return r._wd; }));
   availableDates=[...dateSet].sort();
   if(!availableDates.length){showOverlay('No data');showError('Header: '+header.slice(0,6).join(' | '));return;}
-  buildPicker(); renderForDate(availableDates[availableDates.length-1]);
+  buildPicker();
+  renderForDate(availableDates[availableDates.length-1]);
   var now=new Date();
   document.getElementById('lastUpdate').textContent='Updated: '+now.toLocaleDateString('en-GB')+' '+now.toLocaleTimeString('en-GB');
   document.getElementById('rowCount').textContent=allRows.length+' rows · '+availableDates.length+' dates';
@@ -1085,46 +1691,109 @@ function renderForDate(wd){
   var dataH=rows.map(function(r){return parseNum(r[COL.BWE1]);});
   var dataI=rows.map(function(r){return parseNum(r[COL.BWE2]);});
   var dataPerf=rows.map(function(r){return parseNum(r[COL.VALUE]);});
-  bcmChart.data.labels=labels; bcmChart.data.datasets[0].data=dataB; bcmChart.data.datasets[1].data=dataH; bcmChart.data.datasets[2].data=dataI; bcmChart.update();
-  perfChart.data.labels=labels; perfChart.data.datasets[0].data=dataPerf; perfChart.update();
+
+  bcmChart.data.labels=labels;
+  bcmChart.data.datasets[0].data=dataB;
+  bcmChart.data.datasets[1].data=dataH;
+  bcmChart.data.datasets[2].data=dataI;
+  bcmChart.update();
+
+  perfChart.data.labels=labels;
+  perfChart.data.datasets[0].data=dataPerf;
+  perfChart.update();
+
   function sum(a){return a.reduce(function(s,v){return s+v;},0);}
   var sBWE1=sum(dataH),sBWE2=sum(dataI),sCR1=sum(dataCR1),sCR2=sum(dataCR2),sCR3=sum(dataCR3);
   var grand=sBWE1+sBWE2+sCR1+sCR2+sCR3;
-  pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3]; pieChart.update();
-  var pieItems=[{label:'BWE 1',val:sBWE1,color:C.bwe1},{label:'BWE 2',val:sBWE2,color:C.bwe2},{label:'CR 1',val:sCR1,color:C.cr1},{label:'CR 2',val:sCR2,color:C.cr2},{label:'CR 3',val:sCR3,color:C.cr3}];
-  document.getElementById('pieLegend').innerHTML=pieItems.map(function(p){ return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'</div></div>'; }).join('');
+
+  pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3];
+  pieChart.update();
+
+  var pieItems=[
+    {label:'BWE 1',val:sBWE1,color:C.bwe1},
+    {label:'BWE 2',val:sBWE2,color:C.bwe2},
+    {label:'CR 1', val:sCR1, color:C.cr1},
+    {label:'CR 2', val:sCR2, color:C.cr2},
+    {label:'CR 3', val:sCR3, color:C.cr3},
+  ];
+  document.getElementById('pieLegend').innerHTML=pieItems.map(function(p){
+    return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'</div></div>';
+  }).join('');
+
   document.getElementById('grandTotal').textContent=grand.toLocaleString();
+
   function parseHHMM(s){s=(s||'').trim();var m=s.match(/^(\d+):(\d{2})$/);if(!m)return 0;return parseInt(m[1])*60+parseInt(m[2]);}
   var totalMinutes=rows.reduce(function(s,r){return s+parseHHMM(r[COL.HOUR_S3]);},0);
   var th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
   document.getElementById('clockBox').textContent=th+':'+tm;
+
   var totalHoursDecimal=totalMinutes/60;
   var productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
   document.getElementById('productivityBox').textContent=productivity>0?productivity.toLocaleString():'—';
-  updateTargetBox(); updateDonut(grand);
+
+  updateTargetBox();
+  updateDonut(grand);
+
   document.getElementById('rowCount').textContent=rows.length+' rows · '+allRows.length+' total · '+availableDates.length+' dates · '+toDisplay(wd)+' · '+SHIFT_CONFIG[currentShift].label;
-  renderRadarForDate(wd); hideOverlay(); syncNav();
+  renderRadarForDate(wd);
+  hideOverlay(); syncNav();
 }
 
 function buildPicker(){
-  var sel=document.getElementById('datePicker'); sel.innerHTML='';
-  availableDates.forEach(function(d){ var o=document.createElement('option'); o.value=d; o.textContent=toDisplay(d); sel.appendChild(o); });
-  sel.value=availableDates[availableDates.length-1]; syncNav();
+  var sel=document.getElementById('datePicker');
+  sel.innerHTML='';
+  availableDates.forEach(function(d){
+    var o=document.createElement('option');
+    o.value=d; o.textContent=toDisplay(d);
+    sel.appendChild(o);
+  });
+  sel.value=availableDates[availableDates.length-1];
+  syncNav();
 }
-function syncNav(){ var idx=availableDates.indexOf(document.getElementById('datePicker').value); document.getElementById('btnPrev').disabled=idx<=0; document.getElementById('btnNext').disabled=idx>=availableDates.length-1; }
+function syncNav(){
+  var idx=availableDates.indexOf(document.getElementById('datePicker').value);
+  document.getElementById('btnPrev').disabled=idx<=0;
+  document.getElementById('btnNext').disabled=idx>=availableDates.length-1;
+}
 document.getElementById('datePicker').addEventListener('change',function(e){renderForDate(e.target.value);});
-document.getElementById('btnPrev').addEventListener('click',function(){ var sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value); if(idx>0){sel.value=availableDates[idx-1];renderForDate(sel.value);} });
-document.getElementById('btnNext').addEventListener('click',function(){ var sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value); if(idx<availableDates.length-1){sel.value=availableDates[idx+1];renderForDate(sel.value);} });
-document.getElementById('btnRefresh').addEventListener('click',function(){ fetchData().then(function(){ fetchDowntime().then(function(){ var wd=document.getElementById('datePicker').value; if(wd) renderRadarForDate(wd); }); }); });
+document.getElementById('btnPrev').addEventListener('click',function(){
+  var sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value);
+  if(idx>0){sel.value=availableDates[idx-1];renderForDate(sel.value);}
+});
+document.getElementById('btnNext').addEventListener('click',function(){
+  var sel=document.getElementById('datePicker'),idx=availableDates.indexOf(sel.value);
+  if(idx<availableDates.length-1){sel.value=availableDates[idx+1];renderForDate(sel.value);}
+});
+document.getElementById('btnRefresh').addEventListener('click',function(){
+  fetchData().then(function(){
+    fetchDowntime().then(function(){
+      var wd=document.getElementById('datePicker').value;
+      if(wd) renderRadarForDate(wd);
+    });
+  });
+});
 
+/* Resize handler */
 var resizeTimer;
 window.addEventListener('resize', function() {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(function() {
     var fs = getChartFontSize();
-    [bcmChart, perfChart].forEach(function(ch){ if(!ch) return; ch.options.scales.x.ticks.font.size=fs; ch.options.scales.y.ticks.font.size=fs; ch.update('none'); });
-    [radarEquipChart, radarTypeChart].forEach(function(ch){ if(!ch) return; ch.options.scales.r.ticks.font.size=fs; ch.options.scales.r.pointLabels.font.size=fs+1; ch.update('none'); });
-    var popup=document.getElementById('machineFilterPopup'); if(popup.classList.contains('show')) closeMachinePopup();
+    [bcmChart, perfChart].forEach(function(ch) {
+      if (!ch) return;
+      ch.options.scales.x.ticks.font.size = fs;
+      ch.options.scales.y.ticks.font.size = fs;
+      ch.update('none');
+    });
+    [radarEquipChart, radarTypeChart].forEach(function(ch) {
+      if (!ch) return;
+      ch.options.scales.r.ticks.font.size = fs;
+      ch.options.scales.r.pointLabels.font.size = fs + 1;
+      ch.update('none');
+    });
+    /* Reposition popup if open */
+    var popup = document.getElementById('machineFilterPopup');
+    if (popup.classList.contains('show')) closeMachinePopup();
   }, 200);
 });
 
@@ -1133,22 +1802,77 @@ function hideOverlay(){ document.getElementById('overlay').classList.add('hidden
 function showError(html){ var b=document.getElementById('errorBanner');b.innerHTML='Warning: '+html;b.style.display='block'; }
 function hideError(){ document.getElementById('errorBanner').style.display='none'; }
 
-/* BOOT */
+/* ══════════ BOOT ══════════ */
 applyShiftUI('all');
-initBarChart(); initPieChart(); initPerfChart(); initRadarEquip(); initRadarType(); initDonutChart();
-fetchData().then(function(){ fetchDowntime().then(function(){ var wd=document.getElementById('datePicker').value; if(wd) renderRadarForDate(wd); }); });
+initBarChart();
+initPieChart();
+initPerfChart();
+initRadarEquip();
+initRadarType();
+initDonutChart();
+fetchData().then(function(){
+  fetchDowntime().then(function(){
+    var wd=document.getElementById('datePicker').value;
+    if(wd) renderRadarForDate(wd);
+  });
+});
 
-/* AUTO-REFRESH (2 min) */
+/* ══════════ AUTO-REFRESH (2 min) ══════════ */
 (function(){
-  var INTERVAL=2*60, CIRCUMFERENCE=47.12, remaining=INTERVAL;
-  var progEl=document.getElementById('countdownProg'), txtEl=document.getElementById('countdownTxt');
+  var INTERVAL=2*60, CIRCUMFERENCE=47.12;
+  var remaining=INTERVAL;
+  var progEl=document.getElementById('countdownProg');
+  var txtEl=document.getElementById('countdownTxt');
   var lastAdvanceDate=null;
-  function doRefresh(){ var wd=document.getElementById('datePicker').value; fetchData().then(function(){ fetchDowntime().then(function(){ var sel=document.getElementById('datePicker'); if(availableDates.indexOf(wd)>=0){sel.value=wd;renderForDate(wd);}else{var latest=availableDates[availableDates.length-1];sel.value=latest;renderForDate(latest);} if(wd) renderRadarForDate(sel.value); }); }); remaining=INTERVAL; }
-  function advanceToToday(){ fetchData().then(function(){ fetchDowntime().then(function(){ var sel=document.getElementById('datePicker'); var latest=availableDates[availableDates.length-1]; if(latest){sel.value=latest;renderForDate(latest);} }); }); remaining=INTERVAL; }
-  function checkDateAdvance(){ var now=new Date(),h=now.getHours(),m=now.getMinutes(); if(h===7&&m>=10&&m<=20){var todayKey=toYMD(now);if(lastAdvanceDate!==todayKey){lastAdvanceDate=todayKey;advanceToToday();}} }
-  function updateUI(){ var ratio=remaining/INTERVAL; progEl.style.strokeDashoffset=CIRCUMFERENCE*(1-ratio); var mins=Math.floor(remaining/60),secs=String(remaining%60).padStart(2,'0'); txtEl.textContent=mins+':'+secs; progEl.style.stroke=remaining<=10?'#ef5350':'#42a5f5'; txtEl.style.color=remaining<=10?'#ef5350':'#42a5f5'; }
+
+  function doRefresh(){
+    var wd=document.getElementById('datePicker').value;
+    fetchData().then(function(){
+      fetchDowntime().then(function(){
+        var sel=document.getElementById('datePicker');
+        if(availableDates.indexOf(wd)>=0){sel.value=wd;renderForDate(wd);}
+        else{var latest=availableDates[availableDates.length-1];sel.value=latest;renderForDate(latest);}
+        if(wd) renderRadarForDate(sel.value);
+      });
+    });
+    remaining=INTERVAL;
+  }
+
+  function advanceToToday(){
+    fetchData().then(function(){
+      fetchDowntime().then(function(){
+        var sel=document.getElementById('datePicker');
+        var latest=availableDates[availableDates.length-1];
+        if(latest){ sel.value=latest; renderForDate(latest); }
+      });
+    });
+    remaining=INTERVAL;
+  }
+
+  function checkDateAdvance(){
+    var now=new Date(),h=now.getHours(),m=now.getMinutes();
+    if(h===7&&m>=10&&m<=20){
+      var todayKey=toYMD(now);
+      if(lastAdvanceDate!==todayKey){lastAdvanceDate=todayKey;advanceToToday();}
+    }
+  }
+
+  function updateUI(){
+    var ratio=remaining/INTERVAL;
+    progEl.style.strokeDashoffset=CIRCUMFERENCE*(1-ratio);
+    var mins=Math.floor(remaining/60),secs=String(remaining%60).padStart(2,'0');
+    txtEl.textContent=mins+':'+secs;
+    progEl.style.stroke=remaining<=10?'#ef5350':'#42a5f5';
+    txtEl.style.color=remaining<=10?'#ef5350':'#42a5f5';
+  }
+
   updateUI();
-  setInterval(function(){ remaining--; if(remaining<=0) doRefresh(); checkDateAdvance(); updateUI(); },1000);
+  setInterval(function(){
+    remaining--;
+    if(remaining<=0) doRefresh();
+    checkDateAdvance();
+    updateUI();
+  },1000);
 })();
 </script>
 </body>
