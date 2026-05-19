@@ -26,9 +26,8 @@
     --fs-lg:   1.05rem;
     --fs-xl:   1.35rem;
     --fs-2xl:  1.7rem;
-    /* ★ ลดความสูง chart ลงเพื่อให้ตาราง Downtime แสดงได้มากขึ้น */
-    --bar-h:  210px;
-    --perf-h: 120px;
+    --bar-h:  220px;   /* ★ เพิ่มความสูง chart area */
+    --perf-h: 130px;   /* ★ เพิ่มความสูง perf chart */
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -167,7 +166,8 @@
   .card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 10px; box-shadow: var(--shadow);
-    padding: 10px 12px 12px; position: relative; overflow: hidden;
+    padding: 6px 12px 8px;   /* ★ ลด padding card จาก 10/12/12 → 6/12/8 */
+    position: relative; overflow: hidden;
   }
   .card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
@@ -184,7 +184,8 @@
   .card-head {
     font-family: 'Chakra Petch', Arial, sans-serif;
     font-size: var(--fs-sm); font-weight: 700; color: #0d47a1;
-    margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    margin-bottom: 3px;   /* ★ ลด margin-bottom จาก 8px → 3px */
+    display: flex; align-items: center; gap: 6px;
   }
   .card-head.red { color: #b71c1c; }
   .card-head.teal { color: #004d40; }
@@ -195,9 +196,20 @@
   }
   .card-head.red::before  { background: linear-gradient(180deg,#c62828,#ef5350); }
   .card-head.teal::before { background: linear-gradient(180deg,#00695c,#26a69a); }
-  .legend { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; justify-content: center; }
-  .legend-item { display: flex; align-items: center; gap: 4px; font-size: var(--fs-xs); color: #1a237e; font-weight: 700; }
-  .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ★ Legend เล็กลง + margin ลดลง */
+  .legend {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-top: 2px;           /* ★ ลดจาก 6px → 2px */
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 3px;
+    font-size: 0.65rem;        /* ★ ลดจาก var(--fs-xs)=0.72rem → 0.65rem */
+    color: #1a237e; font-weight: 700;
+  }
+  .legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; } /* ★ ลดจาก 9px → 7px */
+
   .overlay {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -332,7 +344,6 @@
   .dt-filter-btn.type-Uncontrol.active { background: #e91e63; border-color: #e91e63; }
   .dt-filter-btn.type-STB.active       { background: #78909c; border-color: #78909c; }
   .dt-filter-btn.type-Other.active     { background: #8d6e63; border-color: #8d6e63; }
-  /* ★ ขยาย max-height ของตาราง Downtime เพื่อแสดงข้อมูลได้มากขึ้น */
   .dt-table-wrap { overflow-x: auto; overflow-y: auto; max-height: 560px; border-radius: 6px; border: 1px solid var(--border); scrollbar-width: thin; scrollbar-color: #dde1e8 transparent; }
   .dt-table-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
   .dt-table-wrap::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 4px; }
@@ -343,7 +354,6 @@
   .dt-table tbody tr:hover { background: #f0f7ff; }
   .dt-table tbody tr:nth-child(even) { background: #fafbfc; }
   .dt-table tbody tr:nth-child(even):hover { background: #f0f7ff; }
-  /* ★ แถวที่ End Time ยังไม่มี (กำลัง downtime อยู่) ให้มี highlight พิเศษ */
   .dt-table tbody tr.row-no-end { background: #fff8e1 !important; border-left: 3px solid #ff9800; }
   .dt-table tbody tr.row-no-end:hover { background: #fff3cd !important; }
   .dt-table tbody td { padding: 5px 8px; color: var(--text); vertical-align: middle; white-space: nowrap; border-right: 1px solid #f0f2f5; }
@@ -597,7 +607,6 @@
   }
   .machine-filter-active-badge.show { display: inline-block; }
 
-  /* ★ badge แจ้งจำนวน row ที่ยังไม่มี End Time */
   .dt-ongoing-badge {
     display: none;
     font-family: 'Chakra Petch', monospace;
@@ -615,8 +624,7 @@
 
   @media (min-width: 1800px) {
     :root { --topbar-h: 62px; --fs-xs: 0.85rem; --fs-sm: 0.95rem; --fs-base: 1.05rem; --fs-lg: 1.2rem; --fs-xl: 1.6rem; --fs-2xl: 2rem;
-      /* ★ ลดความสูง chart สำหรับจอใหญ่ด้วย */
-      --bar-h: 280px; --perf-h: 160px;
+      --bar-h: 290px; --perf-h: 170px;
     }
     .right-col { width: 420px; }
     .pie-wrap  { width: 180px; height: 180px; }
@@ -625,7 +633,7 @@
     .donut-wrap { width: 130px; height: 130px; }
   }
   @media (min-width: 1400px) and (max-width: 1799px) {
-    :root { --bar-h: 250px; --perf-h: 140px; }
+    :root { --bar-h: 260px; --perf-h: 150px; }
     .right-col { width: 380px; }
     .pie-wrap  { width: 160px; height: 160px; }
     .radar-wrap { width: 170px; height: 170px; }
@@ -751,7 +759,6 @@
         <div class="dt-table-header">
           <div class="card-head teal" style="margin:0;">Downtime Detail</div>
           <span class="dt-count-badge" id="dtCountBadge">— records</span>
-          <!-- ★ badge แสดงจำนวน ongoing downtime -->
           <span class="dt-ongoing-badge" id="dtOngoingBadge">⚠ 0 Ongoing</span>
           <div class="dt-filter-wrap" id="dtFilterWrap">
             <button class="dt-filter-btn active" data-type="ALL">All</button>
@@ -1214,7 +1221,7 @@ function initBarChart(){
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode:'index', intersect:false },
-      layout: { padding: { top:32 } },
+      layout: { padding: { top:28, bottom:0 } },  /* ★ ลด top padding จาก 32 → 28, bottom 0 */
       plugins: {
         legend: { display:false },
         tooltip: {
@@ -1238,6 +1245,7 @@ function initBarChart(){
             color:'#1a237e',
             maxRotation:0, minRotation:0,
             autoSkip:true, maxTicksLimit:24,
+            padding: 2,   /* ★ ลด tick padding จาก default(3) → 2 */
           }
         },
         y: {
@@ -1247,7 +1255,8 @@ function initBarChart(){
             font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
             color:'#374151',
             callback:function(v){ return v.toLocaleString(); },
-            stepSize:1000
+            stepSize:1000,
+            padding: 2,   /* ★ ลด tick padding → 2 */
           },
           beginAtZero:true, min:0, max:7000
         }
@@ -1312,6 +1321,7 @@ function initPerfChart(){
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode:'index', intersect:false },
+      layout: { padding: { top:4, bottom:0 } },  /* ★ เพิ่ม layout padding เล็กน้อย */
       plugins: {
         legend: { display:false },
         tooltip: {
@@ -1333,6 +1343,7 @@ function initPerfChart(){
             color:'#1a237e',
             maxRotation:0, minRotation:0,
             autoSkip:true, maxTicksLimit:24,
+            padding: 2,   /* ★ ลด tick padding → 2 */
           }
         },
         y: {
@@ -1341,7 +1352,8 @@ function initPerfChart(){
             font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
             color:'#374151',
             callback:function(v){ return v.toLocaleString(); },
-            stepSize:20
+            stepSize:20,
+            padding: 2,   /* ★ ลด tick padding → 2 */
           },
           beginAtZero:true, min:0, max:160
         }
@@ -1530,18 +1542,14 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ★★★ ฟังก์ชัน sort: ไม่มี End Time → ขึ้นบนสุด, มี End Time → เรียงตาม Start Time ★★★ */
 function sortDTRows(rows) {
   return rows.slice().sort(function(a, b) {
     var aEnd = fmtDTTime(a[DT_COL.END] || '');
     var bEnd = fmtDTTime(b[DT_COL.END] || '');
     var aNoEnd = !aEnd;
     var bNoEnd = !bEnd;
-    /* แถวที่ไม่มี End Time ขึ้นก่อน */
     if (aNoEnd && !bNoEnd) return -1;
     if (!aNoEnd && bNoEnd) return 1;
-    /* ถ้าทั้งคู่ไม่มี End Time → เรียงตาม Start Time */
-    /* ถ้าทั้งคู่มี End Time → เรียงตาม Start Time */
     var aStart = (a[DT_COL.START] || '');
     var bStart = (b[DT_COL.START] || '');
     if (aStart < bStart) return -1;
@@ -1569,10 +1577,8 @@ function renderDTTable(filterType) {
     });
   }
 
-  /* ★ Sort: ไม่มี End Time ขึ้นบนสุด → มี End Time เรียงตาม Start Time */
   rows = sortDTRows(rows);
 
-  /* ★ นับจำนวน ongoing (ไม่มี End Time) */
   var ongoingCount = rows.filter(function(r){ return !fmtDTTime(r[DT_COL.END]||''); }).length;
   var ongoingBadge = document.getElementById('dtOngoingBadge');
   if (ongoingCount > 0) {
