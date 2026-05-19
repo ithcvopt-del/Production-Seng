@@ -1151,23 +1151,6 @@ var targetLinePlugin = {
   }
 };
 
-/* ══════════ PLUGIN: "BCM/Hr." label ══════════ */
-var bcmLabelPlugin = {
-  id: 'bcmLabel',
-  afterDraw: function(chart) {
-    var ctx = chart.ctx;
-    var yAxis = chart.scales.y;
-    var fs = getChartFontSize();
-    ctx.save();
-    ctx.font = 'bold ' + fs + "px 'Chakra Petch',monospace";
-    ctx.fillStyle = '#5677fc';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText('BCM/Hr.', yAxis.left - 2, yAxis.top + fs + 1);
-    ctx.restore();
-  }
-};
-
 /* ══════════ INIT CHARTS ══════════ */
 function initBarChart(){
   var ctx = document.getElementById('bcmChart').getContext('2d');
