@@ -39,7 +39,7 @@
   }
   .top-bar {
     background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #1565c0 100%);
-    padding: 0 14px;
+    padding: 0 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1185,30 +1185,13 @@ var targetLinePlugin = {
   }
 };
 
-/* ══════════ PLUGIN: "BCM/Hr." label ══════════ */
-var bcmLabelPlugin = {
-  id: 'bcmLabel',
-  afterDraw: function(chart) {
-    var ctx = chart.ctx;
-    var yAxis = chart.scales.y;
-    var fs = getChartFontSize();
-    ctx.save();
-    ctx.font = 'bold ' + fs + "px 'Chakra Petch',monospace";
-    ctx.fillStyle = '#5677fc';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText('BCM/Hr.', yAxis.left - 2, yAxis.top + fs + 1);
-    ctx.restore();
-  }
-};
-
 /* ══════════ INIT CHARTS ══════════ */
 function initBarChart(){
   var ctx = document.getElementById('bcmChart').getContext('2d');
   var fs = getChartFontSize();
   bcmChart = new Chart(ctx, {
     type: 'bar',
-    plugins: [totalLabelPlugin, targetLinePlugin, bcmLabelPlugin],
+    plugins: [totalLabelPlugin, targetLinePlugin],
     data: {
       labels: [],
       datasets: [
@@ -1221,7 +1204,7 @@ function initBarChart(){
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode:'index', intersect:false },
-      layout: { padding: { top:28, bottom:0 } },  /* ★ ลด top padding จาก 32 → 28, bottom 0 */
+      layout: { padding: { top:10, bottom:0 } },  /* ★ ลด top padding จาก 32 → 10, bottom 0 */
       plugins: {
         legend: { display:false },
         tooltip: {
