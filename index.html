@@ -434,7 +434,7 @@
   .dt-ongoing-badge.show { display: inline-block; }
   @keyframes pulse-orange { 0%,100% { box-shadow: 0 0 0 0 rgba(255,152,0,.4); } 50% { box-shadow: 0 0 0 5px rgba(255,152,0,.0); } }
 
-  /* ══════════ CHANGE 1: Custom bar chart tooltip ══════════ */
+  /* ══════════ Custom bar chart tooltip ══════════ */
   #barCustomTooltip {
     position: fixed;
     z-index: 9999;
@@ -444,7 +444,7 @@
     box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 10px rgba(0,0,0,.12);
     pointer-events: none;
     min-width: 230px;
-    max-width: 310px;
+    max-width: 320px;
     display: none;
     overflow: hidden;
     font-family: 'Sarabun', Arial, sans-serif;
@@ -511,9 +511,13 @@
     font-size: 0.72rem; font-weight: 800; color: #0d47a1;
     display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
   }
-  .bct-dt-type {
-    font-size: 0.65rem; font-weight: 700; padding: 0px 5px;
-    border-radius: 3px; flex-shrink: 0;
+  /* [CHANGE 1] Description text style for bar tooltip */
+  .bct-dt-desc {
+    font-size: 0.68rem; color: #374151;
+    font-family: 'Sarabun', Arial, sans-serif;
+    line-height: 1.3;
+    word-break: break-word;
+    white-space: normal;
   }
   .bct-dt-meta {
     font-size: 0.68rem; color: #546e7a;
@@ -528,6 +532,93 @@
     font-family: 'Chakra Petch', monospace;
     font-size: 0.68rem; color: #90a4ae; text-align: center;
     padding: 4px 0;
+  }
+
+  /* ══════════ [CHANGE 2 & 3] Radar hover popup ══════════ */
+  .radar-hover-popup {
+    position: fixed;
+    z-index: 9999;
+    background: #fff;
+    border: 1.5px solid #90caf9;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 10px rgba(0,0,0,.12);
+    pointer-events: none;
+    min-width: 260px;
+    max-width: 340px;
+    display: none;
+    overflow: hidden;
+    font-family: 'Sarabun', Arial, sans-serif;
+    animation: tooltipFadeIn .12s ease;
+  }
+  .radar-hover-popup.show { display: block; }
+  .rhp-header {
+    padding: 7px 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .rhp-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .rhp-title {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.78rem; font-weight: 700; color: #fff; flex: 1;
+    letter-spacing: .5px;
+  }
+  .rhp-count {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.72rem; font-weight: 800;
+    background: rgba(255,255,255,.2);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 10px; padding: 1px 7px; color: #fff;
+    white-space: nowrap;
+  }
+  .rhp-body {
+    max-height: 280px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #dde1e8 transparent;
+  }
+  .rhp-body::-webkit-scrollbar { width: 3px; }
+  .rhp-body::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 3px; }
+  .rhp-item {
+    padding: 5px 12px;
+    border-bottom: 1px solid #f0f2f5;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .rhp-item:last-child { border-bottom: none; }
+  .rhp-item-top {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .rhp-machine {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.72rem; font-weight: 800; color: #0d47a1;
+  }
+  .rhp-type-badge {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.62rem; font-weight: 700;
+    padding: 0 5px; border-radius: 3px;
+  }
+  .rhp-time {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.65rem; color: #546e7a;
+  }
+  .rhp-dur {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.65rem; font-weight: 800; color: #b71c1c;
+    margin-left: auto;
+  }
+  .rhp-desc {
+    font-size: 0.70rem; color: #374151;
+    font-family: 'Sarabun', Arial, sans-serif;
+    line-height: 1.3; word-break: break-word;
+  }
+  .rhp-empty {
+    padding: 12px; text-align: center;
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.68rem; color: #90a4ae; letter-spacing: .5px;
+  }
+  .rhp-more {
+    padding: 5px 12px;
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.65rem; color: #90a4ae;
+    text-align: center; border-top: 1px solid #f0f2f5;
   }
 
   /* ══════════ Gap label transition styles ══════════ */
@@ -584,8 +675,14 @@
 </head>
 <body>
 
-<!-- CHANGE 1: Custom bar tooltip element -->
+<!-- Custom bar tooltip element -->
 <div id="barCustomTooltip"></div>
+
+<!-- [CHANGE 2] Radar Equipment hover popup -->
+<div class="radar-hover-popup" id="radarEquipPopup"></div>
+
+<!-- [CHANGE 3] Radar Type hover popup -->
+<div class="radar-hover-popup" id="radarTypePopup"></div>
 
 <div class="top-bar">
   <div class="top-bar-row1">
@@ -729,12 +826,10 @@
             <div class="pie-legend" id="pieLegend"></div>
             <div class="totals-row">
               <div class="total-box">
-                <!-- CHANGE 2: label updated to show unit hint -->
                 <div class="total-label" style="color:#0d47a1;">total production:</div>
                 <div class="total-value" id="grandTotal">—</div>
               </div>
               <div class="total-box">
-                <!-- CHANGE 2: label shows Hr. unit hint -->
                 <div class="total-label" style="color:#004d40;">working hour s3 :</div>
                 <div class="clock-box" id="clockBox">—</div>
               </div>
@@ -768,7 +863,6 @@
                 <span class="donut-stat-label">Target</span>
                 <span class="donut-stat-val orange" id="donutTarget">—</span>
               </div>
-              <!-- CHANGE 3: Gap label now has an ID for dynamic text -->
               <div class="donut-stat">
                 <span class="donut-stat-label" id="donutGapLabel">Gap</span>
                 <span class="donut-stat-val" id="donutGap">—</span>
@@ -1082,7 +1176,7 @@ var targetLinePlugin = {
   }
 };
 
-/* ══════════ CHANGE 1: Custom HTML Tooltip for Bar Chart ══════════ */
+/* ══════════ Custom HTML Tooltip for Bar Chart ══════════ */
 var barTooltipEl = null;
 
 function getBarTooltipEl() {
@@ -1095,13 +1189,12 @@ function hideBarTooltip() {
   el.style.display = 'none';
 }
 
-/* Get downtime records for a specific chart label hour.
-   Label "8:00" = hour 8, represents period 07:00–07:59 */
+/* Get downtime records for a specific chart label hour. */
 function getDowntimesForHour(labelStr) {
   if (!dtCurrentRows || !dtCurrentRows.length) return [];
   var parts = labelStr.split(':');
-  var endH = parseInt(parts[0], 10);   // the label hour (e.g. 8)
-  var startH = (endH - 1 + 24) % 24;  // previous hour (e.g. 7)
+  var endH = parseInt(parts[0], 10);
+  var startH = (endH - 1 + 24) % 24;
 
   return dtCurrentRows.filter(function(r) {
     var st = fmtDTTime(r[DT_COL.START] || '');
@@ -1125,10 +1218,8 @@ function showBarTooltip(context) {
   var total = dp.reduce(function(s, p) { return s + (p.parsed.y || 0); }, 0);
   var belowTarget = total < 4800;
 
-  /* Dataset colors */
   var dsColors = ['#259B24', '#7b1fa2', '#f48fb1'];
 
-  /* ── Build HTML ── */
   var html = '';
 
   /* Header */
@@ -1166,23 +1257,15 @@ function showBarTooltip(context) {
         var machine  = escHtml((r[DT_COL.MACHINE]  || '').trim());
         var startT   = fmtDTTime(r[DT_COL.START]   || '') || '—';
         var endT     = fmtDTTime(r[DT_COL.END]     || '') || '?';
-        var typeRaw  = (r[DT_COL.TYPE] || '').trim();
+        /* [CHANGE 1] Use DESC column instead of TYPE */
+        var desc     = escHtml((r[DT_COL.DESC] || '').trim() || '—');
         var duration = (r[DT_COL.DURATION] || '').trim() || '—';
 
-        /* Type badge color mapping */
-        var typeColors = {
-          'OPT':'#5677fc','EE':'#26a69a','ME':'#ff6f00',
-          'Plan':'#00bcd4','Uncontrol':'#e91e63','STB':'#795548',
-          'PM':'#9292D1','Other':'#8d6e63'
-        };
-        var tColor = typeColors[typeRaw] || '#90a4ae';
-        var typeBg = tColor + '22';
-
         html += '<div class="bct-dt-item">';
-        html += '<div class="bct-dt-machine">' + machine;
-        html += '<span class="bct-dt-type" style="background:' + typeBg + ';color:' + tColor + ';border:1px solid ' + tColor + '55;">' + escHtml(typeRaw || '—') + '</span>';
-        html += '</div>';
+        html += '<div class="bct-dt-machine">' + machine + '</div>';
         html += '<div class="bct-dt-meta">' + startT + ' → ' + endT + '&nbsp;&nbsp;(' + escHtml(duration) + ')</div>';
+        /* [CHANGE 1] Show description text */
+        html += '<div class="bct-dt-desc">' + desc + '</div>';
         html += '</div>';
       });
       if (dts.length > MAX_SHOW) {
@@ -1201,7 +1284,6 @@ function showBarTooltip(context) {
   var caretX = rect.left + tooltip.caretX;
   var caretY = rect.top  + tooltip.caretY;
 
-  /* Force browser to compute height first */
   el.style.visibility = 'hidden';
   el.style.display = 'block';
   var elW = el.offsetWidth  || 280;
@@ -1212,7 +1294,6 @@ function showBarTooltip(context) {
   var posX = caretX + margin;
   var posY = caretY - elH / 2;
 
-  /* Clamp to viewport */
   if (posX + elW + 8 > window.innerWidth)  posX = caretX - elW - margin;
   if (posX < 8)                             posX = 8;
   if (posY + elH + 8 > window.innerHeight) posY = window.innerHeight - elH - 8;
@@ -1244,7 +1325,6 @@ function initBarChart(){
       layout: { padding: { top:10, bottom:0 } },
       plugins: {
         legend: { display:false },
-        /* CHANGE 1: disable built-in tooltip, use external HTML tooltip */
         tooltip: {
           enabled: false,
           external: showBarTooltip
@@ -1278,7 +1358,6 @@ function initBarChart(){
     }
   });
 
-  /* Hide custom tooltip when mouse leaves the chart canvas */
   document.getElementById('bcmChart').addEventListener('mouseleave', function() {
     hideBarTooltip();
   });
@@ -1392,7 +1471,7 @@ function initDonutChart() {
   });
 }
 
-/* ══════════ CHANGE 3: Dynamic Gap label + CHANGE 2 units ══════════ */
+/* ══════════ Dynamic Gap label ══════════ */
 function updateDonut(grandTotal) {
   var target = getShiftTarget();
   var pct = target > 0 ? (grandTotal / target * 100) : 0;
@@ -1413,24 +1492,20 @@ function updateDonut(grandTotal) {
   document.getElementById('donutActual').textContent  = grandTotal.toLocaleString() + ' BCM';
   document.getElementById('donutTarget').textContent  = target.toLocaleString() + ' BCM';
 
-  /* CHANGE 3: Dynamic label based on gap value */
   var gapEl      = document.getElementById('donutGap');
   var gapLabelEl = document.getElementById('donutGapLabel');
 
   gapEl.textContent = (gap >= 0 ? '+' : '') + gap.toLocaleString() + ' BCM';
 
   if (gap > 1000) {
-    /* Positive, more than 1,000 BCM above target */
     gapLabelEl.textContent = '✅ Above Target';
     gapLabelEl.style.color = '#2e7d32';
     gapEl.className = 'donut-stat-val green';
   } else if (gap >= 0) {
-    /* Positive but ≤ 1,000 BCM — on target */
     gapLabelEl.textContent = '🎯 On Target';
     gapLabelEl.style.color = '#1565c0';
     gapEl.className = 'donut-stat-val blue';
   } else {
-    /* Negative — below target */
     gapLabelEl.textContent = '⚠ Below Target';
     gapLabelEl.style.color = '#c62828';
     gapEl.className = 'donut-stat-val red';
@@ -1463,6 +1538,12 @@ var TYPE_DEF = [
   { label:'Uncontrol', key:'Uncontrol', color:'#e91e63' },
 ];
 
+var TYPE_COLORS = {
+  'OPT':'#5677fc','EE':'#26a69a','ME':'#ff6f00',
+  'Plan':'#00bcd4','Uncontrol':'#e91e63','STB':'#795548',
+  'PM':'#9292D1','Other':'#8d6e63'
+};
+
 var dtAllRows=[], dtCurrentRows=[], dtActiveFilter='ALL';
 
 function radarOptions() {
@@ -1470,7 +1551,7 @@ function radarOptions() {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { legend:{ display:false } },
+    plugins: { legend:{ display:false }, tooltip:{ enabled:false } },
     scales: {
       r: {
         beginAtZero: true,
@@ -1500,6 +1581,21 @@ function initRadarEquip() {
     },
     options: radarOptions()
   });
+
+  /* [CHANGE 2] Attach hover popup to radar equip chart */
+  attachRadarHover(
+    document.getElementById('radarEquipChart'),
+    document.getElementById('radarEquipPopup'),
+    EQUIP_DEF,
+    function(def) {
+      /* Filter dtCurrentRows by machine key */
+      return dtCurrentRows.filter(function(r){
+        return (r[DT_COL.MACHINE]||'').trim() === def.key;
+      });
+    },
+    function(def) { return '🏭 ' + def.label + ' — Downtime'; },
+    'equip'
+  );
 }
 
 function initRadarType() {
@@ -1518,6 +1614,180 @@ function initRadarType() {
       }]
     },
     options: radarOptions()
+  });
+
+  /* [CHANGE 3] Attach hover popup to radar type chart */
+  attachRadarHover(
+    document.getElementById('radarTypeChart'),
+    document.getElementById('radarTypePopup'),
+    TYPE_DEF,
+    function(def) {
+      /* Filter dtCurrentRows by TYPEMACHINE or TYPE column */
+      return dtCurrentRows.filter(function(r){
+        var t = (r[DT_COL.TYPEMACHINE]||r[DT_COL.TYPE]||'').trim();
+        return t === def.key;
+      });
+    },
+    function(def) { return '📋 ' + def.label + ' — Downtime Detail'; },
+    'type'
+  );
+}
+
+/* ══════════ [CHANGE 2 & 3] Generic radar hover popup logic ══════════ */
+function attachRadarHover(canvas, popupEl, defList, filterFn, titleFn, mode) {
+  var lastIdx = -1;
+  var hideTimer = null;
+
+  function positionPopup(x, y) {
+    popupEl.style.visibility = 'hidden';
+    popupEl.style.display = 'block';
+    var pw = popupEl.offsetWidth || 280;
+    var ph = popupEl.offsetHeight || 200;
+    popupEl.style.visibility = '';
+    popupEl.style.display = 'none';
+
+    var margin = 14;
+    var posX = x + margin;
+    var posY = y - ph / 2;
+
+    if (posX + pw + 8 > window.innerWidth)  posX = x - pw - margin;
+    if (posX < 8)                            posX = 8;
+    if (posY + ph + 8 > window.innerHeight) posY = window.innerHeight - ph - 8;
+    if (posY < 8)                            posY = 8;
+
+    popupEl.style.left = posX + 'px';
+    popupEl.style.top  = posY + 'px';
+    popupEl.classList.add('show');
+  }
+
+  function buildPopup(idx, mouseX, mouseY) {
+    if (idx < 0 || idx >= defList.length) { hidePopup(); return; }
+    var def = defList[idx];
+    var rows = filterFn(def);
+    var title = titleFn(def);
+
+    /* Header background based on color */
+    var html = '';
+    html += '<div class="rhp-header" style="background:linear-gradient(135deg,' + def.color + 'cc,' + def.color + '88);">';
+    html += '<div class="rhp-dot" style="background:#fff;opacity:.9;"></div>';
+    html += '<span class="rhp-title">' + escHtml(title) + '</span>';
+    html += '<span class="rhp-count">' + rows.length + ' records</span>';
+    html += '</div>';
+
+    html += '<div class="rhp-body">';
+    if (rows.length === 0) {
+      html += '<div class="rhp-empty">No downtime records</div>';
+    } else {
+      var MAX = 8;
+      var sorted = sortDTRows(rows);
+      sorted.slice(0, MAX).forEach(function(r) {
+        var machine  = escHtml((r[DT_COL.MACHINE] || '').trim() || '—');
+        var startT   = fmtDTTime(r[DT_COL.START]  || '') || '—';
+        var endT     = fmtDTTime(r[DT_COL.END]    || '') || '?';
+        var desc     = escHtml((r[DT_COL.DESC]    || '').trim() || '—');
+        var typeRaw  = (r[DT_COL.TYPE]             || '').trim();
+        var duration = escHtml((r[DT_COL.DURATION]|| '').trim() || '—');
+        var shiftRaw = (r[DT_COL.SHIFT]            || '').trim().toLowerCase();
+        var tColor   = TYPE_COLORS[typeRaw] || '#90a4ae';
+        var typeBg   = tColor + '22';
+        var shiftEmoji = shiftRaw === 'd' ? '☀️' : shiftRaw === 'n' ? '🌙' : '';
+
+        html += '<div class="rhp-item">';
+        html += '<div class="rhp-item-top">';
+        /* For equip mode show machine; for type mode show machine too */
+        html += '<span class="rhp-machine">' + machine + '</span>';
+        html += '<span class="rhp-type-badge" style="background:' + typeBg + ';color:' + tColor + ';border:1px solid ' + tColor + '55;">' + escHtml(typeRaw || '—') + '</span>';
+        if (shiftEmoji) html += '<span style="font-size:0.65rem;">' + shiftEmoji + '</span>';
+        html += '<span class="rhp-dur">' + duration + '</span>';
+        html += '</div>';
+        html += '<span class="rhp-time">' + startT + ' → ' + endT + '</span>';
+        html += '<div class="rhp-desc">' + desc + '</div>';
+        html += '</div>';
+      });
+      if (rows.length > MAX) {
+        html += '<div class="rhp-more">+' + (rows.length - MAX) + ' more records</div>';
+      }
+    }
+    html += '</div>';
+
+    popupEl.innerHTML = html;
+    positionPopup(mouseX, mouseY);
+  }
+
+  function hidePopup() {
+    popupEl.classList.remove('show');
+    lastIdx = -1;
+  }
+
+  /* Find nearest label index from mouse position on radar chart */
+  function getNearestLabelIdx(chart, mouseX, mouseY) {
+    var rect = canvas.getBoundingClientRect();
+    var x = mouseX - rect.left;
+    var y = mouseY - rect.top;
+
+    /* Use chart's getElementsAtEventForMode or compute angle manually */
+    var scale = chart.scales.r;
+    if (!scale) return -1;
+
+    var cx = scale.xCenter;
+    var cy = scale.yCenter;
+    var dx = x - cx;
+    var dy = y - cy;
+    var dist = Math.sqrt(dx*dx + dy*dy);
+
+    /* Only trigger when mouse is close to the chart area */
+    var chartR = scale.drawingArea || 60;
+    if (dist > chartR * 1.5) return -1;
+
+    /* Compute angle from center */
+    var angle = Math.atan2(dy, dx);
+    /* Normalize to [0, 2PI) */
+    if (angle < 0) angle += Math.PI * 2;
+
+    var count = defList.length;
+    /* Radar chart starts at top (−PI/2), goes clockwise */
+    var startAngle = -Math.PI / 2;
+    var step = (Math.PI * 2) / count;
+
+    /* Find closest label angle */
+    var bestIdx = -1;
+    var bestDist = Infinity;
+    for (var i = 0; i < count; i++) {
+      var labelAngle = startAngle + step * i;
+      if (labelAngle < 0) labelAngle += Math.PI * 2;
+      if (labelAngle > Math.PI * 2) labelAngle -= Math.PI * 2;
+
+      var diff = Math.abs(angle - labelAngle);
+      if (diff > Math.PI) diff = Math.PI * 2 - diff;
+      if (diff < bestDist) { bestDist = diff; bestIdx = i; }
+    }
+
+    /* Only show if within roughly half step angle and in chart radius */
+    if (bestDist < step * 0.6 && dist < chartR * 1.4) return bestIdx;
+    return -1;
+  }
+
+  canvas.addEventListener('mousemove', function(e) {
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    var chart = mode === 'equip' ? radarEquipChart : radarTypeChart;
+    if (!chart) return;
+
+    var idx = getNearestLabelIdx(chart, e.clientX, e.clientY);
+    if (idx !== lastIdx) {
+      lastIdx = idx;
+      if (idx >= 0) {
+        buildPopup(idx, e.clientX, e.clientY);
+      } else {
+        hidePopup();
+      }
+    }
+  });
+
+  canvas.addEventListener('mouseleave', function() {
+    hideTimer = setTimeout(function() {
+      hidePopup();
+      lastIdx = -1;
+    }, 120);
   });
 }
 
@@ -1742,20 +2012,17 @@ function renderForDate(wd){
     return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'</div></div>';
   }).join('');
 
-  /* CHANGE 2: Add BCM unit to total production */
   document.getElementById('grandTotal').textContent = grand.toLocaleString() + ' BCM';
 
   function parseHHMM(s){s=(s||'').trim();var m=s.match(/^(\d+):(\d{2})$/);if(!m)return 0;return parseInt(m[1])*60+parseInt(m[2]);}
   var totalMinutes=rows.reduce(function(s,r){return s+parseHHMM(r[COL.HOUR_S3]);},0);
   var th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
 
-  /* CHANGE 2: Add Hr. unit to working hour */
   document.getElementById('clockBox').textContent = th + ':' + tm + ' Hr.';
 
   var totalHoursDecimal=totalMinutes/60;
   var productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
 
-  /* CHANGE 2: Add BCM/Hr unit to productivity */
   document.getElementById('productivityBox').textContent = productivity > 0 ? productivity.toLocaleString() + ' BCM/Hr' : '—';
 
   updateTargetBox();
