@@ -26,8 +26,8 @@
     --fs-lg:   1.05rem;
     --fs-xl:   1.35rem;
     --fs-2xl:  1.7rem;
-    --bar-h:  220px;   /* ★ เพิ่มความสูง chart area */
-    --perf-h: 130px;   /* ★ เพิ่มความสูง perf chart */
+    --bar-h:  220px;
+    --perf-h: 130px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -166,7 +166,7 @@
   .card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 10px; box-shadow: var(--shadow);
-    padding: 6px 12px 8px;   /* ★ ลด padding card จาก 10/12/12 → 6/12/8 */
+    padding: 6px 12px 8px;
     position: relative; overflow: hidden;
   }
   .card::before {
@@ -184,7 +184,7 @@
   .card-head {
     font-family: 'Chakra Petch', Arial, sans-serif;
     font-size: var(--fs-sm); font-weight: 700; color: #0d47a1;
-    margin-bottom: 3px;   /* ★ ลด margin-bottom จาก 8px → 3px */
+    margin-bottom: 3px;
     display: flex; align-items: center; gap: 6px;
   }
   .card-head.red { color: #b71c1c; }
@@ -196,20 +196,17 @@
   }
   .card-head.red::before  { background: linear-gradient(180deg,#c62828,#ef5350); }
   .card-head.teal::before { background: linear-gradient(180deg,#00695c,#26a69a); }
-
-  /* ★ Legend เล็กลง + margin ลดลง */
   .legend {
     display: flex; gap: 8px; flex-wrap: wrap;
-    margin-top: 2px;           /* ★ ลดจาก 6px → 2px */
+    margin-top: 2px;
     justify-content: center;
   }
   .legend-item {
     display: flex; align-items: center; gap: 3px;
-    font-size: 0.65rem;        /* ★ ลดจาก var(--fs-xs)=0.72rem → 0.65rem */
+    font-size: 0.65rem;
     color: #1a237e; font-weight: 700;
   }
-  .legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; } /* ★ ลดจาก 9px → 7px */
-
+  .legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .overlay {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -309,6 +306,7 @@
   .donut-stat-val.orange { color: #ff9800; }
   .donut-stat-val.green  { color: #2e7d32; }
   .donut-stat-val.red    { color: #c62828; }
+  .donut-stat-val.blue   { color: #1565c0; }
   .donut-remaining {
     margin-top: 3px;
     font-family: 'Chakra Petch', monospace;
@@ -382,250 +380,165 @@
   .footer-txt { font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); color: #546e7a; font-weight: 600; }
   #errorBanner { display: none; background: #fff3f3; border: 1px solid #ffcdd2; border-radius: 7px; padding: 7px 12px; font-size: var(--fs-sm); color: #c62828; line-height: 1.5; }
 
-  .th-machine-filter {
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-    transition: background .15s;
-  }
+  .th-machine-filter { cursor: pointer; user-select: none; position: relative; transition: background .15s; }
   .th-machine-filter:hover { background: #283593 !important; }
-  .th-machine-inner {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .th-filter-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px; height: 16px;
-    border-radius: 3px;
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.25);
-    font-size: 9px;
-    flex-shrink: 0;
-    transition: all .15s;
-  }
-  .th-filter-icon.has-filter {
-    background: #42a5f5;
-    border-color: #42a5f5;
-    color: #fff;
-    box-shadow: 0 0 6px rgba(66,165,245,.6);
-  }
+  .th-machine-inner { display: flex; align-items: center; gap: 5px; }
+  .th-filter-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 3px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); font-size: 9px; flex-shrink: 0; transition: all .15s; }
+  .th-filter-icon.has-filter { background: #42a5f5; border-color: #42a5f5; color: #fff; box-shadow: 0 0 6px rgba(66,165,245,.6); }
   .th-filter-icon svg { width: 9px; height: 9px; }
 
   #machineFilterPopup {
-    position: fixed;
-    z-index: 9999;
-    background: #fff;
-    border: 1.5px solid #90caf9;
-    border-radius: 10px;
-    box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 8px rgba(0,0,0,.1);
-    padding: 0;
-    min-width: 230px;
-    max-width: 280px;
-    display: none;
-    overflow: hidden;
-    animation: popupIn .18s cubic-bezier(.34,1.56,.64,1);
+    position: fixed; z-index: 9999; background: #fff; border: 1.5px solid #90caf9; border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 8px rgba(0,0,0,.1); padding: 0; min-width: 230px; max-width: 280px;
+    display: none; overflow: hidden; animation: popupIn .18s cubic-bezier(.34,1.56,.64,1);
   }
-  @keyframes popupIn {
-    from { opacity: 0; transform: translateY(-8px) scale(.97); }
-    to   { opacity: 1; transform: translateY(0)   scale(1);    }
-  }
+  @keyframes popupIn { from { opacity: 0; transform: translateY(-8px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
   #machineFilterPopup.show { display: block; }
-
-  .mfp-header {
-    background: linear-gradient(135deg,#1a237e,#1565c0);
-    padding: 8px 12px;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 6px;
-  }
-  .mfp-title {
-    font-family: 'Chakra Petch', Arial, sans-serif;
-    font-size: 0.75rem; font-weight: 700;
-    color: #fff; letter-spacing: .8px;
-    text-transform: uppercase;
-  }
-  .mfp-close {
-    background: rgba(255,255,255,.15);
-    border: 1px solid rgba(255,255,255,.25);
-    border-radius: 4px;
-    color: #fff;
-    font-size: 13px; font-weight: 700;
-    width: 20px; height: 20px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; line-height: 1;
-    transition: background .15s;
-    flex-shrink: 0;
-  }
+  .mfp-header { background: linear-gradient(135deg,#1a237e,#1565c0); padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .mfp-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.75rem; font-weight: 700; color: #fff; letter-spacing: .8px; text-transform: uppercase; }
+  .mfp-close { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); border-radius: 4px; color: #fff; font-size: 13px; font-weight: 700; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; line-height: 1; transition: background .15s; flex-shrink: 0; }
   .mfp-close:hover { background: rgba(255,255,255,.3); }
-
-  .mfp-search-wrap {
-    padding: 8px 10px 6px;
-    border-bottom: 1px solid #e8eaf0;
-  }
-  .mfp-search {
-    width: 100%;
-    border: 1px solid #90caf9;
-    border-radius: 5px;
-    padding: 4px 8px;
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.72rem;
-    color: #1a1f2e;
-    outline: none;
-    background: #f8f9fc;
-    transition: border-color .15s;
-  }
+  .mfp-search-wrap { padding: 8px 10px 6px; border-bottom: 1px solid #e8eaf0; }
+  .mfp-search { width: 100%; border: 1px solid #90caf9; border-radius: 5px; padding: 4px 8px; font-family: 'Chakra Petch', monospace; font-size: 0.72rem; color: #1a1f2e; outline: none; background: #f8f9fc; transition: border-color .15s; }
   .mfp-search:focus { border-color: #1565c0; background: #fff; }
   .mfp-search::placeholder { color: #b0b8c4; }
-
-  .mfp-actions {
-    padding: 5px 10px;
-    display: flex; gap: 4px;
-    border-bottom: 1px solid #e8eaf0;
-  }
-  .mfp-action-btn {
-    font-family: 'Chakra Petch', Arial, sans-serif;
-    font-size: 0.68rem; font-weight: 700;
-    padding: 2px 8px; border-radius: 4px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: all .13s;
-    letter-spacing: .4px;
-  }
-  .mfp-action-btn.select-all {
-    background: #e3f2fd; color: #1565c0; border-color: #90caf9;
-  }
+  .mfp-actions { padding: 5px 10px; display: flex; gap: 4px; border-bottom: 1px solid #e8eaf0; }
+  .mfp-action-btn { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; transition: all .13s; letter-spacing: .4px; }
+  .mfp-action-btn.select-all { background: #e3f2fd; color: #1565c0; border-color: #90caf9; }
   .mfp-action-btn.select-all:hover { background: #1565c0; color: #fff; }
-  .mfp-action-btn.clear-all {
-    background: #fce4ec; color: #c62828; border-color: #ef9a9a;
-  }
+  .mfp-action-btn.clear-all { background: #fce4ec; color: #c62828; border-color: #ef9a9a; }
   .mfp-action-btn.clear-all:hover { background: #c62828; color: #fff; }
-
-  .mfp-list {
-    max-height: 240px;
-    overflow-y: auto;
-    padding: 4px 0;
-    scrollbar-width: thin;
-    scrollbar-color: #dde1e8 transparent;
-  }
+  .mfp-list { max-height: 240px; overflow-y: auto; padding: 4px 0; scrollbar-width: thin; scrollbar-color: #dde1e8 transparent; }
   .mfp-list::-webkit-scrollbar { width: 4px; }
   .mfp-list::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 4px; }
-
-  .mfp-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: background .12s;
-    border-bottom: 1px solid #f5f6f8;
-  }
+  .mfp-item { display: flex; align-items: center; gap: 8px; padding: 5px 12px; cursor: pointer; transition: background .12s; border-bottom: 1px solid #f5f6f8; }
   .mfp-item:last-child { border-bottom: none; }
   .mfp-item:hover { background: #e8f0fe; }
   .mfp-item.checked { background: #e3f2fd; }
-
-  .mfp-checkbox {
-    width: 14px; height: 14px;
-    border: 1.5px solid #90caf9;
-    border-radius: 3px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    background: #fff;
-    transition: all .12px;
-  }
-  .mfp-item.checked .mfp-checkbox {
-    background: #1565c0;
-    border-color: #1565c0;
-  }
-  .mfp-checkmark {
-    display: none;
-    color: #fff;
-    font-size: 9px;
-    font-weight: 900;
-    line-height: 1;
-  }
+  .mfp-checkbox { width: 14px; height: 14px; border: 1.5px solid #90caf9; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #fff; transition: all .12px; }
+  .mfp-item.checked .mfp-checkbox { background: #1565c0; border-color: #1565c0; }
+  .mfp-checkmark { display: none; color: #fff; font-size: 9px; font-weight: 900; line-height: 1; }
   .mfp-item.checked .mfp-checkmark { display: block; }
-
-  .mfp-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .mfp-label {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.72rem; font-weight: 700;
-    color: #0d47a1;
-    flex: 1;
-  }
+  .mfp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .mfp-label { font-family: 'Chakra Petch', monospace; font-size: 0.72rem; font-weight: 700; color: #0d47a1; flex: 1; }
   .mfp-item:not(.checked) .mfp-label { color: #546e7a; }
-  .mfp-count {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.65rem; font-weight: 700;
-    color: #90a4ae;
-    background: #f0f2f5;
-    border-radius: 10px;
-    padding: 0px 5px;
-    min-width: 20px;
-    text-align: center;
-  }
-  .mfp-item.checked .mfp-count {
-    background: #1565c0;
-    color: #fff;
-  }
+  .mfp-count { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; font-weight: 700; color: #90a4ae; background: #f0f2f5; border-radius: 10px; padding: 0px 5px; min-width: 20px; text-align: center; }
+  .mfp-item.checked .mfp-count { background: #1565c0; color: #fff; }
+  .mfp-footer { padding: 6px 12px; border-top: 1px solid #e8eaf0; background: #f8f9fc; display: flex; align-items: center; justify-content: space-between; }
+  .mfp-apply-btn { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.72rem; font-weight: 700; padding: 4px 14px; border-radius: 5px; border: none; cursor: pointer; background: linear-gradient(135deg,#1565c0,#42a5f5); color: #fff; letter-spacing: .5px; transition: opacity .15s; }
+  .mfp-apply-btn:hover { opacity: .88; }
+  .mfp-status { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; color: #78909c; font-weight: 600; }
+  .machine-filter-active-badge { display: none; font-family: 'Chakra Petch', monospace; font-size: 0.62rem; font-weight: 700; background: #42a5f5; color: #fff; border-radius: 10px; padding: 0 5px; min-width: 16px; text-align: center; line-height: 1.5; }
+  .machine-filter-active-badge.show { display: inline-block; }
+  .dt-ongoing-badge { display: none; font-family: 'Chakra Petch', monospace; font-size: var(--fs-xs); font-weight: 700; background: #ff9800; color: #fff; border-radius: 20px; padding: 2px 9px; white-space: nowrap; animation: pulse-orange 2s ease-in-out infinite; }
+  .dt-ongoing-badge.show { display: inline-block; }
+  @keyframes pulse-orange { 0%,100% { box-shadow: 0 0 0 0 rgba(255,152,0,.4); } 50% { box-shadow: 0 0 0 5px rgba(255,152,0,.0); } }
 
-  .mfp-footer {
+  /* ══════════ CHANGE 1: Custom bar chart tooltip ══════════ */
+  #barCustomTooltip {
+    position: fixed;
+    z-index: 9999;
+    background: #fff;
+    border: 1.5px solid #dde1e8;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 10px rgba(0,0,0,.12);
+    pointer-events: none;
+    min-width: 230px;
+    max-width: 310px;
+    display: none;
+    overflow: hidden;
+    font-family: 'Sarabun', Arial, sans-serif;
+    animation: tooltipFadeIn .12s ease;
+  }
+  @keyframes tooltipFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .bct-header {
+    background: linear-gradient(135deg, #1a237e, #1565c0);
     padding: 6px 12px;
-    border-top: 1px solid #e8eaf0;
-    background: #f8f9fc;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .mfp-apply-btn {
-    font-family: 'Chakra Petch', Arial, sans-serif;
-    font-size: 0.72rem; font-weight: 700;
-    padding: 4px 14px; border-radius: 5px;
-    border: none; cursor: pointer;
-    background: linear-gradient(135deg,#1565c0,#42a5f5);
-    color: #fff; letter-spacing: .5px;
-    transition: opacity .15s;
-  }
-  .mfp-apply-btn:hover { opacity: .88; }
-  .mfp-status {
+  .bct-time {
     font-family: 'Chakra Petch', monospace;
-    font-size: 0.65rem; color: #78909c;
-    font-weight: 600;
+    font-size: 0.85rem; font-weight: 700; color: #fff;
+  }
+  .bct-total-badge {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.78rem; font-weight: 800;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 12px; padding: 1px 8px; color: #fff;
+  }
+  .bct-body { padding: 8px 12px; }
+  .bct-row {
+    display: flex; align-items: center; gap: 6px;
+    padding: 2px 0; border-bottom: 1px solid #f0f2f5;
+  }
+  .bct-row:last-child { border-bottom: none; }
+  .bct-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .bct-label { font-size: 0.78rem; color: #374151; flex: 1; }
+  .bct-val {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.78rem; font-weight: 700; color: #0d47a1;
+    text-align: right;
+  }
+  .bct-below-warning {
+    margin: 6px 12px 0;
+    padding: 4px 8px;
+    background: rgba(255,152,0,.08);
+    border: 1px solid rgba(255,152,0,.35);
+    border-radius: 6px;
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.68rem; font-weight: 700; color: #e65100;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .bct-dt-section {
+    border-top: 2px dashed rgba(239,83,80,.3);
+    margin: 0 0 0 0;
+    padding: 6px 12px 8px;
+    background: rgba(255,245,245,.6);
+  }
+  .bct-dt-title {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.68rem; font-weight: 700; color: #b71c1c;
+    margin-bottom: 4px; text-transform: uppercase; letter-spacing: .6px;
+  }
+  .bct-dt-item {
+    display: flex; flex-direction: column; gap: 1px;
+    padding: 3px 0; border-bottom: 1px solid rgba(239,83,80,.15);
+  }
+  .bct-dt-item:last-child { border-bottom: none; }
+  .bct-dt-machine {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.72rem; font-weight: 800; color: #0d47a1;
+    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
+  }
+  .bct-dt-type {
+    font-size: 0.65rem; font-weight: 700; padding: 0px 5px;
+    border-radius: 3px; flex-shrink: 0;
+  }
+  .bct-dt-meta {
+    font-size: 0.68rem; color: #546e7a;
+    font-family: 'Chakra Petch', monospace;
+  }
+  .bct-dt-more {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.65rem; color: #90a4ae; text-align: center;
+    margin-top: 3px;
+  }
+  .bct-no-dt {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.68rem; color: #90a4ae; text-align: center;
+    padding: 4px 0;
   }
 
-  .machine-filter-active-badge {
-    display: none;
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.62rem; font-weight: 700;
-    background: #42a5f5; color: #fff;
-    border-radius: 10px; padding: 0 5px;
-    min-width: 16px; text-align: center;
-    line-height: 1.5;
-  }
-  .machine-filter-active-badge.show { display: inline-block; }
-
-  .dt-ongoing-badge {
-    display: none;
-    font-family: 'Chakra Petch', monospace;
-    font-size: var(--fs-xs); font-weight: 700;
-    background: #ff9800; color: #fff;
-    border-radius: 20px; padding: 2px 9px;
+  /* ══════════ Gap label transition styles ══════════ */
+  #donutGapLabel {
+    transition: color .3s ease;
+    font-size: 0.65rem !important;
     white-space: nowrap;
-    animation: pulse-orange 2s ease-in-out infinite;
-  }
-  .dt-ongoing-badge.show { display: inline-block; }
-  @keyframes pulse-orange {
-    0%,100% { box-shadow: 0 0 0 0 rgba(255,152,0,.4); }
-    50%      { box-shadow: 0 0 0 5px rgba(255,152,0,.0); }
   }
 
   @media (min-width: 1800px) {
-    :root { --topbar-h: 62px; --fs-xs: 0.85rem; --fs-sm: 0.95rem; --fs-base: 1.05rem; --fs-lg: 1.2rem; --fs-xl: 1.6rem; --fs-2xl: 2rem;
-      --bar-h: 290px; --perf-h: 170px;
-    }
+    :root { --topbar-h: 62px; --fs-xs: 0.85rem; --fs-sm: 0.95rem; --fs-base: 1.05rem; --fs-lg: 1.2rem; --fs-xl: 1.6rem; --fs-2xl: 2rem; --bar-h: 290px; --perf-h: 170px; }
     .right-col { width: 420px; }
     .pie-wrap  { width: 180px; height: 180px; }
     .radar-wrap { width: 190px; height: 190px; }
@@ -670,6 +583,9 @@
 </style>
 </head>
 <body>
+
+<!-- CHANGE 1: Custom bar tooltip element -->
+<div id="barCustomTooltip"></div>
 
 <div class="top-bar">
   <div class="top-bar-row1">
@@ -744,7 +660,6 @@
         </div>
       </div>
 
-      <!-- Performance chart -->
       <div class="card perf-card">
         <div class="card-head red">Performance Main Line S3</div>
         <div class="perf-chart-wrap">
@@ -814,10 +729,12 @@
             <div class="pie-legend" id="pieLegend"></div>
             <div class="totals-row">
               <div class="total-box">
+                <!-- CHANGE 2: label updated to show unit hint -->
                 <div class="total-label" style="color:#0d47a1;">total production:</div>
                 <div class="total-value" id="grandTotal">—</div>
               </div>
               <div class="total-box">
+                <!-- CHANGE 2: label shows Hr. unit hint -->
                 <div class="total-label" style="color:#004d40;">working hour s3 :</div>
                 <div class="clock-box" id="clockBox">—</div>
               </div>
@@ -851,8 +768,9 @@
                 <span class="donut-stat-label">Target</span>
                 <span class="donut-stat-val orange" id="donutTarget">—</span>
               </div>
+              <!-- CHANGE 3: Gap label now has an ID for dynamic text -->
               <div class="donut-stat">
-                <span class="donut-stat-label">Gap</span>
+                <span class="donut-stat-label" id="donutGapLabel">Gap</span>
                 <span class="donut-stat-val" id="donutGap">—</span>
               </div>
             </div>
@@ -1025,34 +943,21 @@ document.getElementById('thMachineName').addEventListener('click', function(e){
   if (popup.classList.contains('show')) { closeMachinePopup(); return; }
   openMachinePopup(this);
 });
-
-document.getElementById('mfpClose').addEventListener('click', function(e){
-  e.stopPropagation();
-  closeMachinePopup();
-});
-
-document.getElementById('mfpApply').addEventListener('click', function(e){
-  e.stopPropagation();
-  applyMachineFilter();
-});
-
+document.getElementById('mfpClose').addEventListener('click', function(e){ e.stopPropagation(); closeMachinePopup(); });
+document.getElementById('mfpApply').addEventListener('click', function(e){ e.stopPropagation(); applyMachineFilter(); });
 document.getElementById('mfpSelectAll').addEventListener('click', function(e){
   e.stopPropagation();
   pendingMachines = null;
   buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
   updateMfpStatus(pendingMachines);
 });
-
 document.getElementById('mfpClearAll').addEventListener('click', function(e){
   e.stopPropagation();
   pendingMachines = new Set();
   buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
   updateMfpStatus(pendingMachines);
 });
-
-document.getElementById('mfpSearch').addEventListener('input', function(){
-  buildMfpList(this.value, pendingMachines);
-});
+document.getElementById('mfpSearch').addEventListener('input', function(){ buildMfpList(this.value, pendingMachines); });
 document.getElementById('mfpSearch').addEventListener('click', function(e){ e.stopPropagation(); });
 document.getElementById('mfpList').addEventListener('click', function(e){ e.stopPropagation(); });
 document.getElementById('machineFilterPopup').addEventListener('click', function(e){ e.stopPropagation(); });
@@ -1075,17 +980,9 @@ var SHIFT_CONFIG = {
   night: { label:'Shift Night', period:'20:00 → 07:00 (+1 day)', minH:20, maxH:31 },
 };
 
-function getShiftTarget() {
-  return currentShift === 'all' ? 115200 : 57600;
-}
-function getShiftTargetLabel() {
-  return currentShift === 'all' ? '115,200 BCM/Day' : '57,600 BCM/Shift';
-}
-
-function updateTargetBox() {
-  document.getElementById('targetBox').textContent = getShiftTargetLabel();
-}
-
+function getShiftTarget() { return currentShift === 'all' ? 115200 : 57600; }
+function getShiftTargetLabel() { return currentShift === 'all' ? '115,200 BCM/Day' : '57,600 BCM/Shift'; }
+function updateTargetBox() { document.getElementById('targetBox').textContent = getShiftTargetLabel(); }
 function shiftHour(r) { var h=parseDT(r[COL.DT]).getHours(); return h<8?h+24:h; }
 function filterByShift(rows,shift) {
   var cfg=SHIFT_CONFIG[shift];
@@ -1185,6 +1082,146 @@ var targetLinePlugin = {
   }
 };
 
+/* ══════════ CHANGE 1: Custom HTML Tooltip for Bar Chart ══════════ */
+var barTooltipEl = null;
+
+function getBarTooltipEl() {
+  if (!barTooltipEl) barTooltipEl = document.getElementById('barCustomTooltip');
+  return barTooltipEl;
+}
+
+function hideBarTooltip() {
+  var el = getBarTooltipEl();
+  el.style.display = 'none';
+}
+
+/* Get downtime records for a specific chart label hour.
+   Label "8:00" = hour 8, represents period 07:00–07:59 */
+function getDowntimesForHour(labelStr) {
+  if (!dtCurrentRows || !dtCurrentRows.length) return [];
+  var parts = labelStr.split(':');
+  var endH = parseInt(parts[0], 10);   // the label hour (e.g. 8)
+  var startH = (endH - 1 + 24) % 24;  // previous hour (e.g. 7)
+
+  return dtCurrentRows.filter(function(r) {
+    var st = fmtDTTime(r[DT_COL.START] || '');
+    if (!st) return false;
+    var stH = parseInt(st.split(':')[0], 10);
+    return stH === startH;
+  });
+}
+
+/* Build and position the custom tooltip */
+function showBarTooltip(context) {
+  var tooltip = context.tooltip;
+  var el = getBarTooltipEl();
+
+  if (tooltip.opacity === 0) { hideBarTooltip(); return; }
+
+  var dp = tooltip.dataPoints;
+  if (!dp || !dp.length) { hideBarTooltip(); return; }
+
+  var label = dp[0].label;
+  var total = dp.reduce(function(s, p) { return s + (p.parsed.y || 0); }, 0);
+  var belowTarget = total < 4800;
+
+  /* Dataset colors */
+  var dsColors = ['#259B24', '#7b1fa2', '#f48fb1'];
+
+  /* ── Build HTML ── */
+  var html = '';
+
+  /* Header */
+  html += '<div class="bct-header">';
+  html += '<span class="bct-time">🕐 ' + label + '</span>';
+  html += '<span class="bct-total-badge">' + total.toLocaleString() + ' BCM</span>';
+  html += '</div>';
+
+  /* Dataset rows */
+  html += '<div class="bct-body">';
+  dp.forEach(function(p, i) {
+    var color = dsColors[i] || '#90a4ae';
+    html += '<div class="bct-row">';
+    html += '<div class="bct-dot" style="background:' + color + '"></div>';
+    html += '<span class="bct-label">' + escHtml(p.dataset.label) + '</span>';
+    html += '<span class="bct-val">' + (p.parsed.y || 0).toLocaleString() + '</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  /* Below target warning + downtime section */
+  if (belowTarget) {
+    var gap = 4800 - total;
+    html += '<div class="bct-below-warning">⚠ Below target by ' + gap.toLocaleString() + ' BCM</div>';
+
+    var dts = getDowntimesForHour(label);
+    html += '<div class="bct-dt-section">';
+    html += '<div class="bct-dt-title">⏱ Downtime in ' + label + ' window</div>';
+
+    if (dts.length === 0) {
+      html += '<div class="bct-no-dt">No downtime records found for this hour</div>';
+    } else {
+      var MAX_SHOW = 6;
+      dts.slice(0, MAX_SHOW).forEach(function(r) {
+        var machine  = escHtml((r[DT_COL.MACHINE]  || '').trim());
+        var startT   = fmtDTTime(r[DT_COL.START]   || '') || '—';
+        var endT     = fmtDTTime(r[DT_COL.END]     || '') || '?';
+        var typeRaw  = (r[DT_COL.TYPE] || '').trim();
+        var duration = (r[DT_COL.DURATION] || '').trim() || '—';
+
+        /* Type badge color mapping */
+        var typeColors = {
+          'OPT':'#5677fc','EE':'#26a69a','ME':'#ff6f00',
+          'Plan':'#00bcd4','Uncontrol':'#e91e63','STB':'#795548',
+          'PM':'#9292D1','Other':'#8d6e63'
+        };
+        var tColor = typeColors[typeRaw] || '#90a4ae';
+        var typeBg = tColor + '22';
+
+        html += '<div class="bct-dt-item">';
+        html += '<div class="bct-dt-machine">' + machine;
+        html += '<span class="bct-dt-type" style="background:' + typeBg + ';color:' + tColor + ';border:1px solid ' + tColor + '55;">' + escHtml(typeRaw || '—') + '</span>';
+        html += '</div>';
+        html += '<div class="bct-dt-meta">' + startT + ' → ' + endT + '&nbsp;&nbsp;(' + escHtml(duration) + ')</div>';
+        html += '</div>';
+      });
+      if (dts.length > MAX_SHOW) {
+        html += '<div class="bct-dt-more">+' + (dts.length - MAX_SHOW) + ' more records…</div>';
+      }
+    }
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+  el.style.display = 'block';
+
+  /* Position tooltip */
+  var canvas = context.chart.canvas;
+  var rect = canvas.getBoundingClientRect();
+  var caretX = rect.left + tooltip.caretX;
+  var caretY = rect.top  + tooltip.caretY;
+
+  /* Force browser to compute height first */
+  el.style.visibility = 'hidden';
+  el.style.display = 'block';
+  var elW = el.offsetWidth  || 280;
+  var elH = el.offsetHeight || 200;
+  el.style.visibility = '';
+
+  var margin = 14;
+  var posX = caretX + margin;
+  var posY = caretY - elH / 2;
+
+  /* Clamp to viewport */
+  if (posX + elW + 8 > window.innerWidth)  posX = caretX - elW - margin;
+  if (posX < 8)                             posX = 8;
+  if (posY + elH + 8 > window.innerHeight) posY = window.innerHeight - elH - 8;
+  if (posY < 8)                             posY = 8;
+
+  el.style.left = posX + 'px';
+  el.style.top  = posY + 'px';
+}
+
 /* ══════════ INIT CHARTS ══════════ */
 function initBarChart(){
   var ctx = document.getElementById('bcmChart').getContext('2d');
@@ -1204,19 +1241,13 @@ function initBarChart(){
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode:'index', intersect:false },
-      layout: { padding: { top:10, bottom:0 } },  /* ★ ลด top padding จาก 32 → 10, bottom 0 */
+      layout: { padding: { top:10, bottom:0 } },
       plugins: {
         legend: { display:false },
+        /* CHANGE 1: disable built-in tooltip, use external HTML tooltip */
         tooltip: {
-          backgroundColor:'#fff', borderColor:'#dde1e8', borderWidth:1,
-          titleColor:'#1a1f2e', bodyColor:'#374151',
-          titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
-          bodyFont:{ family:"'Sarabun',Arial,sans-serif", size:fs+2 },
-          padding:8,
-          callbacks:{
-            label:function(c){ return ' '+c.dataset.label+': '+c.parsed.y.toLocaleString(); },
-            footer:function(items){ return '  Total: '+items.reduce(function(s,i){return s+i.parsed.y;},0).toLocaleString(); }
-          }
+          enabled: false,
+          external: showBarTooltip
         }
       },
       scales: {
@@ -1228,7 +1259,7 @@ function initBarChart(){
             color:'#1a237e',
             maxRotation:0, minRotation:0,
             autoSkip:true, maxTicksLimit:24,
-            padding: 2,   /* ★ ลด tick padding จาก default(3) → 2 */
+            padding: 2,
           }
         },
         y: {
@@ -1239,12 +1270,17 @@ function initBarChart(){
             color:'#374151',
             callback:function(v){ return v.toLocaleString(); },
             stepSize:1000,
-            padding: 2,   /* ★ ลด tick padding → 2 */
+            padding: 2,
           },
           beginAtZero:true, min:0, max:7000
         }
       }
     }
+  });
+
+  /* Hide custom tooltip when mouse leaves the chart canvas */
+  document.getElementById('bcmChart').addEventListener('mouseleave', function() {
+    hideBarTooltip();
   });
 }
 
@@ -1304,7 +1340,7 @@ function initPerfChart(){
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode:'index', intersect:false },
-      layout: { padding: { top:4, bottom:0 } },  /* ★ เพิ่ม layout padding เล็กน้อย */
+      layout: { padding: { top:4, bottom:0 } },
       plugins: {
         legend: { display:false },
         tooltip: {
@@ -1313,31 +1349,17 @@ function initPerfChart(){
           titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
           bodyFont:{ family:"'Sarabun',Arial,sans-serif", size:fs+2 },
           padding:8,
-          callbacks:{
-            label:function(c){ return ' Motor Current of Line S3: '+c.parsed.y.toLocaleString(); }
-          }
+          callbacks:{ label:function(c){ return ' Motor Current of Line S3: '+c.parsed.y.toLocaleString(); } }
         }
       },
       scales: {
         x: {
           grid: { color:'#fce4ec' },
-          ticks: {
-            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
-            color:'#1a237e',
-            maxRotation:0, minRotation:0,
-            autoSkip:true, maxTicksLimit:24,
-            padding: 2,   /* ★ ลด tick padding → 2 */
-          }
+          ticks: { font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' }, color:'#1a237e', maxRotation:0, minRotation:0, autoSkip:true, maxTicksLimit:24, padding: 2 }
         },
         y: {
           grid: { color:'#fce4ec' },
-          ticks: {
-            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
-            color:'#374151',
-            callback:function(v){ return v.toLocaleString(); },
-            stepSize:20,
-            padding: 2,   /* ★ ลด tick padding → 2 */
-          },
+          ticks: { font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' }, color:'#374151', callback:function(v){ return v.toLocaleString(); }, stepSize:20, padding: 2 },
           beginAtZero:true, min:0, max:160
         }
       }
@@ -1365,34 +1387,54 @@ function initDonutChart() {
       rotation: -90,
       circumference: 360,
       animation: { animateRotate: true, duration: 700 },
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false }
-      }
+      plugins: { legend: { display: false }, tooltip: { enabled: false } }
     }
   });
 }
 
+/* ══════════ CHANGE 3: Dynamic Gap label + CHANGE 2 units ══════════ */
 function updateDonut(grandTotal) {
   var target = getShiftTarget();
   var pct = target > 0 ? (grandTotal / target * 100) : 0;
   var pctClamped = Math.min(pct, 100);
   var remaining = Math.max(0, 100 - pctClamped);
   var arcColor = pct >= 80 ? '#00FF00' : pct >= 55 ? '#ff9800' : '#ef5350';
-  var arcBorder = arcColor;
   donutChart.data.datasets[0].data = [pctClamped, remaining];
   donutChart.data.datasets[0].backgroundColor = [arcColor, 'rgba(0,0,0,.07)'];
-  donutChart.data.datasets[0].borderColor = [arcBorder, 'rgba(0,0,0,.05)'];
+  donutChart.data.datasets[0].borderColor = [arcColor, 'rgba(0,0,0,.05)'];
   donutChart.update();
+
   var pctEl = document.getElementById('donutPct');
   pctEl.textContent = pct.toFixed(1) + '%';
   pctEl.style.color = arcColor;
+
   var gap = grandTotal - target;
+
   document.getElementById('donutActual').textContent  = grandTotal.toLocaleString() + ' BCM';
   document.getElementById('donutTarget').textContent  = target.toLocaleString() + ' BCM';
-  var gapEl = document.getElementById('donutGap');
+
+  /* CHANGE 3: Dynamic label based on gap value */
+  var gapEl      = document.getElementById('donutGap');
+  var gapLabelEl = document.getElementById('donutGapLabel');
+
   gapEl.textContent = (gap >= 0 ? '+' : '') + gap.toLocaleString() + ' BCM';
-  gapEl.className = 'donut-stat-val ' + (gap >= 0 ? 'green' : 'red');
+
+  if (gap > 1000) {
+    /* Positive, more than 1,000 BCM above target */
+    gapLabelEl.textContent = '✅ Above Target';
+    gapLabelEl.style.color = '#2e7d32';
+    gapEl.className = 'donut-stat-val green';
+  } else if (gap >= 0) {
+    /* Positive but ≤ 1,000 BCM — on target */
+    gapLabelEl.textContent = '🎯 On Target';
+    gapLabelEl.style.color = '#1565c0';
+    gapEl.className = 'donut-stat-val blue';
+  } else {
+    /* Negative — below target */
+    gapLabelEl.textContent = '⚠ Below Target';
+    gapLabelEl.style.color = '#c62828';
+    gapEl.className = 'donut-stat-val red';
+  }
 }
 
 /* ══════════ RADAR CHARTS ══════════ */
@@ -1432,18 +1474,8 @@ function radarOptions() {
     scales: {
       r: {
         beginAtZero: true,
-        ticks: {
-          font:{ family:"'Chakra Petch',monospace", size:fs, weight:'700' },
-          color:'#37474f',
-          backdropColor:'rgba(255,255,255,0.75)',
-          backdropPadding:2,
-          maxTicksLimit:4
-        },
-        pointLabels: {
-          font:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'800' },
-          color:'#0d47a1',
-          padding:6
-        },
+        ticks: { font:{ family:"'Chakra Petch',monospace", size:fs, weight:'700' }, color:'#37474f', backdropColor:'rgba(255,255,255,0.75)', backdropPadding:2, maxTicksLimit:4 },
+        pointLabels: { font:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'800' }, color:'#0d47a1', padding:6 },
         grid: { color:'rgba(0,0,0,.15)' },
         angleLines: { color:'rgba(0,0,0,.2)' },
       }
@@ -1529,8 +1561,7 @@ function sortDTRows(rows) {
   return rows.slice().sort(function(a, b) {
     var aEnd = fmtDTTime(a[DT_COL.END] || '');
     var bEnd = fmtDTTime(b[DT_COL.END] || '');
-    var aNoEnd = !aEnd;
-    var bNoEnd = !bEnd;
+    var aNoEnd = !aEnd; var bNoEnd = !bEnd;
     if (aNoEnd && !bNoEnd) return -1;
     if (!aNoEnd && bNoEnd) return 1;
     var aStart = (a[DT_COL.START] || '');
@@ -1549,27 +1580,17 @@ function renderDTTable(filterType) {
 
   var rows = dtCurrentRows;
   if (selectedMachines !== null) {
-    rows = rows.filter(function(r){
-      return selectedMachines.has((r[DT_COL.MACHINE]||'').trim());
-    });
+    rows = rows.filter(function(r){ return selectedMachines.has((r[DT_COL.MACHINE]||'').trim()); });
   }
   if (dtActiveFilter !== 'ALL') {
-    rows = rows.filter(function(r){
-      var t=(r[DT_COL.TYPE]||'').trim().toUpperCase();
-      return t===dtActiveFilter.toUpperCase();
-    });
+    rows = rows.filter(function(r){ var t=(r[DT_COL.TYPE]||'').trim().toUpperCase(); return t===dtActiveFilter.toUpperCase(); });
   }
-
   rows = sortDTRows(rows);
 
   var ongoingCount = rows.filter(function(r){ return !fmtDTTime(r[DT_COL.END]||''); }).length;
   var ongoingBadge = document.getElementById('dtOngoingBadge');
-  if (ongoingCount > 0) {
-    ongoingBadge.textContent = '⚠ ' + ongoingCount + ' Ongoing';
-    ongoingBadge.classList.add('show');
-  } else {
-    ongoingBadge.classList.remove('show');
-  }
+  if (ongoingCount > 0) { ongoingBadge.textContent='⚠ '+ongoingCount+' Ongoing'; ongoingBadge.classList.add('show'); }
+  else { ongoingBadge.classList.remove('show'); }
 
   document.getElementById('dtCountBadge').textContent = rows.length+' records';
   var tbody = document.getElementById('dtTableBody');
@@ -1588,23 +1609,9 @@ function renderDTTable(filterType) {
     var typeClass='type-'+typeRaw;
     var isOngoing = !endRaw;
     var rowClass = isOngoing ? ' class="row-no-end"' : '';
-    var shiftCell=shiftRaw==='d'
-      ? '<span class="shift-badge shift-badge-d">☀️Day</span>'
-      : shiftRaw==='n'
-        ? '<span class="shift-badge shift-badge-n">🌙Night</span>'
-        : '<span style="color:var(--muted);font-size:.65rem;">—</span>';
-    var endCell=endRaw
-      ? '<span class="time-cell">'+escHtml(endRaw)+'</span>'
-      : '<span class="end-unknown" title="Still Running — No End Time">?</span>';
-    return '<tr'+rowClass+'>'
-      +'<td class="machine-cell">'+escHtml(machine)+'</td>'
-      +'<td>'+shiftCell+'</td>'
-      +'<td class="time-cell">'+escHtml(startT||'—')+'</td>'
-      +'<td>'+endCell+'</td>'
-      +'<td class="desc-cell">'+escHtml(desc)+'</td>'
-      +'<td><span class="type-badge '+typeClass+'">'+escHtml(typeRaw||'—')+'</span></td>'
-      +'<td class="dur-cell">'+escHtml(duration)+'</td>'
-      +'</tr>';
+    var shiftCell=shiftRaw==='d'?'<span class="shift-badge shift-badge-d">☀️Day</span>':shiftRaw==='n'?'<span class="shift-badge shift-badge-n">🌙Night</span>':'<span style="color:var(--muted);font-size:.65rem;">—</span>';
+    var endCell=endRaw?'<span class="time-cell">'+escHtml(endRaw)+'</span>':'<span class="end-unknown" title="Still Running — No End Time">?</span>';
+    return '<tr'+rowClass+'><td class="machine-cell">'+escHtml(machine)+'</td><td>'+shiftCell+'</td><td class="time-cell">'+escHtml(startT||'—')+'</td><td>'+endCell+'</td><td class="desc-cell">'+escHtml(desc)+'</td><td><span class="type-badge '+typeClass+'">'+escHtml(typeRaw||'—')+'</span></td><td class="dur-cell">'+escHtml(duration)+'</td></tr>';
   }).join('');
 }
 
@@ -1735,16 +1742,21 @@ function renderForDate(wd){
     return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'</div></div>';
   }).join('');
 
-  document.getElementById('grandTotal').textContent=grand.toLocaleString();
+  /* CHANGE 2: Add BCM unit to total production */
+  document.getElementById('grandTotal').textContent = grand.toLocaleString() + ' BCM';
 
   function parseHHMM(s){s=(s||'').trim();var m=s.match(/^(\d+):(\d{2})$/);if(!m)return 0;return parseInt(m[1])*60+parseInt(m[2]);}
   var totalMinutes=rows.reduce(function(s,r){return s+parseHHMM(r[COL.HOUR_S3]);},0);
   var th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
-  document.getElementById('clockBox').textContent=th+':'+tm;
+
+  /* CHANGE 2: Add Hr. unit to working hour */
+  document.getElementById('clockBox').textContent = th + ':' + tm + ' Hr.';
 
   var totalHoursDecimal=totalMinutes/60;
   var productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
-  document.getElementById('productivityBox').textContent=productivity>0?productivity.toLocaleString():'—';
+
+  /* CHANGE 2: Add BCM/Hr unit to productivity */
+  document.getElementById('productivityBox').textContent = productivity > 0 ? productivity.toLocaleString() + ' BCM/Hr' : '—';
 
   updateTargetBox();
   updateDonut(grand);
@@ -1807,6 +1819,7 @@ window.addEventListener('resize', function() {
     });
     var popup = document.getElementById('machineFilterPopup');
     if (popup.classList.contains('show')) closeMachinePopup();
+    hideBarTooltip();
   }, 200);
 });
 
