@@ -317,13 +317,16 @@
   .radar-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: var(--fs-sm); font-weight: 700; color: #0d47a1; text-align: center; margin-bottom: 5px; }
   .radar-body { display: flex; gap: 8px; align-items: center; }
   .radar-wrap { flex-shrink: 0; width: 150px; height: 150px; position: relative; }
-  .radar-wrap canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; }
+  .radar-wrap canvas { position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; cursor: crosshair; }
   .radar-legend { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
   .radar-legend-item {
     display: flex; align-items: center; justify-content: space-between;
     font-size: var(--fs-xs); color: #1a1f2e; font-weight: 700;
     padding: 2px 0; border-bottom: 1px solid #e8eaf0;
+    cursor: pointer; border-radius: 3px; padding: 3px 4px;
+    transition: background .12s;
   }
+  .radar-legend-item:hover { background: #e8f0fe; }
   .radar-legend-left { display: flex; align-items: center; gap: 5px; font-weight: 800; color: #0d47a1; overflow: hidden; }
   .radar-legend-left span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--fs-xs); }
   .radar-legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
@@ -434,199 +437,69 @@
   .dt-ongoing-badge.show { display: inline-block; }
   @keyframes pulse-orange { 0%,100% { box-shadow: 0 0 0 0 rgba(255,152,0,.4); } 50% { box-shadow: 0 0 0 5px rgba(255,152,0,.0); } }
 
-  /* ══════════ Custom bar chart tooltip ══════════ */
+  /* ══ Bar tooltip ══ */
   #barCustomTooltip {
-    position: fixed;
-    z-index: 9999;
-    background: #fff;
-    border: 1.5px solid #dde1e8;
-    border-radius: 10px;
+    position: fixed; z-index: 9999; background: #fff;
+    border: 1.5px solid #dde1e8; border-radius: 10px;
     box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 10px rgba(0,0,0,.12);
-    pointer-events: none;
-    min-width: 230px;
-    max-width: 320px;
-    display: none;
-    overflow: hidden;
-    font-family: 'Sarabun', Arial, sans-serif;
+    pointer-events: none; min-width: 230px; max-width: 320px;
+    display: none; overflow: hidden; font-family: 'Sarabun', Arial, sans-serif;
     animation: tooltipFadeIn .12s ease;
   }
   @keyframes tooltipFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-  .bct-header {
-    background: linear-gradient(135deg, #1a237e, #1565c0);
-    padding: 6px 12px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .bct-time {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.85rem; font-weight: 700; color: #fff;
-  }
-  .bct-total-badge {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.78rem; font-weight: 800;
-    background: rgba(255,255,255,.18);
-    border: 1px solid rgba(255,255,255,.25);
-    border-radius: 12px; padding: 1px 8px; color: #fff;
-  }
+  .bct-header { background: linear-gradient(135deg, #1a237e, #1565c0); padding: 6px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .bct-time { font-family: 'Chakra Petch', monospace; font-size: 0.85rem; font-weight: 700; color: #fff; }
+  .bct-total-badge { font-family: 'Chakra Petch', monospace; font-size: 0.78rem; font-weight: 800; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.25); border-radius: 12px; padding: 1px 8px; color: #fff; }
   .bct-body { padding: 8px 12px; }
-  .bct-row {
-    display: flex; align-items: center; gap: 6px;
-    padding: 2px 0; border-bottom: 1px solid #f0f2f5;
-  }
+  .bct-row { display: flex; align-items: center; gap: 6px; padding: 2px 0; border-bottom: 1px solid #f0f2f5; }
   .bct-row:last-child { border-bottom: none; }
   .bct-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
   .bct-label { font-size: 0.78rem; color: #374151; flex: 1; }
-  .bct-val {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.78rem; font-weight: 700; color: #0d47a1;
-    text-align: right;
-  }
-  .bct-below-warning {
-    margin: 6px 12px 0;
-    padding: 4px 8px;
-    background: rgba(255,152,0,.08);
-    border: 1px solid rgba(255,152,0,.35);
-    border-radius: 6px;
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.68rem; font-weight: 700; color: #e65100;
-    display: flex; align-items: center; gap: 4px;
-  }
-  .bct-dt-section {
-    border-top: 2px dashed rgba(239,83,80,.3);
-    margin: 0 0 0 0;
-    padding: 6px 12px 8px;
-    background: rgba(255,245,245,.6);
-  }
-  .bct-dt-title {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.68rem; font-weight: 700; color: #b71c1c;
-    margin-bottom: 4px; text-transform: uppercase; letter-spacing: .6px;
-  }
-  .bct-dt-item {
-    display: flex; flex-direction: column; gap: 1px;
-    padding: 3px 0; border-bottom: 1px solid rgba(239,83,80,.15);
-  }
+  .bct-val { font-family: 'Chakra Petch', monospace; font-size: 0.78rem; font-weight: 700; color: #0d47a1; text-align: right; }
+  .bct-below-warning { margin: 6px 12px 0; padding: 4px 8px; background: rgba(255,152,0,.08); border: 1px solid rgba(255,152,0,.35); border-radius: 6px; font-family: 'Chakra Petch', monospace; font-size: 0.68rem; font-weight: 700; color: #e65100; display: flex; align-items: center; gap: 4px; }
+  .bct-dt-section { border-top: 2px dashed rgba(239,83,80,.3); margin: 0; padding: 6px 12px 8px; background: rgba(255,245,245,.6); }
+  .bct-dt-title { font-family: 'Chakra Petch', monospace; font-size: 0.68rem; font-weight: 700; color: #b71c1c; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .6px; }
+  .bct-dt-item { display: flex; flex-direction: column; gap: 1px; padding: 3px 0; border-bottom: 1px solid rgba(239,83,80,.15); }
   .bct-dt-item:last-child { border-bottom: none; }
-  .bct-dt-machine {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.72rem; font-weight: 800; color: #0d47a1;
-    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
-  }
-  /* [CHANGE 1] Description text style for bar tooltip */
-  .bct-dt-desc {
-    font-size: 0.68rem; color: #374151;
-    font-family: 'Sarabun', Arial, sans-serif;
-    line-height: 1.3;
-    word-break: break-word;
-    white-space: normal;
-  }
-  .bct-dt-meta {
-    font-size: 0.68rem; color: #546e7a;
-    font-family: 'Chakra Petch', monospace;
-  }
-  .bct-dt-more {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.65rem; color: #90a4ae; text-align: center;
-    margin-top: 3px;
-  }
-  .bct-no-dt {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.68rem; color: #90a4ae; text-align: center;
-    padding: 4px 0;
-  }
+  .bct-dt-machine { font-family: 'Chakra Petch', monospace; font-size: 0.72rem; font-weight: 800; color: #0d47a1; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .bct-dt-desc { font-size: 0.68rem; color: #374151; font-family: 'Sarabun', Arial, sans-serif; line-height: 1.3; word-break: break-word; white-space: normal; }
+  .bct-dt-meta { font-size: 0.68rem; color: #546e7a; font-family: 'Chakra Petch', monospace; }
+  .bct-dt-more { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; color: #90a4ae; text-align: center; margin-top: 3px; }
+  .bct-no-dt { font-family: 'Chakra Petch', monospace; font-size: 0.68rem; color: #90a4ae; text-align: center; padding: 4px 0; }
 
-  /* ══════════ [CHANGE 2 & 3] Radar hover popup ══════════ */
+  /* ══ Radar Hover Popup ══ */
   .radar-hover-popup {
-    position: fixed;
-    z-index: 9999;
-    background: #fff;
-    border: 1.5px solid #90caf9;
-    border-radius: 10px;
+    position: fixed; z-index: 9999; background: #fff;
+    border: 1.5px solid #90caf9; border-radius: 10px;
     box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 10px rgba(0,0,0,.12);
-    pointer-events: none;
-    min-width: 260px;
-    max-width: 340px;
-    display: none;
-    overflow: hidden;
-    font-family: 'Sarabun', Arial, sans-serif;
+    pointer-events: none; min-width: 280px; max-width: 360px;
+    display: none; overflow: hidden; font-family: 'Sarabun', Arial, sans-serif;
     animation: tooltipFadeIn .12s ease;
   }
   .radar-hover-popup.show { display: block; }
-  .rhp-header {
-    padding: 7px 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .rhp-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .rhp-title {
-    font-family: 'Chakra Petch', Arial, sans-serif;
-    font-size: 0.78rem; font-weight: 700; color: #fff; flex: 1;
-    letter-spacing: .5px;
-  }
-  .rhp-count {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.72rem; font-weight: 800;
-    background: rgba(255,255,255,.2);
-    border: 1px solid rgba(255,255,255,.3);
-    border-radius: 10px; padding: 1px 7px; color: #fff;
-    white-space: nowrap;
-  }
-  .rhp-body {
-    max-height: 280px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #dde1e8 transparent;
-  }
+  .rhp-header { padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
+  .rhp-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: rgba(255,255,255,.85); }
+  .rhp-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.80rem; font-weight: 700; color: #fff; flex: 1; letter-spacing: .4px; }
+  .rhp-shift-badge { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; font-weight: 700; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.35); border-radius: 8px; padding: 1px 7px; color: #fff; white-space: nowrap; }
+  .rhp-count { font-family: 'Chakra Petch', monospace; font-size: 0.72rem; font-weight: 800; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3); border-radius: 10px; padding: 1px 7px; color: #fff; white-space: nowrap; }
+  .rhp-body { max-height: 320px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #dde1e8 transparent; }
   .rhp-body::-webkit-scrollbar { width: 3px; }
   .rhp-body::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 3px; }
-  .rhp-item {
-    padding: 5px 12px;
-    border-bottom: 1px solid #f0f2f5;
-    display: flex; flex-direction: column; gap: 2px;
-  }
+  .rhp-item { padding: 6px 12px; border-bottom: 1px solid #f0f2f5; display: flex; flex-direction: column; gap: 3px; }
   .rhp-item:last-child { border-bottom: none; }
-  .rhp-item-top {
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  }
-  .rhp-machine {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.72rem; font-weight: 800; color: #0d47a1;
-  }
-  .rhp-type-badge {
-    font-family: 'Chakra Petch', Arial, sans-serif;
-    font-size: 0.62rem; font-weight: 700;
-    padding: 0 5px; border-radius: 3px;
-  }
-  .rhp-time {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.65rem; color: #546e7a;
-  }
-  .rhp-dur {
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.65rem; font-weight: 800; color: #b71c1c;
-    margin-left: auto;
-  }
-  .rhp-desc {
-    font-size: 0.70rem; color: #374151;
-    font-family: 'Sarabun', Arial, sans-serif;
-    line-height: 1.3; word-break: break-word;
-  }
-  .rhp-empty {
-    padding: 12px; text-align: center;
-    font-family: 'Chakra Petch', Arial, sans-serif;
-    font-size: 0.68rem; color: #90a4ae; letter-spacing: .5px;
-  }
-  .rhp-more {
-    padding: 5px 12px;
-    font-family: 'Chakra Petch', monospace;
-    font-size: 0.65rem; color: #90a4ae;
-    text-align: center; border-top: 1px solid #f0f2f5;
-  }
+  .rhp-item:hover { background: #f8faff; }
+  .rhp-item-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .rhp-num { font-family: 'Chakra Petch', monospace; font-size: 0.62rem; font-weight: 700; color: #90a4ae; min-width: 16px; }
+  .rhp-machine { font-family: 'Chakra Petch', monospace; font-size: 0.75rem; font-weight: 800; color: #0d47a1; }
+  .rhp-type-badge { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.62rem; font-weight: 700; padding: 0 5px; border-radius: 3px; }
+  .rhp-shift-em { font-size: 0.68rem; }
+  .rhp-dur { font-family: 'Chakra Petch', monospace; font-size: 0.68rem; font-weight: 800; color: #b71c1c; margin-left: auto; }
+  .rhp-time { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; color: #546e7a; }
+  .rhp-desc { font-size: 0.72rem; color: #374151; font-family: 'Sarabun', Arial, sans-serif; line-height: 1.35; word-break: break-word; }
+  .rhp-empty { padding: 16px 12px; text-align: center; font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.70rem; color: #90a4ae; letter-spacing: .5px; }
+  .rhp-more { padding: 5px 12px; font-family: 'Chakra Petch', monospace; font-size: 0.65rem; color: #90a4ae; text-align: center; border-top: 1px solid #f0f2f5; background: #fafbfc; }
 
-  /* ══════════ Gap label transition styles ══════════ */
-  #donutGapLabel {
-    transition: color .3s ease;
-    font-size: 0.65rem !important;
-    white-space: nowrap;
-  }
+  #donutGapLabel { transition: color .3s ease; font-size: 0.65rem !important; white-space: nowrap; }
 
   @media (min-width: 1800px) {
     :root { --topbar-h: 62px; --fs-xs: 0.85rem; --fs-sm: 0.95rem; --fs-base: 1.05rem; --fs-lg: 1.2rem; --fs-xl: 1.6rem; --fs-2xl: 2rem; --bar-h: 290px; --perf-h: 170px; }
@@ -675,13 +548,8 @@
 </head>
 <body>
 
-<!-- Custom bar tooltip element -->
 <div id="barCustomTooltip"></div>
-
-<!-- [CHANGE 2] Radar Equipment hover popup -->
 <div class="radar-hover-popup" id="radarEquipPopup"></div>
-
-<!-- [CHANGE 3] Radar Type hover popup -->
 <div class="radar-hover-popup" id="radarTypePopup"></div>
 
 <div class="top-bar">
@@ -872,10 +740,11 @@
         </div>
       </div>
 
+      <!-- Radar: Downtime of Equipment -->
       <div class="card radar-card" id="radarEquipCard">
         <div class="radar-title">Downtime of Equipment</div>
         <div class="radar-body">
-          <div class="radar-wrap">
+          <div class="radar-wrap" id="radarEquipWrap">
             <canvas id="radarEquipChart"></canvas>
           </div>
           <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;">
@@ -885,10 +754,11 @@
         </div>
       </div>
 
+      <!-- Radar: Type of Downtime -->
       <div class="card radar-card" id="radarTypeCard">
         <div class="radar-title">Type of Downtime</div>
         <div class="radar-body">
-          <div class="radar-wrap">
+          <div class="radar-wrap" id="radarTypeWrap">
             <canvas id="radarTypeChart"></canvas>
           </div>
           <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;">
@@ -908,618 +778,35 @@
 
 <script>
 /* ══════════ CONFIG ══════════ */
-const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
-const CSV_URLS = [ BASE + '?gid=1971585139&single=true&output=csv' ];
-const COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11, VALUE:23 };
+var BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
+var CSV_URLS = [ BASE + '?gid=1971585139&single=true&output=csv' ];
+var COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11, VALUE:23 };
 
-const C = {
-  bwe1: '#6B007B',
-  bwe2: '#F48FB1',
-  cr1:  '#2baf2b',
-  cr2:  '#72D572',
-  cr3:  '#CDDC39'
-};
+var C = { bwe1:'#6B007B', bwe2:'#F48FB1', cr1:'#2baf2b', cr2:'#72D572', cr3:'#CDDC39' };
 
-let allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
-let radarEquipChart=null, radarTypeChart=null, donutChart=null;
+var allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
+var radarEquipChart=null, radarTypeChart=null, donutChart=null;
 
-/* ══════════ MACHINE NAME FILTER STATE ══════════ */
+/* ══════════ MACHINE FILTER STATE ══════════ */
 var MACHINE_DEF = [
-  { label: 'Bucket Wheel #1', color: '#6B007B' },
-  { label: 'Bucket Wheel #2', color: '#F48FB1' },
-  { label: 'Crusher #1',      color: '#2baf2b' },
-  { label: 'Crusher #2',      color: '#72D572' },
-  { label: 'Crusher #3',      color: '#CDDC39' },
-  { label: 'Spreader',        color: '#4db6ac' },
-  { label: 'System',          color: '#03a9f4' },
+  { label:'Bucket Wheel #1', color:'#6B007B' },
+  { label:'Bucket Wheel #2', color:'#F48FB1' },
+  { label:'Crusher #1',      color:'#2baf2b' },
+  { label:'Crusher #2',      color:'#72D572' },
+  { label:'Crusher #3',      color:'#CDDC39' },
+  { label:'Spreader',        color:'#4db6ac' },
+  { label:'System',          color:'#03a9f4' },
 ];
-
 var selectedMachines = null;
 var pendingMachines  = null;
 
-/* ══════════ POPUP BUILD & LOGIC ══════════ */
-function getMachineCounts(rows) {
-  var counts = {};
-  MACHINE_DEF.forEach(function(m){ counts[m.label] = 0; });
-  rows.forEach(function(r){
-    var name = (r[DT_COL.MACHINE]||'').trim();
-    if (counts.hasOwnProperty(name)) counts[name]++;
-  });
-  return counts;
-}
-
-function buildMfpList(searchVal, tempSelected) {
-  var list = document.getElementById('mfpList');
-  var counts = getMachineCounts(dtCurrentRows);
-  var q = (searchVal||'').toLowerCase().trim();
-  list.innerHTML = '';
-
-  MACHINE_DEF.forEach(function(m){
-    if (q && m.label.toLowerCase().indexOf(q) === -1) return;
-    var isChecked = tempSelected === null || tempSelected.has(m.label);
-    var div = document.createElement('div');
-    div.className = 'mfp-item' + (isChecked ? ' checked' : '');
-    div.dataset.machine = m.label;
-    div.innerHTML =
-      '<div class="mfp-checkbox"><span class="mfp-checkmark">✓</span></div>' +
-      '<div class="mfp-dot" style="background:' + m.color + '"></div>' +
-      '<span class="mfp-label">' + escHtml(m.label) + '</span>' +
-      '<span class="mfp-count">' + (counts[m.label] || 0) + '</span>';
-    div.addEventListener('click', function(){
-      if (pendingMachines === null) {
-        pendingMachines = new Set(MACHINE_DEF.map(function(x){ return x.label; }));
-        pendingMachines.delete(m.label);
-      } else {
-        if (pendingMachines.has(m.label)) pendingMachines.delete(m.label);
-        else pendingMachines.add(m.label);
-        if (pendingMachines.size === MACHINE_DEF.length) pendingMachines = null;
-      }
-      buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
-      updateMfpStatus(pendingMachines);
-    });
-    list.appendChild(div);
-  });
-}
-
-function updateMfpStatus(tempSelected) {
-  var el = document.getElementById('mfpStatus');
-  if (tempSelected === null) {
-    el.textContent = 'All machines selected';
-  } else {
-    el.textContent = tempSelected.size + ' / ' + MACHINE_DEF.length + ' selected';
-  }
-}
-
-function openMachinePopup(anchorEl) {
-  pendingMachines = selectedMachines === null ? null : new Set(selectedMachines);
-  var popup = document.getElementById('machineFilterPopup');
-  var rect  = anchorEl.getBoundingClientRect();
-  var top  = rect.bottom + 4;
-  var left = rect.left;
-  var popW = 250;
-  if (left + popW > window.innerWidth - 8) left = window.innerWidth - popW - 8;
-  if (top + 380 > window.innerHeight)       top  = rect.top - 380 - 4;
-  popup.style.top  = top + 'px';
-  popup.style.left = left + 'px';
-  document.getElementById('mfpSearch').value = '';
-  buildMfpList('', pendingMachines);
-  updateMfpStatus(pendingMachines);
-  popup.classList.add('show');
-}
-
-function closeMachinePopup() {
-  document.getElementById('machineFilterPopup').classList.remove('show');
-}
-
-function applyMachineFilter() {
-  selectedMachines = pendingMachines;
-  updateMachineFilterUI();
-  renderDTTable(dtActiveFilter);
-  closeMachinePopup();
-}
-
-function updateMachineFilterUI() {
-  var badge = document.getElementById('machineActiveBadge');
-  var icon  = document.getElementById('thFilterIcon');
-  if (selectedMachines === null) {
-    badge.classList.remove('show');
-    icon.classList.remove('has-filter');
-  } else {
-    badge.textContent = selectedMachines.size;
-    badge.classList.add('show');
-    icon.classList.add('has-filter');
-  }
-}
-
-document.getElementById('thMachineName').addEventListener('click', function(e){
-  e.stopPropagation();
-  var popup = document.getElementById('machineFilterPopup');
-  if (popup.classList.contains('show')) { closeMachinePopup(); return; }
-  openMachinePopup(this);
-});
-document.getElementById('mfpClose').addEventListener('click', function(e){ e.stopPropagation(); closeMachinePopup(); });
-document.getElementById('mfpApply').addEventListener('click', function(e){ e.stopPropagation(); applyMachineFilter(); });
-document.getElementById('mfpSelectAll').addEventListener('click', function(e){
-  e.stopPropagation();
-  pendingMachines = null;
-  buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
-  updateMfpStatus(pendingMachines);
-});
-document.getElementById('mfpClearAll').addEventListener('click', function(e){
-  e.stopPropagation();
-  pendingMachines = new Set();
-  buildMfpList(document.getElementById('mfpSearch').value, pendingMachines);
-  updateMfpStatus(pendingMachines);
-});
-document.getElementById('mfpSearch').addEventListener('input', function(){ buildMfpList(this.value, pendingMachines); });
-document.getElementById('mfpSearch').addEventListener('click', function(e){ e.stopPropagation(); });
-document.getElementById('mfpList').addEventListener('click', function(e){ e.stopPropagation(); });
-document.getElementById('machineFilterPopup').addEventListener('click', function(e){ e.stopPropagation(); });
-document.addEventListener('click', function(){ closeMachinePopup(); });
-
-/* ══════════ FONT SIZE ══════════ */
-function getChartFontSize() {
-  var w = window.innerWidth;
-  if (w >= 2400) return 13;
-  if (w >= 1800) return 11;
-  if (w >= 1400) return 10;
-  return 9;
-}
-
-/* ══════════ SHIFT ══════════ */
-var currentShift = 'all';
-var SHIFT_CONFIG = {
-  all:   { label:'All Shift',   period:'08:00 → 07:00 (+1 day)', minH:8,  maxH:31 },
-  day:   { label:'Shift Day',   period:'08:00 → 19:00',          minH:8,  maxH:19 },
-  night: { label:'Shift Night', period:'20:00 → 07:00 (+1 day)', minH:20, maxH:31 },
-};
-
-function getShiftTarget() { return currentShift === 'all' ? 115200 : 57600; }
-function getShiftTargetLabel() { return currentShift === 'all' ? '115,200 BCM/Day' : '57,600 BCM/Shift'; }
-function updateTargetBox() { document.getElementById('targetBox').textContent = getShiftTargetLabel(); }
-function shiftHour(r) { var h=parseDT(r[COL.DT]).getHours(); return h<8?h+24:h; }
-function filterByShift(rows,shift) {
-  var cfg=SHIFT_CONFIG[shift];
-  return rows.filter(function(r){var sh=shiftHour(r);return sh>=cfg.minH&&sh<=cfg.maxH;});
-}
-function applyShiftUI(shift) {
-  document.querySelectorAll('.btn-shift').forEach(function(btn){
-    btn.className='btn-shift';
-    if(btn.dataset.shift===shift) btn.classList.add('active-'+shift);
-  });
-  var bc=document.getElementById('barCard');
-  bc.className='card'+(shift==='all'?'':' shift-'+shift);
-}
-document.querySelectorAll('.btn-shift').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    currentShift=btn.dataset.shift;
-    applyShiftUI(currentShift);
-    updateTargetBox();
-    var wd=document.getElementById('datePicker').value;
-    if(availableDates.length&&wd) renderForDate(wd);
-  });
-});
-
-/* ══════════ CHART.JS DEFAULTS ══════════ */
-Chart.defaults.font.family="'Sarabun',Arial,sans-serif";
-
-/* ══════════ PLUGIN: Total label on top of stacked bars ══════════ */
-var totalLabelPlugin = {
-  id: 'totalLabel',
-  afterRender: function(chart) {
-    var ctx = chart.ctx;
-    var scales = chart.scales;
-    var x = scales.x;
-    var y = scales.y;
-    var ds = chart.data.datasets;
-    ctx.save();
-    var fs = getChartFontSize();
-    chart.data.labels.forEach(function(_, i) {
-      var total = ds.reduce(function(s, d){ return s + (Number(d.data[i]) || 0); }, 0);
-      if (!total) return;
-      var xp = x.getPixelForValue(i);
-      var yp = y.getPixelForValue(total);
-      var lbl = total.toLocaleString();
-      ctx.font = 'bold ' + fs + "px 'Chakra Petch',monospace";
-      var tw = ctx.measureText(lbl).width;
-      var pw = tw + 8;
-      var ph = fs + 6;
-      var px2 = xp - pw / 2;
-      var py2 = yp - ph - 3;
-      ctx.fillStyle = 'rgba(21,35,126,.95)';
-      ctx.fillRect(px2, py2, pw, ph);
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'bottom';
-      ctx.fillText(lbl, xp, yp - 3);
-    });
-    ctx.restore();
-  }
-};
-
-/* ══════════ PLUGIN: Target line at 4,800 BCM/Hr. ══════════ */
-var targetLinePlugin = {
-  id: 'targetLine',
-  afterDraw: function(chart) {
-    var ctx = chart.ctx;
-    var yAxis = chart.scales.y;
-    var xAxis = chart.scales.x;
-    var TARGET = 4800;
-    var yPixel = yAxis.getPixelForValue(TARGET);
-    var fs = getChartFontSize();
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(xAxis.left, yPixel);
-    ctx.lineTo(xAxis.right, yPixel);
-    ctx.strokeStyle = '#ff9800';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([8, 4]);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    var label = '🎯Target 4,800 BCM/Hr.';
-    ctx.font = 'bold ' + (fs + 1) + "px 'Chakra Petch',monospace";
-    var tw = ctx.measureText(label).width;
-    var bw = tw + 10;
-    var bh = fs + 8;
-    var bx = xAxis.left + 8;
-    var by = yPixel - bh - 3;
-    ctx.fillStyle = 'rgba(255,152,0,0.15)';
-    ctx.fillRect(bx, by, bw, bh);
-    ctx.strokeStyle = '#ff9800';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(bx, by, bw, bh);
-    ctx.fillStyle = '#ff5722';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText(label, bx + 5, yPixel - 4);
-    ctx.restore();
-  }
-};
-
-/* ══════════ Custom HTML Tooltip for Bar Chart ══════════ */
-var barTooltipEl = null;
-
-function getBarTooltipEl() {
-  if (!barTooltipEl) barTooltipEl = document.getElementById('barCustomTooltip');
-  return barTooltipEl;
-}
-
-function hideBarTooltip() {
-  var el = getBarTooltipEl();
-  el.style.display = 'none';
-}
-
-/* Get downtime records for a specific chart label hour. */
-function getDowntimesForHour(labelStr) {
-  if (!dtCurrentRows || !dtCurrentRows.length) return [];
-  var parts = labelStr.split(':');
-  var endH = parseInt(parts[0], 10);
-  var startH = (endH - 1 + 24) % 24;
-
-  return dtCurrentRows.filter(function(r) {
-    var st = fmtDTTime(r[DT_COL.START] || '');
-    if (!st) return false;
-    var stH = parseInt(st.split(':')[0], 10);
-    return stH === startH;
-  });
-}
-
-/* Build and position the custom tooltip */
-function showBarTooltip(context) {
-  var tooltip = context.tooltip;
-  var el = getBarTooltipEl();
-
-  if (tooltip.opacity === 0) { hideBarTooltip(); return; }
-
-  var dp = tooltip.dataPoints;
-  if (!dp || !dp.length) { hideBarTooltip(); return; }
-
-  var label = dp[0].label;
-  var total = dp.reduce(function(s, p) { return s + (p.parsed.y || 0); }, 0);
-  var belowTarget = total < 4800;
-
-  var dsColors = ['#259B24', '#7b1fa2', '#f48fb1'];
-
-  var html = '';
-
-  /* Header */
-  html += '<div class="bct-header">';
-  html += '<span class="bct-time">🕐 ' + label + '</span>';
-  html += '<span class="bct-total-badge">' + total.toLocaleString() + ' BCM</span>';
-  html += '</div>';
-
-  /* Dataset rows */
-  html += '<div class="bct-body">';
-  dp.forEach(function(p, i) {
-    var color = dsColors[i] || '#90a4ae';
-    html += '<div class="bct-row">';
-    html += '<div class="bct-dot" style="background:' + color + '"></div>';
-    html += '<span class="bct-label">' + escHtml(p.dataset.label) + '</span>';
-    html += '<span class="bct-val">' + (p.parsed.y || 0).toLocaleString() + '</span>';
-    html += '</div>';
-  });
-  html += '</div>';
-
-  /* Below target warning + downtime section */
-  if (belowTarget) {
-    var gap = 4800 - total;
-    html += '<div class="bct-below-warning">⚠ Below target by ' + gap.toLocaleString() + ' BCM</div>';
-
-    var dts = getDowntimesForHour(label);
-    html += '<div class="bct-dt-section">';
-    html += '<div class="bct-dt-title">⏱ Downtime in ' + label + ' window</div>';
-
-    if (dts.length === 0) {
-      html += '<div class="bct-no-dt">No downtime records found for this hour</div>';
-    } else {
-      var MAX_SHOW = 6;
-      dts.slice(0, MAX_SHOW).forEach(function(r) {
-        var machine  = escHtml((r[DT_COL.MACHINE]  || '').trim());
-        var startT   = fmtDTTime(r[DT_COL.START]   || '') || '—';
-        var endT     = fmtDTTime(r[DT_COL.END]     || '') || '?';
-        /* [CHANGE 1] Use DESC column instead of TYPE */
-        var desc     = escHtml((r[DT_COL.DESC] || '').trim() || '—');
-        var duration = (r[DT_COL.DURATION] || '').trim() || '—';
-
-        html += '<div class="bct-dt-item">';
-        html += '<div class="bct-dt-machine">' + machine + '</div>';
-        html += '<div class="bct-dt-meta">' + startT + ' → ' + endT + '&nbsp;&nbsp;(' + escHtml(duration) + ')</div>';
-        /* [CHANGE 1] Show description text */
-        html += '<div class="bct-dt-desc">' + desc + '</div>';
-        html += '</div>';
-      });
-      if (dts.length > MAX_SHOW) {
-        html += '<div class="bct-dt-more">+' + (dts.length - MAX_SHOW) + ' more records…</div>';
-      }
-    }
-    html += '</div>';
-  }
-
-  el.innerHTML = html;
-  el.style.display = 'block';
-
-  /* Position tooltip */
-  var canvas = context.chart.canvas;
-  var rect = canvas.getBoundingClientRect();
-  var caretX = rect.left + tooltip.caretX;
-  var caretY = rect.top  + tooltip.caretY;
-
-  el.style.visibility = 'hidden';
-  el.style.display = 'block';
-  var elW = el.offsetWidth  || 280;
-  var elH = el.offsetHeight || 200;
-  el.style.visibility = '';
-
-  var margin = 14;
-  var posX = caretX + margin;
-  var posY = caretY - elH / 2;
-
-  if (posX + elW + 8 > window.innerWidth)  posX = caretX - elW - margin;
-  if (posX < 8)                             posX = 8;
-  if (posY + elH + 8 > window.innerHeight) posY = window.innerHeight - elH - 8;
-  if (posY < 8)                             posY = 8;
-
-  el.style.left = posX + 'px';
-  el.style.top  = posY + 'px';
-}
-
-/* ══════════ INIT CHARTS ══════════ */
-function initBarChart(){
-  var ctx = document.getElementById('bcmChart').getContext('2d');
-  var fs = getChartFontSize();
-  bcmChart = new Chart(ctx, {
-    type: 'bar',
-    plugins: [totalLabelPlugin, targetLinePlugin],
-    data: {
-      labels: [],
-      datasets: [
-        { label:'BCM CR', data:[], backgroundColor:'#259B24', stack:'s', borderRadius:2 },
-        { label:'BWE 1',  data:[], backgroundColor:'#7b1fa2', stack:'s', borderRadius:2 },
-        { label:'BWE 2',  data:[], backgroundColor:'#f48fb1', stack:'s', borderRadius:2 },
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode:'index', intersect:false },
-      layout: { padding: { top:10, bottom:0 } },
-      plugins: {
-        legend: { display:false },
-        tooltip: {
-          enabled: false,
-          external: showBarTooltip
-        }
-      },
-      scales: {
-        x: {
-          stacked: true,
-          grid: { color:'#e8eaf0' },
-          ticks: {
-            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
-            color:'#1a237e',
-            maxRotation:0, minRotation:0,
-            autoSkip:true, maxTicksLimit:24,
-            padding: 2,
-          }
-        },
-        y: {
-          stacked: true,
-          grid: { color:'#e8eaf0' },
-          ticks: {
-            font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' },
-            color:'#374151',
-            callback:function(v){ return v.toLocaleString(); },
-            stepSize:1000,
-            padding: 2,
-          },
-          beginAtZero:true, min:0, max:7000
-        }
-      }
-    }
-  });
-
-  document.getElementById('bcmChart').addEventListener('mouseleave', function() {
-    hideBarTooltip();
-  });
-}
-
-function initPieChart(){
-  var canvas = document.getElementById('pieChart');
-  var ctx = canvas.getContext('2d');
-  var fs = getChartFontSize();
-  pieChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: ['BWE 1','BWE 2','CR 1','CR 2','CR 3'],
-      datasets: [{
-        data: [0,0,0,0,0],
-        backgroundColor: [C.bwe1, C.bwe2, C.cr1, C.cr2, C.cr3],
-        borderColor: '#fff', borderWidth:2, hoverOffset:8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display:false },
-        tooltip: {
-          backgroundColor:'#fff', borderColor:'#dde1e8', borderWidth:1,
-          titleColor:'#1a1f2e', bodyColor:'#374151',
-          titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
-          callbacks:{ label:function(c){ return ' '+c.label+': '+c.parsed.toLocaleString(); } }
-        }
-      }
-    }
-  });
-}
-
-function initPerfChart(){
-  var ctx = document.getElementById('perfChart').getContext('2d');
-  var fs = getChartFontSize();
-  perfChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Motor Current of Line S3',
-        data: [],
-        borderColor: '#ef5350',
-        backgroundColor: 'rgba(239,83,80,.08)',
-        borderWidth: 2.5,
-        pointBackgroundColor: '#ef5350',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 1.5,
-        pointRadius: 3,
-        pointHoverRadius: 5,
-        tension: 0.3,
-        fill: true,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode:'index', intersect:false },
-      layout: { padding: { top:4, bottom:0 } },
-      plugins: {
-        legend: { display:false },
-        tooltip: {
-          backgroundColor:'#fff', borderColor:'#ffcdd2', borderWidth:1,
-          titleColor:'#1a1f2e', bodyColor:'#c62828',
-          titleFont:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'700' },
-          bodyFont:{ family:"'Sarabun',Arial,sans-serif", size:fs+2 },
-          padding:8,
-          callbacks:{ label:function(c){ return ' Motor Current of Line S3: '+c.parsed.y.toLocaleString(); } }
-        }
-      },
-      scales: {
-        x: {
-          grid: { color:'#fce4ec' },
-          ticks: { font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' }, color:'#1a237e', maxRotation:0, minRotation:0, autoSkip:true, maxTicksLimit:24, padding: 2 }
-        },
-        y: {
-          grid: { color:'#fce4ec' },
-          ticks: { font:{ family:"'Chakra Petch',monospace", size:fs, weight:'600' }, color:'#374151', callback:function(v){ return v.toLocaleString(); }, stepSize:20, padding: 2 },
-          beginAtZero:true, min:0, max:160
-        }
-      }
-    }
-  });
-}
-
-function initDonutChart() {
-  var ctx = document.getElementById('donutChart').getContext('2d');
-  donutChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      datasets: [{
-        data: [0, 100],
-        backgroundColor: ['#ff9800', 'rgba(0,0,0,.08)'],
-        borderColor:     ['#ff9800', 'rgba(0,0,0,.06)'],
-        borderWidth: 1.5,
-        hoverOffset: 4,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '72%',
-      rotation: -90,
-      circumference: 360,
-      animation: { animateRotate: true, duration: 700 },
-      plugins: { legend: { display: false }, tooltip: { enabled: false } }
-    }
-  });
-}
-
-/* ══════════ Dynamic Gap label ══════════ */
-function updateDonut(grandTotal) {
-  var target = getShiftTarget();
-  var pct = target > 0 ? (grandTotal / target * 100) : 0;
-  var pctClamped = Math.min(pct, 100);
-  var remaining = Math.max(0, 100 - pctClamped);
-  var arcColor = pct >= 80 ? '#00FF00' : pct >= 55 ? '#ff9800' : '#ef5350';
-  donutChart.data.datasets[0].data = [pctClamped, remaining];
-  donutChart.data.datasets[0].backgroundColor = [arcColor, 'rgba(0,0,0,.07)'];
-  donutChart.data.datasets[0].borderColor = [arcColor, 'rgba(0,0,0,.05)'];
-  donutChart.update();
-
-  var pctEl = document.getElementById('donutPct');
-  pctEl.textContent = pct.toFixed(1) + '%';
-  pctEl.style.color = arcColor;
-
-  var gap = grandTotal - target;
-
-  document.getElementById('donutActual').textContent  = grandTotal.toLocaleString() + ' BCM';
-  document.getElementById('donutTarget').textContent  = target.toLocaleString() + ' BCM';
-
-  var gapEl      = document.getElementById('donutGap');
-  var gapLabelEl = document.getElementById('donutGapLabel');
-
-  gapEl.textContent = (gap >= 0 ? '+' : '') + gap.toLocaleString() + ' BCM';
-
-  if (gap > 1000) {
-    gapLabelEl.textContent = '✅ Above Target';
-    gapLabelEl.style.color = '#2e7d32';
-    gapEl.className = 'donut-stat-val green';
-  } else if (gap >= 0) {
-    gapLabelEl.textContent = '🎯 On Target';
-    gapLabelEl.style.color = '#1565c0';
-    gapEl.className = 'donut-stat-val blue';
-  } else {
-    gapLabelEl.textContent = '⚠ Below Target';
-    gapLabelEl.style.color = '#c62828';
-    gapEl.className = 'donut-stat-val red';
-  }
-}
-
-/* ══════════ RADAR CHARTS ══════════ */
+/* ══════════ DT CONFIG ══════════ */
 var DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 var DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
-var DT_COL = {
-  MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, SHIFT:7, TYPE:9, TYPEMACHINE:11
-};
+var DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, SHIFT:7, TYPE:9, TYPEMACHINE:11 };
 
+/* ══ EQUIP_DEF: label = ชื่อย่อ radar, key = ชื่อใน column Machine Name ══ */
 var EQUIP_DEF = [
   { label:'BWE 1',  key:'Bucket Wheel #1', color:'#6B007B' },
   { label:'BWE 2',  key:'Bucket Wheel #2', color:'#F48FB1' },
@@ -1546,265 +833,10 @@ var TYPE_COLORS = {
 
 var dtAllRows=[], dtCurrentRows=[], dtActiveFilter='ALL';
 
-function radarOptions() {
-  var fs = getChartFontSize();
-  return {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend:{ display:false }, tooltip:{ enabled:false } },
-    scales: {
-      r: {
-        beginAtZero: true,
-        ticks: { font:{ family:"'Chakra Petch',monospace", size:fs, weight:'700' }, color:'#37474f', backdropColor:'rgba(255,255,255,0.75)', backdropPadding:2, maxTicksLimit:4 },
-        pointLabels: { font:{ family:"'Chakra Petch',monospace", size:fs+1, weight:'800' }, color:'#0d47a1', padding:6 },
-        grid: { color:'rgba(0,0,0,.15)' },
-        angleLines: { color:'rgba(0,0,0,.2)' },
-      }
-    }
-  };
-}
+/* ══════════ HELPERS ══════════ */
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-function initRadarEquip() {
-  var ctx = document.getElementById('radarEquipChart').getContext('2d');
-  radarEquipChart = new Chart(ctx, {
-    type: 'radar',
-    data: {
-      labels: EQUIP_DEF.map(function(e){ return e.label; }),
-      datasets: [{
-        label: 'Downtime Count',
-        data: new Array(EQUIP_DEF.length).fill(0),
-        backgroundColor: 'rgba(21,101,192,.13)',
-        borderColor: '#1565c0', borderWidth:2,
-        pointBackgroundColor: EQUIP_DEF.map(function(e){ return e.color; }),
-        pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6,
-      }]
-    },
-    options: radarOptions()
-  });
-
-  /* [CHANGE 2] Attach hover popup to radar equip chart */
-  attachRadarHover(
-    document.getElementById('radarEquipChart'),
-    document.getElementById('radarEquipPopup'),
-    EQUIP_DEF,
-    function(def) {
-      /* Filter dtCurrentRows by machine key */
-      return dtCurrentRows.filter(function(r){
-        return (r[DT_COL.MACHINE]||'').trim() === def.key;
-      });
-    },
-    function(def) { return '🏭 ' + def.label + ' — Downtime'; },
-    'equip'
-  );
-}
-
-function initRadarType() {
-  var ctx = document.getElementById('radarTypeChart').getContext('2d');
-  radarTypeChart = new Chart(ctx, {
-    type: 'radar',
-    data: {
-      labels: TYPE_DEF.map(function(t){ return t.label; }),
-      datasets: [{
-        label: 'Count',
-        data: new Array(TYPE_DEF.length).fill(0),
-        backgroundColor: 'rgba(55,71,79,.13)',
-        borderColor: '#546e7a', borderWidth:2,
-        pointBackgroundColor: TYPE_DEF.map(function(t){ return t.color; }),
-        pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6,
-      }]
-    },
-    options: radarOptions()
-  });
-
-  /* [CHANGE 3] Attach hover popup to radar type chart */
-  attachRadarHover(
-    document.getElementById('radarTypeChart'),
-    document.getElementById('radarTypePopup'),
-    TYPE_DEF,
-    function(def) {
-      /* Filter dtCurrentRows by TYPEMACHINE or TYPE column */
-      return dtCurrentRows.filter(function(r){
-        var t = (r[DT_COL.TYPEMACHINE]||r[DT_COL.TYPE]||'').trim();
-        return t === def.key;
-      });
-    },
-    function(def) { return '📋 ' + def.label + ' — Downtime Detail'; },
-    'type'
-  );
-}
-
-/* ══════════ [CHANGE 2 & 3] Generic radar hover popup logic ══════════ */
-function attachRadarHover(canvas, popupEl, defList, filterFn, titleFn, mode) {
-  var lastIdx = -1;
-  var hideTimer = null;
-
-  function positionPopup(x, y) {
-    popupEl.style.visibility = 'hidden';
-    popupEl.style.display = 'block';
-    var pw = popupEl.offsetWidth || 280;
-    var ph = popupEl.offsetHeight || 200;
-    popupEl.style.visibility = '';
-    popupEl.style.display = 'none';
-
-    var margin = 14;
-    var posX = x + margin;
-    var posY = y - ph / 2;
-
-    if (posX + pw + 8 > window.innerWidth)  posX = x - pw - margin;
-    if (posX < 8)                            posX = 8;
-    if (posY + ph + 8 > window.innerHeight) posY = window.innerHeight - ph - 8;
-    if (posY < 8)                            posY = 8;
-
-    popupEl.style.left = posX + 'px';
-    popupEl.style.top  = posY + 'px';
-    popupEl.classList.add('show');
-  }
-
-  function buildPopup(idx, mouseX, mouseY) {
-    if (idx < 0 || idx >= defList.length) { hidePopup(); return; }
-    var def = defList[idx];
-    var rows = filterFn(def);
-    var title = titleFn(def);
-
-    /* Header background based on color */
-    var html = '';
-    html += '<div class="rhp-header" style="background:linear-gradient(135deg,' + def.color + 'cc,' + def.color + '88);">';
-    html += '<div class="rhp-dot" style="background:#fff;opacity:.9;"></div>';
-    html += '<span class="rhp-title">' + escHtml(title) + '</span>';
-    html += '<span class="rhp-count">' + rows.length + ' records</span>';
-    html += '</div>';
-
-    html += '<div class="rhp-body">';
-    if (rows.length === 0) {
-      html += '<div class="rhp-empty">No downtime records</div>';
-    } else {
-      var MAX = 8;
-      var sorted = sortDTRows(rows);
-      sorted.slice(0, MAX).forEach(function(r) {
-        var machine  = escHtml((r[DT_COL.MACHINE] || '').trim() || '—');
-        var startT   = fmtDTTime(r[DT_COL.START]  || '') || '—';
-        var endT     = fmtDTTime(r[DT_COL.END]    || '') || '?';
-        var desc     = escHtml((r[DT_COL.DESC]    || '').trim() || '—');
-        var typeRaw  = (r[DT_COL.TYPE]             || '').trim();
-        var duration = escHtml((r[DT_COL.DURATION]|| '').trim() || '—');
-        var shiftRaw = (r[DT_COL.SHIFT]            || '').trim().toLowerCase();
-        var tColor   = TYPE_COLORS[typeRaw] || '#90a4ae';
-        var typeBg   = tColor + '22';
-        var shiftEmoji = shiftRaw === 'd' ? '☀️' : shiftRaw === 'n' ? '🌙' : '';
-
-        html += '<div class="rhp-item">';
-        html += '<div class="rhp-item-top">';
-        /* For equip mode show machine; for type mode show machine too */
-        html += '<span class="rhp-machine">' + machine + '</span>';
-        html += '<span class="rhp-type-badge" style="background:' + typeBg + ';color:' + tColor + ';border:1px solid ' + tColor + '55;">' + escHtml(typeRaw || '—') + '</span>';
-        if (shiftEmoji) html += '<span style="font-size:0.65rem;">' + shiftEmoji + '</span>';
-        html += '<span class="rhp-dur">' + duration + '</span>';
-        html += '</div>';
-        html += '<span class="rhp-time">' + startT + ' → ' + endT + '</span>';
-        html += '<div class="rhp-desc">' + desc + '</div>';
-        html += '</div>';
-      });
-      if (rows.length > MAX) {
-        html += '<div class="rhp-more">+' + (rows.length - MAX) + ' more records</div>';
-      }
-    }
-    html += '</div>';
-
-    popupEl.innerHTML = html;
-    positionPopup(mouseX, mouseY);
-  }
-
-  function hidePopup() {
-    popupEl.classList.remove('show');
-    lastIdx = -1;
-  }
-
-  /* Find nearest label index from mouse position on radar chart */
-  function getNearestLabelIdx(chart, mouseX, mouseY) {
-    var rect = canvas.getBoundingClientRect();
-    var x = mouseX - rect.left;
-    var y = mouseY - rect.top;
-
-    /* Use chart's getElementsAtEventForMode or compute angle manually */
-    var scale = chart.scales.r;
-    if (!scale) return -1;
-
-    var cx = scale.xCenter;
-    var cy = scale.yCenter;
-    var dx = x - cx;
-    var dy = y - cy;
-    var dist = Math.sqrt(dx*dx + dy*dy);
-
-    /* Only trigger when mouse is close to the chart area */
-    var chartR = scale.drawingArea || 60;
-    if (dist > chartR * 1.5) return -1;
-
-    /* Compute angle from center */
-    var angle = Math.atan2(dy, dx);
-    /* Normalize to [0, 2PI) */
-    if (angle < 0) angle += Math.PI * 2;
-
-    var count = defList.length;
-    /* Radar chart starts at top (−PI/2), goes clockwise */
-    var startAngle = -Math.PI / 2;
-    var step = (Math.PI * 2) / count;
-
-    /* Find closest label angle */
-    var bestIdx = -1;
-    var bestDist = Infinity;
-    for (var i = 0; i < count; i++) {
-      var labelAngle = startAngle + step * i;
-      if (labelAngle < 0) labelAngle += Math.PI * 2;
-      if (labelAngle > Math.PI * 2) labelAngle -= Math.PI * 2;
-
-      var diff = Math.abs(angle - labelAngle);
-      if (diff > Math.PI) diff = Math.PI * 2 - diff;
-      if (diff < bestDist) { bestDist = diff; bestIdx = i; }
-    }
-
-    /* Only show if within roughly half step angle and in chart radius */
-    if (bestDist < step * 0.6 && dist < chartR * 1.4) return bestIdx;
-    return -1;
-  }
-
-  canvas.addEventListener('mousemove', function(e) {
-    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-    var chart = mode === 'equip' ? radarEquipChart : radarTypeChart;
-    if (!chart) return;
-
-    var idx = getNearestLabelIdx(chart, e.clientX, e.clientY);
-    if (idx !== lastIdx) {
-      lastIdx = idx;
-      if (idx >= 0) {
-        buildPopup(idx, e.clientX, e.clientY);
-      } else {
-        hidePopup();
-      }
-    }
-  });
-
-  canvas.addEventListener('mouseleave', function() {
-    hideTimer = setTimeout(function() {
-      hidePopup();
-      lastIdx = -1;
-    }, 120);
-  });
-}
-
-async function fetchDowntime() {
-  try {
-    var res = await fetch(DT_URL+'&_cb='+Date.now());
-    if (!res.ok) return;
-    var text = await res.text();
-    var rows = Papa.parse(text, {skipEmptyLines:true}).data;
-    dtAllRows = rows.slice(1).filter(function(r){
-      var d=(r[DT_COL.DATE]||'').trim();
-      return d.length>=8;
-    });
-  } catch(e) { console.warn('MasterDowntime fetch failed:',e); }
-}
-
-function fmtDTTime(s) {
+function fmtDTTime(s){
   s=(s||'').trim(); if(!s) return null;
   var m=s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);
   if(m) return m[1].padStart(2,'0')+':'+m[2];
@@ -1815,7 +847,7 @@ function fmtDTTime(s) {
   return null;
 }
 
-function normDateG(s) {
+function normDateG(s){
   s=(s||'').trim(); if(!s) return '';
   if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
   var m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
@@ -1823,52 +855,723 @@ function normDateG(s) {
   return s;
 }
 
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function sortDTRows(rows) {
-  return rows.slice().sort(function(a, b) {
-    var aEnd = fmtDTTime(a[DT_COL.END] || '');
-    var bEnd = fmtDTTime(b[DT_COL.END] || '');
-    var aNoEnd = !aEnd; var bNoEnd = !bEnd;
-    if (aNoEnd && !bNoEnd) return -1;
-    if (!aNoEnd && bNoEnd) return 1;
-    var aStart = (a[DT_COL.START] || '');
-    var bStart = (b[DT_COL.START] || '');
-    if (aStart < bStart) return -1;
-    if (aStart > bStart) return 1;
-    return 0;
+function sortDTRows(rows){
+  return rows.slice().sort(function(a,b){
+    var aEnd=fmtDTTime(a[DT_COL.END]||''), bEnd=fmtDTTime(b[DT_COL.END]||'');
+    if(!aEnd&&bEnd) return -1;
+    if(aEnd&&!bEnd) return 1;
+    var aS=a[DT_COL.START]||'', bS=b[DT_COL.START]||'';
+    return aS<bS?-1:aS>bS?1:0;
   });
 }
 
-function renderDTTable(filterType) {
-  dtActiveFilter = filterType || dtActiveFilter;
-  document.querySelectorAll('.dt-filter-btn').forEach(function(btn){
-    btn.classList.toggle('active', btn.dataset.type===dtActiveFilter);
+function getChartFontSize(){
+  var w=window.innerWidth;
+  if(w>=2400) return 13;
+  if(w>=1800) return 11;
+  if(w>=1400) return 10;
+  return 9;
+}
+
+/* ══════════ SHIFT ══════════ */
+var currentShift='all';
+var SHIFT_CONFIG={
+  all:  {label:'All Shift',  period:'08:00 → 07:00 (+1 day)',minH:8, maxH:31},
+  day:  {label:'Shift Day',  period:'08:00 → 19:00',         minH:8, maxH:19},
+  night:{label:'Shift Night',period:'20:00 → 07:00 (+1 day)',minH:20,maxH:31},
+};
+function getShiftTarget(){ return currentShift==='all'?115200:57600; }
+function getShiftTargetLabel(){ return currentShift==='all'?'115,200 BCM/Day':'57,600 BCM/Shift'; }
+function updateTargetBox(){ document.getElementById('targetBox').textContent=getShiftTargetLabel(); }
+function shiftHour(r){ var h=parseDT(r[COL.DT]).getHours(); return h<8?h+24:h; }
+function filterByShift(rows,shift){
+  var cfg=SHIFT_CONFIG[shift];
+  return rows.filter(function(r){var sh=shiftHour(r);return sh>=cfg.minH&&sh<=cfg.maxH;});
+}
+function applyShiftUI(shift){
+  document.querySelectorAll('.btn-shift').forEach(function(btn){
+    btn.className='btn-shift';
+    if(btn.dataset.shift===shift) btn.classList.add('active-'+shift);
   });
+  var bc=document.getElementById('barCard');
+  bc.className='card'+(shift==='all'?'':' shift-'+shift);
+}
+document.querySelectorAll('.btn-shift').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    currentShift=btn.dataset.shift;
+    applyShiftUI(currentShift);
+    updateTargetBox();
+    var wd=document.getElementById('datePicker').value;
+    if(availableDates.length&&wd) renderForDate(wd);
+  });
+});
 
-  var rows = dtCurrentRows;
-  if (selectedMachines !== null) {
-    rows = rows.filter(function(r){ return selectedMachines.has((r[DT_COL.MACHINE]||'').trim()); });
+/* ══════════ MACHINE FILTER POPUP ══════════ */
+function getMachineCounts(rows){
+  var counts={};
+  MACHINE_DEF.forEach(function(m){ counts[m.label]=0; });
+  rows.forEach(function(r){
+    var name=(r[DT_COL.MACHINE]||'').trim();
+    if(counts.hasOwnProperty(name)) counts[name]++;
+  });
+  return counts;
+}
+function buildMfpList(searchVal,tempSelected){
+  var list=document.getElementById('mfpList');
+  var counts=getMachineCounts(dtCurrentRows);
+  var q=(searchVal||'').toLowerCase().trim();
+  list.innerHTML='';
+  MACHINE_DEF.forEach(function(m){
+    if(q&&m.label.toLowerCase().indexOf(q)===-1) return;
+    var isChecked=tempSelected===null||tempSelected.has(m.label);
+    var div=document.createElement('div');
+    div.className='mfp-item'+(isChecked?' checked':'');
+    div.dataset.machine=m.label;
+    div.innerHTML='<div class="mfp-checkbox"><span class="mfp-checkmark">✓</span></div>'+
+      '<div class="mfp-dot" style="background:'+m.color+'"></div>'+
+      '<span class="mfp-label">'+escHtml(m.label)+'</span>'+
+      '<span class="mfp-count">'+(counts[m.label]||0)+'</span>';
+    div.addEventListener('click',function(){
+      if(pendingMachines===null){
+        pendingMachines=new Set(MACHINE_DEF.map(function(x){return x.label;}));
+        pendingMachines.delete(m.label);
+      } else {
+        if(pendingMachines.has(m.label)) pendingMachines.delete(m.label);
+        else pendingMachines.add(m.label);
+        if(pendingMachines.size===MACHINE_DEF.length) pendingMachines=null;
+      }
+      buildMfpList(document.getElementById('mfpSearch').value,pendingMachines);
+      updateMfpStatus(pendingMachines);
+    });
+    list.appendChild(div);
+  });
+}
+function updateMfpStatus(tempSelected){
+  var el=document.getElementById('mfpStatus');
+  el.textContent=tempSelected===null?'All machines selected':tempSelected.size+' / '+MACHINE_DEF.length+' selected';
+}
+function openMachinePopup(anchorEl){
+  pendingMachines=selectedMachines===null?null:new Set(selectedMachines);
+  var popup=document.getElementById('machineFilterPopup');
+  var rect=anchorEl.getBoundingClientRect();
+  var top=rect.bottom+4, left=rect.left, popW=250;
+  if(left+popW>window.innerWidth-8) left=window.innerWidth-popW-8;
+  if(top+380>window.innerHeight) top=rect.top-380-4;
+  popup.style.top=top+'px'; popup.style.left=left+'px';
+  document.getElementById('mfpSearch').value='';
+  buildMfpList('',pendingMachines); updateMfpStatus(pendingMachines);
+  popup.classList.add('show');
+}
+function closeMachinePopup(){ document.getElementById('machineFilterPopup').classList.remove('show'); }
+function applyMachineFilter(){ selectedMachines=pendingMachines; updateMachineFilterUI(); renderDTTable(dtActiveFilter); closeMachinePopup(); }
+function updateMachineFilterUI(){
+  var badge=document.getElementById('machineActiveBadge');
+  var icon=document.getElementById('thFilterIcon');
+  if(selectedMachines===null){ badge.classList.remove('show'); icon.classList.remove('has-filter'); }
+  else { badge.textContent=selectedMachines.size; badge.classList.add('show'); icon.classList.add('has-filter'); }
+}
+document.getElementById('thMachineName').addEventListener('click',function(e){
+  e.stopPropagation();
+  var popup=document.getElementById('machineFilterPopup');
+  if(popup.classList.contains('show')){ closeMachinePopup(); return; }
+  openMachinePopup(this);
+});
+document.getElementById('mfpClose').addEventListener('click',function(e){e.stopPropagation();closeMachinePopup();});
+document.getElementById('mfpApply').addEventListener('click',function(e){e.stopPropagation();applyMachineFilter();});
+document.getElementById('mfpSelectAll').addEventListener('click',function(e){
+  e.stopPropagation(); pendingMachines=null;
+  buildMfpList(document.getElementById('mfpSearch').value,pendingMachines); updateMfpStatus(pendingMachines);
+});
+document.getElementById('mfpClearAll').addEventListener('click',function(e){
+  e.stopPropagation(); pendingMachines=new Set();
+  buildMfpList(document.getElementById('mfpSearch').value,pendingMachines); updateMfpStatus(pendingMachines);
+});
+document.getElementById('mfpSearch').addEventListener('input',function(){ buildMfpList(this.value,pendingMachines); });
+document.getElementById('mfpSearch').addEventListener('click',function(e){e.stopPropagation();});
+document.getElementById('mfpList').addEventListener('click',function(e){e.stopPropagation();});
+document.getElementById('machineFilterPopup').addEventListener('click',function(e){e.stopPropagation();});
+document.addEventListener('click',function(){ closeMachinePopup(); });
+
+/* ══════════ CHART.JS DEFAULTS ══════════ */
+Chart.defaults.font.family="'Sarabun',Arial,sans-serif";
+
+/* ══ Plugin: Total label on stacked bars ══ */
+var totalLabelPlugin={
+  id:'totalLabel',
+  afterRender:function(chart){
+    var ctx=chart.ctx,scales=chart.scales,x=scales.x,y=scales.y,ds=chart.data.datasets;
+    ctx.save();
+    var fs=getChartFontSize();
+    chart.data.labels.forEach(function(_,i){
+      var total=ds.reduce(function(s,d){return s+(Number(d.data[i])||0);},0);
+      if(!total) return;
+      var xp=x.getPixelForValue(i), yp=y.getPixelForValue(total), lbl=total.toLocaleString();
+      ctx.font='bold '+fs+"px 'Chakra Petch',monospace";
+      var tw=ctx.measureText(lbl).width, pw=tw+8, ph=fs+6, px2=xp-pw/2, py2=yp-ph-3;
+      ctx.fillStyle='rgba(21,35,126,.95)'; ctx.fillRect(px2,py2,pw,ph);
+      ctx.fillStyle='#ffffff'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+      ctx.fillText(lbl,xp,yp-3);
+    });
+    ctx.restore();
   }
-  if (dtActiveFilter !== 'ALL') {
-    rows = rows.filter(function(r){ var t=(r[DT_COL.TYPE]||'').trim().toUpperCase(); return t===dtActiveFilter.toUpperCase(); });
+};
+
+/* ══ Plugin: Target line 4800 ══ */
+var targetLinePlugin={
+  id:'targetLine',
+  afterDraw:function(chart){
+    var ctx=chart.ctx,yAxis=chart.scales.y,xAxis=chart.scales.x,TARGET=4800;
+    var yPixel=yAxis.getPixelForValue(TARGET), fs=getChartFontSize();
+    ctx.save();
+    ctx.beginPath(); ctx.moveTo(xAxis.left,yPixel); ctx.lineTo(xAxis.right,yPixel);
+    ctx.strokeStyle='#ff9800'; ctx.lineWidth=2; ctx.setLineDash([8,4]); ctx.stroke(); ctx.setLineDash([]);
+    var label='🎯Target 4,800 BCM/Hr.';
+    ctx.font='bold '+(fs+1)+"px 'Chakra Petch',monospace";
+    var tw=ctx.measureText(label).width, bw=tw+10, bh=fs+8, bx=xAxis.left+8, by=yPixel-bh-3;
+    ctx.fillStyle='rgba(255,152,0,0.15)'; ctx.fillRect(bx,by,bw,bh);
+    ctx.strokeStyle='#ff9800'; ctx.lineWidth=1; ctx.strokeRect(bx,by,bw,bh);
+    ctx.fillStyle='#ff5722'; ctx.textAlign='left'; ctx.textBaseline='bottom';
+    ctx.fillText(label,bx+5,yPixel-4);
+    ctx.restore();
   }
-  rows = sortDTRows(rows);
+};
 
-  var ongoingCount = rows.filter(function(r){ return !fmtDTTime(r[DT_COL.END]||''); }).length;
-  var ongoingBadge = document.getElementById('dtOngoingBadge');
-  if (ongoingCount > 0) { ongoingBadge.textContent='⚠ '+ongoingCount+' Ongoing'; ongoingBadge.classList.add('show'); }
-  else { ongoingBadge.classList.remove('show'); }
+/* ══════════ Bar Tooltip ══════════ */
+var barTooltipEl=null;
+function getBarTooltipEl(){ if(!barTooltipEl) barTooltipEl=document.getElementById('barCustomTooltip'); return barTooltipEl; }
+function hideBarTooltip(){ getBarTooltipEl().style.display='none'; }
 
-  document.getElementById('dtCountBadge').textContent = rows.length+' records';
-  var tbody = document.getElementById('dtTableBody');
+function getDowntimesForHour(labelStr){
+  if(!dtCurrentRows||!dtCurrentRows.length) return [];
+  var parts=labelStr.split(':'), endH=parseInt(parts[0],10), startH=(endH-1+24)%24;
+  return dtCurrentRows.filter(function(r){
+    var st=fmtDTTime(r[DT_COL.START]||''); if(!st) return false;
+    var stH=parseInt(st.split(':')[0],10); return stH===startH;
+  });
+}
+
+function showBarTooltip(context){
+  var tooltip=context.tooltip, el=getBarTooltipEl();
+  if(tooltip.opacity===0){hideBarTooltip();return;}
+  var dp=tooltip.dataPoints; if(!dp||!dp.length){hideBarTooltip();return;}
+  var label=dp[0].label, total=dp.reduce(function(s,p){return s+(p.parsed.y||0);},0);
+  var belowTarget=total<4800, dsColors=['#259B24','#7b1fa2','#f48fb1'], html='';
+  html+='<div class="bct-header"><span class="bct-time">🕐 '+label+'</span><span class="bct-total-badge">'+total.toLocaleString()+' BCM</span></div>';
+  html+='<div class="bct-body">';
+  dp.forEach(function(p,i){
+    var color=dsColors[i]||'#90a4ae';
+    html+='<div class="bct-row"><div class="bct-dot" style="background:'+color+'"></div><span class="bct-label">'+escHtml(p.dataset.label)+'</span><span class="bct-val">'+(p.parsed.y||0).toLocaleString()+'</span></div>';
+  });
+  html+='</div>';
+  if(belowTarget){
+    var gap=4800-total;
+    html+='<div class="bct-below-warning">⚠ Below target by '+gap.toLocaleString()+' BCM</div>';
+    var dts=getDowntimesForHour(label);
+    html+='<div class="bct-dt-section"><div class="bct-dt-title">⏱ Downtime in '+label+' window</div>';
+    if(!dts.length){ html+='<div class="bct-no-dt">No downtime records found for this hour</div>'; }
+    else {
+      var MAX=6;
+      dts.slice(0,MAX).forEach(function(r){
+        var machine=escHtml((r[DT_COL.MACHINE]||'').trim());
+        var startT=fmtDTTime(r[DT_COL.START]||'')||'—', endT=fmtDTTime(r[DT_COL.END]||'')||'?';
+        var desc=escHtml((r[DT_COL.DESC]||'').trim()||'—');
+        var duration=(r[DT_COL.DURATION]||'').trim()||'—';
+        html+='<div class="bct-dt-item"><div class="bct-dt-machine">'+machine+'</div>';
+        html+='<div class="bct-dt-meta">'+startT+' → '+endT+'&nbsp;&nbsp;('+escHtml(duration)+')</div>';
+        html+='<div class="bct-dt-desc">'+desc+'</div></div>';
+      });
+      if(dts.length>MAX) html+='<div class="bct-dt-more">+'+(dts.length-MAX)+' more records…</div>';
+    }
+    html+='</div>';
+  }
+  el.innerHTML=html; el.style.display='block';
+  var canvas=context.chart.canvas, rect=canvas.getBoundingClientRect();
+  var caretX=rect.left+tooltip.caretX, caretY=rect.top+tooltip.caretY;
+  el.style.visibility='hidden'; el.style.display='block';
+  var elW=el.offsetWidth||280, elH=el.offsetHeight||200;
+  el.style.visibility='';
+  var margin=14, posX=caretX+margin, posY=caretY-elH/2;
+  if(posX+elW+8>window.innerWidth) posX=caretX-elW-margin;
+  if(posX<8) posX=8;
+  if(posY+elH+8>window.innerHeight) posY=window.innerHeight-elH-8;
+  if(posY<8) posY=8;
+  el.style.left=posX+'px'; el.style.top=posY+'px';
+}
+
+/* ══════════ INIT CHARTS ══════════ */
+function initBarChart(){
+  var ctx=document.getElementById('bcmChart').getContext('2d'), fs=getChartFontSize();
+  bcmChart=new Chart(ctx,{
+    type:'bar', plugins:[totalLabelPlugin,targetLinePlugin],
+    data:{labels:[],datasets:[
+      {label:'BCM CR',data:[],backgroundColor:'#259B24',stack:'s',borderRadius:2},
+      {label:'BWE 1', data:[],backgroundColor:'#7b1fa2',stack:'s',borderRadius:2},
+      {label:'BWE 2', data:[],backgroundColor:'#f48fb1',stack:'s',borderRadius:2},
+    ]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      layout:{padding:{top:10,bottom:0}},
+      plugins:{legend:{display:false},tooltip:{enabled:false,external:showBarTooltip}},
+      scales:{
+        x:{stacked:true,grid:{color:'#e8eaf0'},ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#1a237e',maxRotation:0,minRotation:0,autoSkip:true,maxTicksLimit:24,padding:2}},
+        y:{stacked:true,grid:{color:'#e8eaf0'},ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#374151',callback:function(v){return v.toLocaleString();},stepSize:1000,padding:2},beginAtZero:true,min:0,max:7000}
+      }
+    }
+  });
+  document.getElementById('bcmChart').addEventListener('mouseleave',function(){hideBarTooltip();});
+}
+
+function initPieChart(){
+  var canvas=document.getElementById('pieChart'), ctx=canvas.getContext('2d'), fs=getChartFontSize();
+  pieChart=new Chart(ctx,{
+    type:'pie',
+    data:{labels:['BWE 1','BWE 2','CR 1','CR 2','CR 3'],datasets:[{data:[0,0,0,0,0],backgroundColor:[C.bwe1,C.bwe2,C.cr1,C.cr2,C.cr3],borderColor:'#fff',borderWidth:2,hoverOffset:8}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#dde1e8',borderWidth:1,titleColor:'#1a1f2e',bodyColor:'#374151',titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},callbacks:{label:function(c){return ' '+c.label+': '+c.parsed.toLocaleString();}}}}}
+  });
+}
+
+function initPerfChart(){
+  var ctx=document.getElementById('perfChart').getContext('2d'), fs=getChartFontSize();
+  perfChart=new Chart(ctx,{
+    type:'line',
+    data:{labels:[],datasets:[{label:'Motor Current of Line S3',data:[],borderColor:'#ef5350',backgroundColor:'rgba(239,83,80,.08)',borderWidth:2.5,pointBackgroundColor:'#ef5350',pointBorderColor:'#fff',pointBorderWidth:1.5,pointRadius:3,pointHoverRadius:5,tension:0.3,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},layout:{padding:{top:4,bottom:0}},
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#ffcdd2',borderWidth:1,titleColor:'#1a1f2e',bodyColor:'#c62828',titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},bodyFont:{family:"'Sarabun',Arial,sans-serif",size:fs+2},padding:8,callbacks:{label:function(c){return ' Motor Current of Line S3: '+c.parsed.y.toLocaleString();}}}},
+      scales:{
+        x:{grid:{color:'#fce4ec'},ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#1a237e',maxRotation:0,minRotation:0,autoSkip:true,maxTicksLimit:24,padding:2}},
+        y:{grid:{color:'#fce4ec'},ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'600'},color:'#374151',callback:function(v){return v.toLocaleString();},stepSize:20,padding:2},beginAtZero:true,min:0,max:160}
+      }
+    }
+  });
+}
+
+function initDonutChart(){
+  var ctx=document.getElementById('donutChart').getContext('2d');
+  donutChart=new Chart(ctx,{
+    type:'doughnut',
+    data:{datasets:[{data:[0,100],backgroundColor:['#ff9800','rgba(0,0,0,.08)'],borderColor:['#ff9800','rgba(0,0,0,.06)'],borderWidth:1.5,hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'72%',rotation:-90,circumference:360,animation:{animateRotate:true,duration:700},plugins:{legend:{display:false},tooltip:{enabled:false}}}
+  });
+}
+
+function updateDonut(grandTotal){
+  var target=getShiftTarget(), pct=target>0?(grandTotal/target*100):0;
+  var pctClamped=Math.min(pct,100), remaining=Math.max(0,100-pctClamped);
+  var arcColor=pct>=80?'#00FF00':pct>=55?'#ff9800':'#ef5350';
+  donutChart.data.datasets[0].data=[pctClamped,remaining];
+  donutChart.data.datasets[0].backgroundColor=[arcColor,'rgba(0,0,0,.07)'];
+  donutChart.data.datasets[0].borderColor=[arcColor,'rgba(0,0,0,.05)'];
+  donutChart.update();
+  var pctEl=document.getElementById('donutPct');
+  pctEl.textContent=pct.toFixed(1)+'%'; pctEl.style.color=arcColor;
+  var gap=grandTotal-target;
+  document.getElementById('donutActual').textContent=grandTotal.toLocaleString()+' BCM';
+  document.getElementById('donutTarget').textContent=target.toLocaleString()+' BCM';
+  var gapEl=document.getElementById('donutGap'), gapLabelEl=document.getElementById('donutGapLabel');
+  gapEl.textContent=(gap>=0?'+':'')+gap.toLocaleString()+' BCM';
+  if(gap>1000){gapLabelEl.textContent='✅ Above Target';gapLabelEl.style.color='#2e7d32';gapEl.className='donut-stat-val green';}
+  else if(gap>=0){gapLabelEl.textContent='🎯 On Target';gapLabelEl.style.color='#1565c0';gapEl.className='donut-stat-val blue';}
+  else{gapLabelEl.textContent='⚠ Below Target';gapLabelEl.style.color='#c62828';gapEl.className='donut-stat-val red';}
+}
+
+/* ══════════ RADAR POPUP — แก้ไขใหม่ทั้งหมด ══════════ */
+
+/* คำนวณ index ที่ใกล้เมาส์ที่สุดบน Radar chart */
+function getRadarNearestIdx(chart, mouseX, mouseY) {
+  var scale = chart.scales.r;
+  if (!scale) return -1;
+
+  var rect = chart.canvas.getBoundingClientRect();
+  /* ต้องใช้ canvas pixel space ไม่ใช่ client space */
+  var canvasX = (mouseX - rect.left) * (chart.canvas.width  / rect.width);
+  var canvasY = (mouseY - rect.top)  * (chart.canvas.height / rect.height);
+
+  var cx = scale.xCenter;
+  var cy = scale.yCenter;
+  var dx = canvasX - cx;
+  var dy = canvasY - cy;
+  var distFromCenter = Math.sqrt(dx*dx + dy*dy);
+
+  /* Ignore if too far from chart */
+  var chartRadius = scale.drawingArea || 60;
+  if (distFromCenter > chartRadius * 1.6) return -1;
+
+  var count = chart.data.labels.length;
+  if (!count) return -1;
+
+  /* Chart.js Radar: angle 0 = top (−π/2), clockwise */
+  var mouseAngle = Math.atan2(dy, dx); /* atan2 returns angle from positive X axis */
+
+  var bestIdx = -1;
+  var bestDiff = Infinity;
+  for (var i = 0; i < count; i++) {
+    /* Chart.js radar point angle: start = -π/2, step = 2π/count, clockwise */
+    var pointAngle = -Math.PI / 2 + (2 * Math.PI * i / count);
+    var diff = mouseAngle - pointAngle;
+    /* Normalize to [-π, π] */
+    while (diff > Math.PI)  diff -= 2 * Math.PI;
+    while (diff < -Math.PI) diff += 2 * Math.PI;
+    diff = Math.abs(diff);
+    if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+  }
+
+  /* Accept if within half-step angle AND reasonably close to edge */
+  var halfStep = Math.PI / count;
+  if (bestDiff < halfStep && distFromCenter > chartRadius * 0.12) return bestIdx;
+  return -1;
+}
+
+/* สร้าง HTML popup สำหรับ radar hover */
+function buildRadarPopupHtml(defEntry, rows, shiftLabel) {
+  var color = defEntry.color;
+  var sorted = sortDTRows(rows);
+  var MAX = 10;
+
+  var html = '';
+  /* Header */
+  html += '<div class="rhp-header" style="background:linear-gradient(135deg,'+color+'dd,'+color+'99);">';
+  html += '<div class="rhp-dot"></div>';
+  html += '<span class="rhp-title">🏭 '+escHtml(defEntry.label)+' — '+escHtml(defEntry.key)+'</span>';
+  if(shiftLabel) html += '<span class="rhp-shift-badge">'+escHtml(shiftLabel)+'</span>';
+  html += '<span class="rhp-count">'+rows.length+' records</span>';
+  html += '</div>';
+
+  html += '<div class="rhp-body">';
   if (!rows.length) {
+    html += '<div class="rhp-empty">✅ ไม่มี Downtime สำหรับเครื่องนี้</div>';
+  } else {
+    sorted.slice(0, MAX).forEach(function(r, idx) {
+      var machine  = escHtml((r[DT_COL.MACHINE]  || '').trim() || '—');
+      var startT   = fmtDTTime(r[DT_COL.START]   || '') || '—';
+      var endT     = fmtDTTime(r[DT_COL.END]     || '') || '?';
+      var desc     = escHtml((r[DT_COL.DESC]      || '').trim() || '—');
+      var typeRaw  = (r[DT_COL.TYPE]              || '').trim();
+      var duration = escHtml((r[DT_COL.DURATION]  || '').trim() || '—');
+      var shiftRaw = (r[DT_COL.SHIFT]             || '').trim().toLowerCase();
+      var tColor   = TYPE_COLORS[typeRaw] || '#90a4ae';
+      var shiftEmoji = shiftRaw==='d' ? '☀️ Day' : shiftRaw==='n' ? '🌙 Night' : '';
+      var isOngoing = !fmtDTTime(r[DT_COL.END] || '');
+
+      html += '<div class="rhp-item">';
+      html += '<div class="rhp-item-top">';
+      html += '<span class="rhp-num">#'+(idx+1)+'</span>';
+      html += '<span class="rhp-machine">'+machine+'</span>';
+      if (typeRaw) {
+        html += '<span class="rhp-type-badge" style="background:'+tColor+'20;color:'+tColor+';border:1px solid '+tColor+'55;">'+escHtml(typeRaw)+'</span>';
+      }
+      if (shiftEmoji) html += '<span class="rhp-shift-em">'+shiftEmoji+'</span>';
+      if (isOngoing) html += '<span style="font-size:0.62rem;color:#ff9800;font-weight:700;margin-left:2px;">⚠ Ongoing</span>';
+      html += '<span class="rhp-dur">'+duration+'</span>';
+      html += '</div>';
+      html += '<span class="rhp-time">'+startT+' → '+endT+'</span>';
+      html += '<div class="rhp-desc">'+desc+'</div>';
+      html += '</div>';
+    });
+    if (rows.length > MAX) {
+      html += '<div class="rhp-more">+ '+(rows.length-MAX)+' more records…</div>';
+    }
+  }
+  html += '</div>';
+  return html;
+}
+
+/* สร้าง HTML popup สำหรับ Type radar */
+function buildRadarTypePopupHtml(defEntry, rows, shiftLabel) {
+  var color = defEntry.color;
+  var sorted = sortDTRows(rows);
+  var MAX = 10;
+
+  var html = '';
+  html += '<div class="rhp-header" style="background:linear-gradient(135deg,'+color+'dd,'+color+'88);">';
+  html += '<div class="rhp-dot"></div>';
+  html += '<span class="rhp-title">📋 Type: '+escHtml(defEntry.label)+'</span>';
+  if(shiftLabel) html += '<span class="rhp-shift-badge">'+escHtml(shiftLabel)+'</span>';
+  html += '<span class="rhp-count">'+rows.length+' records</span>';
+  html += '</div>';
+
+  html += '<div class="rhp-body">';
+  if (!rows.length) {
+    html += '<div class="rhp-empty">✅ ไม่มี Downtime ประเภทนี้</div>';
+  } else {
+    sorted.slice(0, MAX).forEach(function(r, idx) {
+      var machine  = escHtml((r[DT_COL.MACHINE]  || '').trim() || '—');
+      var startT   = fmtDTTime(r[DT_COL.START]   || '') || '—';
+      var endT     = fmtDTTime(r[DT_COL.END]     || '') || '?';
+      var desc     = escHtml((r[DT_COL.DESC]      || '').trim() || '—');
+      var duration = escHtml((r[DT_COL.DURATION]  || '').trim() || '—');
+      var shiftRaw = (r[DT_COL.SHIFT]             || '').trim().toLowerCase();
+      var tColor   = TYPE_COLORS[defEntry.key] || '#90a4ae';
+      var shiftEmoji = shiftRaw==='d' ? '☀️ Day' : shiftRaw==='n' ? '🌙 Night' : '';
+      var isOngoing = !fmtDTTime(r[DT_COL.END] || '');
+
+      html += '<div class="rhp-item">';
+      html += '<div class="rhp-item-top">';
+      html += '<span class="rhp-num">#'+(idx+1)+'</span>';
+      html += '<span class="rhp-machine">'+machine+'</span>';
+      if (shiftEmoji) html += '<span class="rhp-shift-em">'+shiftEmoji+'</span>';
+      if (isOngoing) html += '<span style="font-size:0.62rem;color:#ff9800;font-weight:700;margin-left:2px;">⚠ Ongoing</span>';
+      html += '<span class="rhp-dur">'+duration+'</span>';
+      html += '</div>';
+      html += '<span class="rhp-time">'+startT+' → '+endT+'</span>';
+      html += '<div class="rhp-desc">'+desc+'</div>';
+      html += '</div>';
+    });
+    if (rows.length > MAX) {
+      html += '<div class="rhp-more">+ '+(rows.length-MAX)+' more records…</div>';
+    }
+  }
+  html += '</div>';
+  return html;
+}
+
+/* Position popup ให้ไม่เกินขอบหน้าจอ */
+function positionPopup(popupEl, mouseX, mouseY) {
+  popupEl.style.display = 'block';
+  popupEl.style.visibility = 'hidden';
+  var pw = popupEl.offsetWidth  || 300;
+  var ph = popupEl.offsetHeight || 200;
+  popupEl.style.visibility = '';
+  popupEl.style.display = 'none';
+
+  var margin = 16;
+  var posX = mouseX + margin;
+  var posY = mouseY - ph / 2;
+
+  if (posX + pw + 8 > window.innerWidth)  posX = mouseX - pw - margin;
+  if (posX < 8)                            posX = 8;
+  if (posY + ph + 8 > window.innerHeight) posY = window.innerHeight - ph - 8;
+  if (posY < 8)                            posY = 8;
+
+  popupEl.style.left = posX + 'px';
+  popupEl.style.top  = posY + 'px';
+}
+
+/* ══ Attach hover to Radar Equipment ══ */
+function attachEquipRadarHover(canvasEl, popupEl) {
+  var lastIdx = -1;
+  var hideTimer = null;
+
+  function showAtIdx(idx, mouseX, mouseY) {
+    if (idx < 0 || idx >= EQUIP_DEF.length) { hidePopup(); return; }
+    var def = EQUIP_DEF[idx];
+
+    /* Filter rows ตาม Machine Name key */
+    var rows = dtCurrentRows.filter(function(r){
+      return (r[DT_COL.MACHINE] || '').trim() === def.key;
+    });
+
+    var shiftLabel = currentShift === 'day' ? '☀️ Day Shift' : currentShift === 'night' ? '🌙 Night Shift' : '';
+    popupEl.innerHTML = buildRadarPopupHtml(def, rows, shiftLabel);
+    positionPopup(popupEl, mouseX, mouseY);
+    popupEl.classList.add('show');
+  }
+
+  function hidePopup() {
+    popupEl.classList.remove('show');
+    lastIdx = -1;
+  }
+
+  canvasEl.addEventListener('mousemove', function(e) {
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    if (!radarEquipChart) return;
+    var idx = getRadarNearestIdx(radarEquipChart, e.clientX, e.clientY);
+    if (idx !== lastIdx) {
+      lastIdx = idx;
+      if (idx >= 0) showAtIdx(idx, e.clientX, e.clientY);
+      else hidePopup();
+    } else if (idx >= 0) {
+      /* Update position when same idx but mouse moved */
+      positionPopup(popupEl, e.clientX, e.clientY);
+      if (!popupEl.classList.contains('show')) popupEl.classList.add('show');
+    }
+  });
+
+  canvasEl.addEventListener('mouseleave', function() {
+    hideTimer = setTimeout(function(){ hidePopup(); }, 150);
+  });
+}
+
+/* ══ Attach hover to Radar Type ══ */
+function attachTypeRadarHover(canvasEl, popupEl) {
+  var lastIdx = -1;
+  var hideTimer = null;
+
+  function showAtIdx(idx, mouseX, mouseY) {
+    if (idx < 0 || idx >= TYPE_DEF.length) { hidePopup(); return; }
+    var def = TYPE_DEF[idx];
+
+    /* Filter rows ตาม TYPEMACHINE หรือ TYPE column */
+    var rows = dtCurrentRows.filter(function(r){
+      var t = (r[DT_COL.TYPEMACHINE] || r[DT_COL.TYPE] || '').trim();
+      return t === def.key;
+    });
+
+    var shiftLabel = currentShift === 'day' ? '☀️ Day Shift' : currentShift === 'night' ? '🌙 Night Shift' : '';
+    popupEl.innerHTML = buildRadarTypePopupHtml(def, rows, shiftLabel);
+    positionPopup(popupEl, mouseX, mouseY);
+    popupEl.classList.add('show');
+  }
+
+  function hidePopup() {
+    popupEl.classList.remove('show');
+    lastIdx = -1;
+  }
+
+  canvasEl.addEventListener('mousemove', function(e) {
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    if (!radarTypeChart) return;
+    var idx = getRadarNearestIdx(radarTypeChart, e.clientX, e.clientY);
+    if (idx !== lastIdx) {
+      lastIdx = idx;
+      if (idx >= 0) showAtIdx(idx, e.clientX, e.clientY);
+      else hidePopup();
+    } else if (idx >= 0) {
+      positionPopup(popupEl, e.clientX, e.clientY);
+      if (!popupEl.classList.contains('show')) popupEl.classList.add('show');
+    }
+  });
+
+  canvasEl.addEventListener('mouseleave', function() {
+    hideTimer = setTimeout(function(){ hidePopup(); }, 150);
+  });
+}
+
+/* ══ Init Radar Charts ══ */
+function radarOptions(){
+  var fs=getChartFontSize();
+  return {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{enabled:false}},
+    scales:{r:{
+      beginAtZero:true,
+      ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'700'},color:'#37474f',backdropColor:'rgba(255,255,255,0.75)',backdropPadding:2,maxTicksLimit:4},
+      pointLabels:{font:{family:"'Chakra Petch',monospace",size:fs+1,weight:'800'},color:'#0d47a1',padding:6},
+      grid:{color:'rgba(0,0,0,.15)'},
+      angleLines:{color:'rgba(0,0,0,.2)'},
+    }}
+  };
+}
+
+function initRadarEquip(){
+  var ctx=document.getElementById('radarEquipChart').getContext('2d');
+  radarEquipChart=new Chart(ctx,{
+    type:'radar',
+    data:{
+      labels:EQUIP_DEF.map(function(e){return e.label;}),
+      datasets:[{
+        label:'Downtime Count',
+        data:new Array(EQUIP_DEF.length).fill(0),
+        backgroundColor:'rgba(21,101,192,.13)', borderColor:'#1565c0', borderWidth:2,
+        pointBackgroundColor:EQUIP_DEF.map(function(e){return e.color;}),
+        pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6,
+      }]
+    },
+    options:radarOptions()
+  });
+
+  /* Attach hover popup */
+  attachEquipRadarHover(
+    document.getElementById('radarEquipChart'),
+    document.getElementById('radarEquipPopup')
+  );
+
+  /* Legend items hover = show popup */
+  document.getElementById('radarEquipLegend').addEventListener('mouseover', function(e) {
+    var item = e.target.closest('[data-equip-idx]');
+    if (!item) return;
+    var idx = parseInt(item.dataset.equipIdx, 10);
+    if (isNaN(idx)) return;
+    var def = EQUIP_DEF[idx];
+    var rows = dtCurrentRows.filter(function(r){ return (r[DT_COL.MACHINE]||'').trim()===def.key; });
+    var shiftLabel = currentShift==='day'?'☀️ Day Shift':currentShift==='night'?'🌙 Night Shift':'';
+    var popupEl = document.getElementById('radarEquipPopup');
+    popupEl.innerHTML = buildRadarPopupHtml(def, rows, shiftLabel);
+    var rect = item.getBoundingClientRect();
+    positionPopup(popupEl, rect.left, rect.top + rect.height/2);
+    popupEl.classList.add('show');
+  });
+  document.getElementById('radarEquipLegend').addEventListener('mouseleave', function() {
+    document.getElementById('radarEquipPopup').classList.remove('show');
+  });
+}
+
+function initRadarType(){
+  var ctx=document.getElementById('radarTypeChart').getContext('2d');
+  radarTypeChart=new Chart(ctx,{
+    type:'radar',
+    data:{
+      labels:TYPE_DEF.map(function(t){return t.label;}),
+      datasets:[{
+        label:'Count',
+        data:new Array(TYPE_DEF.length).fill(0),
+        backgroundColor:'rgba(55,71,79,.13)', borderColor:'#546e7a', borderWidth:2,
+        pointBackgroundColor:TYPE_DEF.map(function(t){return t.color;}),
+        pointBorderColor:'#fff', pointBorderWidth:1.5, pointRadius:4, pointHoverRadius:6,
+      }]
+    },
+    options:radarOptions()
+  });
+
+  attachTypeRadarHover(
+    document.getElementById('radarTypeChart'),
+    document.getElementById('radarTypePopup')
+  );
+
+  document.getElementById('radarTypeLegend').addEventListener('mouseover', function(e) {
+    var item = e.target.closest('[data-type-idx]');
+    if (!item) return;
+    var idx = parseInt(item.dataset.typeIdx, 10);
+    if (isNaN(idx)) return;
+    var def = TYPE_DEF[idx];
+    var rows = dtCurrentRows.filter(function(r){
+      var t=(r[DT_COL.TYPEMACHINE]||r[DT_COL.TYPE]||'').trim();
+      return t===def.key;
+    });
+    var shiftLabel = currentShift==='day'?'☀️ Day Shift':currentShift==='night'?'🌙 Night Shift':'';
+    var popupEl = document.getElementById('radarTypePopup');
+    popupEl.innerHTML = buildRadarTypePopupHtml(def, rows, shiftLabel);
+    var rect = item.getBoundingClientRect();
+    positionPopup(popupEl, rect.left, rect.top + rect.height/2);
+    popupEl.classList.add('show');
+  });
+  document.getElementById('radarTypeLegend').addEventListener('mouseleave', function() {
+    document.getElementById('radarTypePopup').classList.remove('show');
+  });
+}
+
+/* ══════════ FETCH DOWNTIME ══════════ */
+async function fetchDowntime(){
+  try {
+    var res=await fetch(DT_URL+'&_cb='+Date.now());
+    if(!res.ok) return;
+    var text=await res.text();
+    var rows=Papa.parse(text,{skipEmptyLines:true}).data;
+    dtAllRows=rows.slice(1).filter(function(r){ var d=(r[DT_COL.DATE]||'').trim(); return d.length>=8; });
+  } catch(e){ console.warn('DT fetch failed:',e); }
+}
+
+/* ══════════ DT TABLE ══════════ */
+function renderDTTable(filterType){
+  dtActiveFilter=filterType||dtActiveFilter;
+  document.querySelectorAll('.dt-filter-btn').forEach(function(btn){
+    btn.classList.toggle('active',btn.dataset.type===dtActiveFilter);
+  });
+  var rows=dtCurrentRows;
+  if(selectedMachines!==null) rows=rows.filter(function(r){return selectedMachines.has((r[DT_COL.MACHINE]||'').trim());});
+  if(dtActiveFilter!=='ALL') rows=rows.filter(function(r){var t=(r[DT_COL.TYPE]||'').trim().toUpperCase();return t===dtActiveFilter.toUpperCase();});
+  rows=sortDTRows(rows);
+  var ongoingCount=rows.filter(function(r){return !fmtDTTime(r[DT_COL.END]||'');}).length;
+  var ongoingBadge=document.getElementById('dtOngoingBadge');
+  if(ongoingCount>0){ongoingBadge.textContent='⚠ '+ongoingCount+' Ongoing';ongoingBadge.classList.add('show');}
+  else{ongoingBadge.classList.remove('show');}
+  document.getElementById('dtCountBadge').textContent=rows.length+' records';
+  var tbody=document.getElementById('dtTableBody');
+  if(!rows.length){
     tbody.innerHTML='<tr><td colspan="7" class="dt-empty">No downtime records for this date'+(dtActiveFilter!=='ALL'?' / type':'')+(selectedMachines!==null?' / machine':'')+'</td></tr>';
     return;
   }
-  tbody.innerHTML = rows.map(function(r){
+  tbody.innerHTML=rows.map(function(r){
     var machine=(r[DT_COL.MACHINE]||'').trim();
     var startT=fmtDTTime(r[DT_COL.START]||'');
     var endRaw=fmtDTTime(r[DT_COL.END]||'');
@@ -1877,64 +1580,75 @@ function renderDTTable(filterType) {
     var duration=(r[DT_COL.DURATION]||'').trim()||'—';
     var shiftRaw=(r[DT_COL.SHIFT]||'').trim().toLowerCase();
     var typeClass='type-'+typeRaw;
-    var isOngoing = !endRaw;
-    var rowClass = isOngoing ? ' class="row-no-end"' : '';
+    var isOngoing=!endRaw;
+    var rowClass=isOngoing?' class="row-no-end"':'';
     var shiftCell=shiftRaw==='d'?'<span class="shift-badge shift-badge-d">☀️Day</span>':shiftRaw==='n'?'<span class="shift-badge shift-badge-n">🌙Night</span>':'<span style="color:var(--muted);font-size:.65rem;">—</span>';
     var endCell=endRaw?'<span class="time-cell">'+escHtml(endRaw)+'</span>':'<span class="end-unknown" title="Still Running — No End Time">?</span>';
     return '<tr'+rowClass+'><td class="machine-cell">'+escHtml(machine)+'</td><td>'+shiftCell+'</td><td class="time-cell">'+escHtml(startT||'—')+'</td><td>'+endCell+'</td><td class="desc-cell">'+escHtml(desc)+'</td><td><span class="type-badge '+typeClass+'">'+escHtml(typeRaw||'—')+'</span></td><td class="dur-cell">'+escHtml(duration)+'</td></tr>';
   }).join('');
 }
-
-document.getElementById('dtFilterWrap').addEventListener('click', function(e){
-  var btn = e.target.closest('.dt-filter-btn');
-  if (!btn) return;
-  renderDTTable(btn.dataset.type);
+document.getElementById('dtFilterWrap').addEventListener('click',function(e){
+  var btn=e.target.closest('.dt-filter-btn'); if(!btn) return; renderDTTable(btn.dataset.type);
 });
 
-function renderRadarForDate(wd) {
-  var rows = dtAllRows.filter(function(r){ return normDateG(r[DT_COL.DATE]||'')===wd; });
-  var shiftRows = rows;
-  if (currentShift==='day') shiftRows=rows.filter(function(r){ return (r[DT_COL.SHIFT]||'').trim().toLowerCase()==='d'; });
-  else if (currentShift==='night') shiftRows=rows.filter(function(r){ return (r[DT_COL.SHIFT]||'').trim().toLowerCase()==='n'; });
-  dtCurrentRows = shiftRows;
-  dtActiveFilter = 'ALL';
-  selectedMachines = null;
-  updateMachineFilterUI();
+/* ══════════ RENDER RADAR FOR DATE ══════════ */
+function renderRadarForDate(wd){
+  var rows=dtAllRows.filter(function(r){return normDateG(r[DT_COL.DATE]||'')===wd;});
+  var shiftRows=rows;
+  if(currentShift==='day')   shiftRows=rows.filter(function(r){return(r[DT_COL.SHIFT]||'').trim().toLowerCase()==='d';});
+  else if(currentShift==='night') shiftRows=rows.filter(function(r){return(r[DT_COL.SHIFT]||'').trim().toLowerCase()==='n';});
+  dtCurrentRows=shiftRows;
+  dtActiveFilter='ALL'; selectedMachines=null; updateMachineFilterUI();
   renderDTTable('ALL');
 
-  var equipCounts=EQUIP_DEF.map(function(def){ return shiftRows.filter(function(r){ return (r[DT_COL.MACHINE]||'').trim()===def.key; }).length; });
+  /* Equip radar */
+  var equipCounts=EQUIP_DEF.map(function(def){
+    return shiftRows.filter(function(r){return(r[DT_COL.MACHINE]||'').trim()===def.key;}).length;
+  });
   radarEquipChart.data.datasets[0].data=equipCounts; radarEquipChart.update();
+
+  /* Legend with data-equip-idx for hover */
   document.getElementById('radarEquipLegend').innerHTML=EQUIP_DEF.map(function(def,i){
-    return '<div class="radar-legend-item"><div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div><span class="radar-legend-val">'+equipCounts[i]+'</span></div>';
+    return '<div class="radar-legend-item" data-equip-idx="'+i+'">'+
+      '<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div>'+
+      '<span class="radar-legend-val">'+equipCounts[i]+'</span></div>';
   }).join('');
 
-  var typeCounts=TYPE_DEF.map(function(def){ return shiftRows.filter(function(r){ return (r[DT_COL.TYPEMACHINE]||'').trim()===def.key; }).length; });
+  /* Type radar */
+  var typeCounts=TYPE_DEF.map(function(def){
+    return shiftRows.filter(function(r){return(r[DT_COL.TYPEMACHINE]||'').trim()===def.key;}).length;
+  });
   radarTypeChart.data.datasets[0].data=typeCounts; radarTypeChart.update();
+
+  /* Legend with data-type-idx for hover */
   document.getElementById('radarTypeLegend').innerHTML=TYPE_DEF.map(function(def,i){
-    return '<div class="radar-legend-item"><div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div><span class="radar-legend-val">'+typeCounts[i]+'</span></div>';
+    return '<div class="radar-legend-item" data-type-idx="'+i+'">'+
+      '<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div>'+
+      '<span class="radar-legend-val">'+typeCounts[i]+'</span></div>';
   }).join('');
 
   document.getElementById('radarEquipTotal').textContent='Total: '+equipCounts.reduce(function(a,b){return a+b;},0)+' events';
   document.getElementById('radarTypeTotal').textContent='Total: '+typeCounts.reduce(function(a,b){return a+b;},0)+' events';
 }
 
+/* ══════════ MAIN DATA FETCH & RENDER ══════════ */
 async function fetchData(){
   showOverlay('LOADING DATA…'); hideError();
   var lastErr='';
-  for (var i=0; i<CSV_URLS.length; i++) {
-    try {
+  for(var i=0;i<CSV_URLS.length;i++){
+    try{
       var res=await fetch(CSV_URLS[i]+'&_cb='+Date.now());
       if(!res.ok){lastErr='HTTP '+res.status;continue;}
       var text=await res.text();
       if(!text||text.trim().length<10){lastErr='Empty';continue;}
       processCSV(text); return true;
-    } catch(e) { lastErr=e.message; }
+    }catch(e){lastErr=e.message;}
   }
   showOverlay('Load failed'); showError('Cannot fetch data: '+lastErr);
   return false;
 }
 
-function parseNum(v){ return parseFloat((v||'0').replace(/,/g,''))||0; }
+function parseNum(v){return parseFloat((v||'0').replace(/,/g,''))||0;}
 function parseDT(s){
   s=(s||'').trim(); if(!s) return new Date(NaN);
   var m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[T ](\d{1,2}):(\d{2})/);
@@ -1943,14 +1657,14 @@ function parseDT(s){
   if(m) return new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5],0);
   return new Date(NaN);
 }
-function fmtTime(s){ var d=parseDT(s); if(!d||isNaN(d)) return s; return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
-function toYMD(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function fmtTime(s){var d=parseDT(s);if(!d||isNaN(d))return s;return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');}
+function toYMD(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function getWorkingDate(dtStr){
-  var d=parseDT(dtStr); if(!d||isNaN(d)) return null;
-  if(d.getHours()<8){ var p=new Date(d); p.setDate(p.getDate()-1); return toYMD(p); }
+  var d=parseDT(dtStr);if(!d||isNaN(d))return null;
+  if(d.getHours()<8){var p=new Date(d);p.setDate(p.getDate()-1);return toYMD(p);}
   return toYMD(d);
 }
-function toDisplay(s){ var p=s.split('-'); return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s; }
+function toDisplay(s){var p=s.split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;}
 
 function processCSV(text){
   var rows=Papa.parse(text,{skipEmptyLines:true}).data;
@@ -1960,9 +1674,9 @@ function processCSV(text){
     if(!dt||/date|time/i.test(dt)) return false;
     return !isNaN(parseDT(dt));
   });
-  allRows.forEach(function(r){ r._wd=getWorkingDate(r[COL.DT]||''); });
-  allRows=allRows.filter(function(r){ return r._wd; });
-  var dateSet=new Set(allRows.map(function(r){ return r._wd; }));
+  allRows.forEach(function(r){r._wd=getWorkingDate(r[COL.DT]||'');});
+  allRows=allRows.filter(function(r){return r._wd;});
+  var dateSet=new Set(allRows.map(function(r){return r._wd;}));
   availableDates=[...dateSet].sort();
   if(!availableDates.length){showOverlay('No data');showError('Header: '+header.slice(0,6).join(' | '));return;}
   buildPicker();
@@ -2012,22 +1726,18 @@ function renderForDate(wd){
     return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'</div></div>';
   }).join('');
 
-  document.getElementById('grandTotal').textContent = grand.toLocaleString() + ' BCM';
+  document.getElementById('grandTotal').textContent=grand.toLocaleString()+' BCM';
 
   function parseHHMM(s){s=(s||'').trim();var m=s.match(/^(\d+):(\d{2})$/);if(!m)return 0;return parseInt(m[1])*60+parseInt(m[2]);}
   var totalMinutes=rows.reduce(function(s,r){return s+parseHHMM(r[COL.HOUR_S3]);},0);
-  var th=Math.floor(totalMinutes/60), tm=String(totalMinutes%60).padStart(2,'0');
-
-  document.getElementById('clockBox').textContent = th + ':' + tm + ' Hr.';
+  var th=Math.floor(totalMinutes/60),tm=String(totalMinutes%60).padStart(2,'0');
+  document.getElementById('clockBox').textContent=th+':'+tm+' Hr.';
 
   var totalHoursDecimal=totalMinutes/60;
   var productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
+  document.getElementById('productivityBox').textContent=productivity>0?productivity.toLocaleString()+' BCM/Hr':'—';
 
-  document.getElementById('productivityBox').textContent = productivity > 0 ? productivity.toLocaleString() + ' BCM/Hr' : '—';
-
-  updateTargetBox();
-  updateDonut(grand);
-
+  updateTargetBox(); updateDonut(grand);
   document.getElementById('rowCount').textContent=rows.length+' rows · '+allRows.length+' total · '+availableDates.length+' dates · '+toDisplay(wd)+' · '+SHIFT_CONFIG[currentShift].label;
   renderRadarForDate(wd);
   hideOverlay(); syncNav();
@@ -2036,13 +1746,8 @@ function renderForDate(wd){
 function buildPicker(){
   var sel=document.getElementById('datePicker');
   sel.innerHTML='';
-  availableDates.forEach(function(d){
-    var o=document.createElement('option');
-    o.value=d; o.textContent=toDisplay(d);
-    sel.appendChild(o);
-  });
-  sel.value=availableDates[availableDates.length-1];
-  syncNav();
+  availableDates.forEach(function(d){var o=document.createElement('option');o.value=d;o.textContent=toDisplay(d);sel.appendChild(o);});
+  sel.value=availableDates[availableDates.length-1]; syncNav();
 }
 function syncNav(){
   var idx=availableDates.indexOf(document.getElementById('datePicker').value);
@@ -2068,32 +1773,32 @@ document.getElementById('btnRefresh').addEventListener('click',function(){
 });
 
 var resizeTimer;
-window.addEventListener('resize', function() {
+window.addEventListener('resize',function(){
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(function() {
-    var fs = getChartFontSize();
-    [bcmChart, perfChart].forEach(function(ch) {
-      if (!ch) return;
-      ch.options.scales.x.ticks.font.size = fs;
-      ch.options.scales.y.ticks.font.size = fs;
+  resizeTimer=setTimeout(function(){
+    var fs=getChartFontSize();
+    [bcmChart,perfChart].forEach(function(ch){
+      if(!ch) return;
+      ch.options.scales.x.ticks.font.size=fs;
+      ch.options.scales.y.ticks.font.size=fs;
       ch.update('none');
     });
-    [radarEquipChart, radarTypeChart].forEach(function(ch) {
-      if (!ch) return;
-      ch.options.scales.r.ticks.font.size = fs;
-      ch.options.scales.r.pointLabels.font.size = fs + 1;
+    [radarEquipChart,radarTypeChart].forEach(function(ch){
+      if(!ch) return;
+      ch.options.scales.r.ticks.font.size=fs;
+      ch.options.scales.r.pointLabels.font.size=fs+1;
       ch.update('none');
     });
-    var popup = document.getElementById('machineFilterPopup');
-    if (popup.classList.contains('show')) closeMachinePopup();
+    var popup=document.getElementById('machineFilterPopup');
+    if(popup.classList.contains('show')) closeMachinePopup();
     hideBarTooltip();
-  }, 200);
+  },200);
 });
 
-function showOverlay(msg){ document.getElementById('overlayMsg').textContent=msg; document.getElementById('overlay').classList.remove('hidden'); }
-function hideOverlay(){ document.getElementById('overlay').classList.add('hidden'); }
-function showError(html){ var b=document.getElementById('errorBanner');b.innerHTML='Warning: '+html;b.style.display='block'; }
-function hideError(){ document.getElementById('errorBanner').style.display='none'; }
+function showOverlay(msg){document.getElementById('overlayMsg').textContent=msg;document.getElementById('overlay').classList.remove('hidden');}
+function hideOverlay(){document.getElementById('overlay').classList.add('hidden');}
+function showError(html){var b=document.getElementById('errorBanner');b.innerHTML='Warning: '+html;b.style.display='block';}
+function hideError(){document.getElementById('errorBanner').style.display='none';}
 
 /* ══════════ BOOT ══════════ */
 applyShiftUI('all');
@@ -2112,10 +1817,8 @@ fetchData().then(function(){
 
 /* ══════════ AUTO-REFRESH (2 min) ══════════ */
 (function(){
-  var INTERVAL=2*60, CIRCUMFERENCE=47.12;
-  var remaining=INTERVAL;
-  var progEl=document.getElementById('countdownProg');
-  var txtEl=document.getElementById('countdownTxt');
+  var INTERVAL=2*60,CIRCUMFERENCE=47.12,remaining=INTERVAL;
+  var progEl=document.getElementById('countdownProg'),txtEl=document.getElementById('countdownTxt');
   var lastAdvanceDate=null;
 
   function doRefresh(){
@@ -2134,9 +1837,8 @@ fetchData().then(function(){
   function advanceToToday(){
     fetchData().then(function(){
       fetchDowntime().then(function(){
-        var sel=document.getElementById('datePicker');
-        var latest=availableDates[availableDates.length-1];
-        if(latest){ sel.value=latest; renderForDate(latest); }
+        var sel=document.getElementById('datePicker'),latest=availableDates[availableDates.length-1];
+        if(latest){sel.value=latest;renderForDate(latest);}
       });
     });
     remaining=INTERVAL;
@@ -2160,12 +1862,7 @@ fetchData().then(function(){
   }
 
   updateUI();
-  setInterval(function(){
-    remaining--;
-    if(remaining<=0) doRefresh();
-    checkDateAdvance();
-    updateUI();
-  },1000);
+  setInterval(function(){remaining--;if(remaining<=0)doRefresh();checkDateAdvance();updateUI();},1000);
 })();
 </script>
 </body>
