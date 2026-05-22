@@ -322,8 +322,8 @@
   .radar-legend-item {
     display: flex; align-items: center; justify-content: space-between;
     font-size: var(--fs-xs); color: #1a1f2e; font-weight: 700;
-    padding: 2px 0; border-bottom: 1px solid #e8eaf0;
-    cursor: pointer; border-radius: 3px; padding: 3px 4px;
+    padding: 3px 4px; border-bottom: 1px solid #e8eaf0;
+    cursor: pointer; border-radius: 3px;
     transition: background .12s;
   }
   .radar-legend-item:hover { background: #e8f0fe; }
@@ -418,7 +418,7 @@
   .mfp-item:last-child { border-bottom: none; }
   .mfp-item:hover { background: #e8f0fe; }
   .mfp-item.checked { background: #e3f2fd; }
-  .mfp-checkbox { width: 14px; height: 14px; border: 1.5px solid #90caf9; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #fff; transition: all .12px; }
+  .mfp-checkbox { width: 14px; height: 14px; border: 1.5px solid #90caf9; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #fff; }
   .mfp-item.checked .mfp-checkbox { background: #1565c0; border-color: #1565c0; }
   .mfp-checkmark { display: none; color: #fff; font-size: 9px; font-weight: 900; line-height: 1; }
   .mfp-item.checked .mfp-checkmark { display: block; }
@@ -469,34 +469,56 @@
 
   /* ══ Radar Hover Popup ══ */
   .radar-hover-popup {
-    position: fixed; z-index: 9999; background: #fff;
-    border: 1.5px solid #90caf9; border-radius: 10px;
-    box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 10px rgba(0,0,0,.12);
-    pointer-events: none; min-width: 280px; max-width: 360px;
-    display: none; overflow: hidden; font-family: 'Sarabun', Arial, sans-serif;
-    animation: tooltipFadeIn .12s ease;
+    position: fixed;
+    z-index: 9999;
+    background: #fff;
+    border: 1.5px solid #90caf9;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(21,35,126,.22), 0 2px 12px rgba(0,0,0,.14);
+    pointer-events: none;
+    min-width: 290px;
+    max-width: 380px;
+    max-height: 460px;
+    overflow: hidden;
+    display: none;
+    font-family: 'Sarabun', Arial, sans-serif;
+    animation: tooltipFadeIn .15s ease;
   }
   .radar-hover-popup.show { display: block; }
-  .rhp-header { padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
-  .rhp-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: rgba(255,255,255,.85); }
-  .rhp-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.80rem; font-weight: 700; color: #fff; flex: 1; letter-spacing: .4px; }
-  .rhp-shift-badge { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; font-weight: 700; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.35); border-radius: 8px; padding: 1px 7px; color: #fff; white-space: nowrap; }
-  .rhp-count { font-family: 'Chakra Petch', monospace; font-size: 0.72rem; font-weight: 800; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3); border-radius: 10px; padding: 1px 7px; color: #fff; white-space: nowrap; }
-  .rhp-body { max-height: 320px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #dde1e8 transparent; }
+
+  /* Popup inner scroll body */
+  .rhp-body {
+    max-height: 360px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #dde1e8 transparent;
+  }
   .rhp-body::-webkit-scrollbar { width: 3px; }
   .rhp-body::-webkit-scrollbar-thumb { background: #dde1e8; border-radius: 3px; }
+
+  .rhp-header {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+    padding: 8px 12px;
+  }
+  .rhp-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .rhp-title { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.80rem; font-weight: 700; color: #fff; flex: 1; letter-spacing: .4px; }
+  .rhp-shift-badge { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; font-weight: 700; background: rgba(255,255,255,.22); border: 1px solid rgba(255,255,255,.35); border-radius: 8px; padding: 1px 7px; color: #fff; white-space: nowrap; }
+  .rhp-count { font-family: 'Chakra Petch', monospace; font-size: 0.72rem; font-weight: 800; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3); border-radius: 10px; padding: 1px 7px; color: #fff; white-space: nowrap; }
+
   .rhp-item { padding: 6px 12px; border-bottom: 1px solid #f0f2f5; display: flex; flex-direction: column; gap: 3px; }
   .rhp-item:last-child { border-bottom: none; }
   .rhp-item:hover { background: #f8faff; }
   .rhp-item-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .rhp-num { font-family: 'Chakra Petch', monospace; font-size: 0.62rem; font-weight: 700; color: #90a4ae; min-width: 16px; }
-  .rhp-machine { font-family: 'Chakra Petch', monospace; font-size: 0.75rem; font-weight: 800; color: #0d47a1; }
+  .rhp-machine { font-family: 'Chakra Petch', monospace; font-size: 0.75rem; font-weight: 800; color: #0d47a1; flex: 1; }
   .rhp-type-badge { font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.62rem; font-weight: 700; padding: 0 5px; border-radius: 3px; }
   .rhp-shift-em { font-size: 0.68rem; }
-  .rhp-dur { font-family: 'Chakra Petch', monospace; font-size: 0.68rem; font-weight: 800; color: #b71c1c; margin-left: auto; }
+  .rhp-dur { font-family: 'Chakra Petch', monospace; font-size: 0.72rem; font-weight: 800; color: #b71c1c; margin-left: auto; white-space: nowrap; }
   .rhp-time { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; color: #546e7a; }
-  .rhp-desc { font-size: 0.72rem; color: #374151; font-family: 'Sarabun', Arial, sans-serif; line-height: 1.35; word-break: break-word; }
-  .rhp-empty { padding: 16px 12px; text-align: center; font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.70rem; color: #90a4ae; letter-spacing: .5px; }
+  .rhp-desc { font-size: 0.72rem; color: #374151; font-family: 'Sarabun', Arial, sans-serif; line-height: 1.35; word-break: break-word; white-space: normal; }
+  .rhp-empty { padding: 14px 12px; text-align: center; font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.72rem; color: #2e7d32; letter-spacing: .5px; background: #f1f8e9; }
   .rhp-more { padding: 5px 12px; font-family: 'Chakra Petch', monospace; font-size: 0.65rem; color: #90a4ae; text-align: center; border-top: 1px solid #f0f2f5; background: #fafbfc; }
 
   #donutGapLabel { transition: color .3s ease; font-size: 0.65rem !important; white-space: nowrap; }
@@ -573,9 +595,9 @@
   <div class="controls top-bar-row2">
     <span class="ctrl-label">Shift</span>
     <div class="shift-group">
-      <button class="btn-shift active-all" id="btnAll"   data-shift="all">☀️🌙</button>
-      <button class="btn-shift"            id="btnDay"   data-shift="day">☀️</button>
-      <button class="btn-shift"            id="btnNight" data-shift="night">🌙</button>
+      <button class="btn-shift active-all" id="btnAll"   data-shift="all">&#x2600;&#xFE0F;&#x1F319;</button>
+      <button class="btn-shift"            id="btnDay"   data-shift="day">&#x2600;&#xFE0F;</button>
+      <button class="btn-shift"            id="btnNight" data-shift="night">&#x1F319;</button>
     </div>
     <span class="ctrl-label" style="margin-left:4px;">Date</span>
     <button class="btn-nav" id="btnPrev" disabled>&#8249;</button>
@@ -806,7 +828,7 @@ var DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
 var DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, SHIFT:7, TYPE:9, TYPEMACHINE:11 };
 
-/* ══ EQUIP_DEF: label = ชื่อย่อ radar, key = ชื่อใน column Machine Name ══ */
+/* ══ EQUIP_DEF: label = radar label, key = Machine Name column ══ */
 var EQUIP_DEF = [
   { label:'BWE 1',  key:'Bucket Wheel #1', color:'#6B007B' },
   { label:'BWE 2',  key:'Bucket Wheel #2', color:'#F48FB1' },
@@ -1175,386 +1197,208 @@ function updateDonut(grandTotal){
   else{gapLabelEl.textContent='⚠ Below Target';gapLabelEl.style.color='#c62828';gapEl.className='donut-stat-val red';}
 }
 
-/* ══════════ RADAR POPUP — แก้ไขใหม่ทั้งหมด ══════════ */
-  
-/* ============================================================
+/* ═══════════════════════════════════════════════════════════════
+   RADAR POPUP SYSTEM — แก้ไขใหม่ทั้งหมด (ทำงานได้จริง)
+   ═══════════════════════════════════════════════════════════════ */
 
-   1.  MACHINE MAPPING
-       radar label  →  Machine Name ใน Downtime Detail
-   ---------------------------------------------------------- */
-var RADAR_MACHINE_MAP = {
-  'BWE 1':  'Bucket Wheel #1',
-  'BWE 2':  'Bucket Wheel #2',
-  'CR 1':   'Crusher #1',
-  'CR 2':   'Crusher #2',
-  'CR 3':   'Crusher #3',
-  'SPD':    'Spreader',
-  'System': 'System'
-};
+/* ── 1. คำนวณ index ของ label บน radar ที่ใกล้เมาส์มากที่สุด ── */
+function getRadarNearestIdx(chart, mouseX, mouseY) {
+  if (!chart || !chart.scales || !chart.scales.r) return -1;
+  var r = chart.scales.r;
+  var cx = r.xCenter, cy = r.yCenter;
+  var labels = chart.data.labels || [];
+  var n = labels.length;
+  if (!n) return -1;
 
-/* ----------------------------------------------------------
-   2.  POPUP DOM HELPER — สร้าง/ดึง popup element
-   ---------------------------------------------------------- */
-function getOrCreateRadarPopup(id) {
-  var el = document.getElementById(id);
-  if (!el) {
-    el = document.createElement('div');
-    el.id = id;
-    el.className = 'radar-hover-popup';
-    /* Base style — ปรับให้ตรงกับ design system ของ dashboard */
-    el.style.cssText = [
-      'position:fixed',
-      'z-index:9999',
-      'pointer-events:none',
-      'display:none',
-      'min-width:280px',
-      'max-width:380px',
-      'max-height:420px',
-      'overflow-y:auto',
-      'background:#1a1f2e',
-      'border:1px solid rgba(255,255,255,0.12)',
-      'border-radius:10px',
-      'box-shadow:0 8px 32px rgba(0,0,0,0.55)',
-      'font-family:inherit',
-      'font-size:0.78rem',
-      'color:#e0e6f0'
-    ].join(';');
-    document.body.appendChild(el);
-  }
-  return el;
+  var rect = chart.canvas.getBoundingClientRect();
+  var mx = mouseX - rect.left;
+  var my = mouseY - rect.top;
+
+  var dx = mx - cx, dy = my - cy;
+  var dist = Math.sqrt(dx * dx + dy * dy);
+  if (dist < 5) return -1;
+
+  /* Chart.js radar: index 0 อยู่ที่ด้านบน (top = -90°), วนตามเข็มนาฬิกา */
+  var angleRad = Math.atan2(dy, dx);           // -π … π, 0 = right
+  var angleDeg = (angleRad * 180 / Math.PI + 90 + 360) % 360; // 0 = top, clockwise
+
+  var step = 360 / n;
+  var idx = Math.round(angleDeg / step) % n;
+
+  /* ไม่ตอบสนองถ้าอยู่ไกลจากศูนย์กลางเกินไป */
+  var outerR = r.drawingArea || 80;
+  if (dist > outerR * 1.45) return -1;
+
+  return idx;
 }
 
-/* ----------------------------------------------------------
-   3.  POSITION POPUP — วาง popup ให้ไม่เกินขอบหน้าจอ
-   ---------------------------------------------------------- */
-function positionPopup(popup, mouseX, mouseY) {
-  var margin = 12;
-  var pw = popup.offsetWidth  || 300;
-  var ph = popup.offsetHeight || 200;
+/* ── 2. จัดตำแหน่ง popup ── */
+function positionRadarPopup(popupEl, mouseX, mouseY) {
+  var margin = 14;
+  /* วัดขนาด popup จริง */
+  var pw = popupEl.offsetWidth  || 300;
+  var ph = popupEl.offsetHeight || 200;
   var vw = window.innerWidth;
   var vh = window.innerHeight;
 
   var left = mouseX + margin;
-  var top  = mouseY + margin;
+  var top  = mouseY - Math.round(ph / 2);
 
   if (left + pw > vw - margin) left = mouseX - pw - margin;
-  if (top  + ph > vh - margin) top  = mouseY - ph - margin;
-  if (left < margin) left = margin;
-  if (top  < margin) top  = margin;
+  if (left < margin)           left = margin;
+  if (top + ph > vh - margin)  top  = vh - ph - margin;
+  if (top < margin)            top  = margin;
 
-  popup.style.left = left + 'px';
-  popup.style.top  = top  + 'px';
+  popupEl.style.left = left + 'px';
+  popupEl.style.top  = top  + 'px';
 }
 
-/* ----------------------------------------------------------
-   4.  FILTER DOWNTIME ROWS
-       ดึง rows จาก global downtime array ที่ตรงกับ
-       - machineName (จาก RADAR_MACHINE_MAP)
-       - shift filter ปัจจุบัน (ถ้ามี)
-   ---------------------------------------------------------- */
-/**
- * @param {string} radarLabel   — ชื่อบน radar เช่น 'BWE 1'
- * @param {string|null} shiftFilter — 'd' | 'n' | null (all)
- * @returns {Array} filtered rows
- */
-function getDowntimeRowsForMachine(radarLabel, shiftFilter) {
-  /* --- ปรับตรงนี้ให้ตรงกับตัวแปร global ที่เก็บ downtime rows ของ dashboard --- */
-  var allRows = (typeof DT_ROWS !== 'undefined') ? DT_ROWS :
-                (typeof window.dtRows !== 'undefined') ? window.dtRows : [];
+/* ── 3. สร้าง HTML ของ popup สำหรับ Equipment radar ── */
+function buildRadarPopupHtml(def, rows, shiftLabel) {
+  var color = def.color || '#1565c0';
+  var MAX = 8;
 
-  var machineName = RADAR_MACHINE_MAP[radarLabel];
-  if (!machineName) return [];
+  var html = '<div class="rhp-header" style="background:linear-gradient(135deg,' +
+    color + 'ee,' + color + '99);">' +
+    '<div class="rhp-dot" style="background:#fff;box-shadow:0 0 0 2px ' + color + ';"></div>' +
+    '<span class="rhp-title">⚙ ' + escHtml(def.label) + '</span>' +
+    (shiftLabel ? '<span class="rhp-shift-badge">' + escHtml(shiftLabel) + '</span>' : '') +
+    '<span class="rhp-count">' + rows.length + ' events</span>' +
+    '</div>';
 
-  return allRows.filter(function(r) {
-    var mName = (r[DT_COL.MACHINE] || '').trim();
-    if (mName !== machineName) return false;
-    if (shiftFilter) {
-      var s = (r[DT_COL.SHIFT] || '').trim().toLowerCase();
-      if (s !== shiftFilter) return false;
-    }
-    return true;
-  });
-}
+  html += '<div class="rhp-body">';
 
-/* ----------------------------------------------------------
-   5.  GET CURRENT SHIFT FILTER
-       อ่านสถานะ shift toggle ปัจจุบันของ dashboard
-       ปรับ selector ให้ตรงกับ UI จริง
-   ---------------------------------------------------------- */
-function getCurrentShiftFilter() {
-  /* ตัวอย่าง: ถ้า dashboard ใช้ตัวแปร global currentShift */
-  if (typeof currentShift !== 'undefined') {
-    if (currentShift === 'd') return { filter: 'd', label: '☀️ Day Shift' };
-    if (currentShift === 'n') return { filter: 'n', label: '🌙 Night Shift' };
-    return { filter: null, label: null };
-  }
-  /* fallback: อ่านจาก active class บน shift button */
-  var dayBtn   = document.querySelector('.shift-btn.day.active, [data-shift="d"].active');
-  var nightBtn = document.querySelector('.shift-btn.night.active, [data-shift="n"].active');
-  if (dayBtn)   return { filter: 'd', label: '☀️ Day Shift' };
-  if (nightBtn) return { filter: 'n', label: '🌙 Night Shift' };
-  return { filter: null, label: null };
-}
-
-/* ----------------------------------------------------------
-   6.  BIND RADAR HOVER EVENTS
-       เรียกฟังก์ชันนี้หลังจากที่ radar chart สร้างเสร็จ
-       @param {Chart} radarChart  — Chart.js instance ของ Equipment radar
-       @param {Array} defEntries  — array ของ { key, label, color }
-                                    ที่ตรงกับ chart.data.labels
-   ---------------------------------------------------------- */
-function bindEquipmentRadarHover(radarChart, defEntries) {
-  if (!radarChart || !radarChart.canvas) return;
-
-  var popup   = getOrCreateRadarPopup('eq-radar-popup');
-  var canvas  = radarChart.canvas;
-  var lastIdx = -1;
-  var hideTimer = null;
-
-  function showPopup(idx, mouseX, mouseY) {
-    if (idx < 0 || idx >= defEntries.length) { hidePopup(); return; }
-    var def = defEntries[idx];
-    var radarLabel = def.label; /* e.g. 'BWE 1' */
-
-    var shiftInfo = getCurrentShiftFilter();
-    var rows = getDowntimeRowsForMachine(radarLabel, shiftInfo.filter);
-
-    popup.innerHTML = buildRadarPopupHtml(def, rows, shiftInfo.label);
-    popup.style.display = 'block';
-    /* ต้อง layout ก่อนวัดขนาด */
-    requestAnimationFrame(function() {
-      positionPopup(popup, mouseX, mouseY);
+  if (!rows.length) {
+    html += '<div class="rhp-empty">✅ ไม่มี Downtime ในช่วงเวลานี้</div>';
+  } else {
+    /* เรียงตาม Start Time */
+    var sorted = rows.slice().sort(function(a, b) {
+      var aS = a[DT_COL.START] || '', bS = b[DT_COL.START] || '';
+      return aS < bS ? -1 : aS > bS ? 1 : 0;
     });
+
+    sorted.slice(0, MAX).forEach(function(r, i) {
+      var startT   = fmtDTTime(r[DT_COL.START] || '') || '—';
+      var endT     = fmtDTTime(r[DT_COL.END]   || '') || '?';
+      var desc     = (r[DT_COL.DESC]     || '').trim() || '—';
+      var typeRaw  = (r[DT_COL.TYPE]     || '').trim() || '—';
+      var dur      = (r[DT_COL.DURATION] || '').trim() || '—';
+      var shiftRaw = (r[DT_COL.SHIFT]    || '').trim().toLowerCase();
+      var shiftEm  = shiftRaw === 'd' ? '☀️' : shiftRaw === 'n' ? '🌙' : '';
+      var tc       = TYPE_COLORS[typeRaw] || '#90a4ae';
+      var isOngoing= !fmtDTTime(r[DT_COL.END] || '');
+
+      html += '<div class="rhp-item">' +
+        '<div class="rhp-item-top">' +
+          '<span class="rhp-num">' + (i + 1) + '</span>' +
+          '<span class="rhp-machine">' + escHtml((r[DT_COL.MACHINE] || '').trim()) + '</span>' +
+          '<span class="rhp-type-badge" style="background:' + tc + '22;color:' + tc + ';border:1px solid ' + tc + '55;">' + escHtml(typeRaw) + '</span>' +
+          (shiftEm ? '<span class="rhp-shift-em">' + shiftEm + '</span>' : '') +
+          '<span class="rhp-dur">' + (isOngoing ? '<span style="color:#ff9800;">ONGOING</span>' : escHtml(dur)) + '</span>' +
+        '</div>' +
+        '<div class="rhp-time">' + escHtml(startT) + ' → ' + (isOngoing ? '<span style="color:#ff9800;font-weight:700;">?</span>' : escHtml(endT)) + '</div>' +
+        '<div class="rhp-desc">' + escHtml(desc) + '</div>' +
+        '</div>';
+    });
+
+    if (rows.length > MAX) {
+      html += '<div class="rhp-more">+' + (rows.length - MAX) + ' more records…</div>';
+    }
   }
 
-  function hidePopup() {
-    popup.style.display = 'none';
-    lastIdx = -1;
-  }
+  html += '</div>';
+  return html;
+}
 
-  canvas.addEventListener('mousemove', function(e) {
-    clearTimeout(hideTimer);
-    var idx = getRadarNearestIdx(radarChart, e.clientX, e.clientY);
-    if (idx !== lastIdx) {
-      lastIdx = idx;
-      if (idx >= 0) {
-        showPopup(idx, e.clientX, e.clientY);
-      } else {
-        hidePopup();
+/* ── 4. สร้าง HTML ของ popup สำหรับ Type radar ── */
+function buildRadarTypePopupHtml(def, rows, shiftLabel) {
+  var color = def.color || '#546e7a';
+  var MAX = 8;
+
+  var html = '<div class="rhp-header" style="background:linear-gradient(135deg,' +
+    color + 'ee,' + color + '99);">' +
+    '<div class="rhp-dot" style="background:#fff;box-shadow:0 0 0 2px ' + color + ';"></div>' +
+    '<span class="rhp-title">📋 Type: ' + escHtml(def.label) + '</span>' +
+    (shiftLabel ? '<span class="rhp-shift-badge">' + escHtml(shiftLabel) + '</span>' : '') +
+    '<span class="rhp-count">' + rows.length + ' events</span>' +
+    '</div>';
+
+  html += '<div class="rhp-body">';
+
+  if (!rows.length) {
+    html += '<div class="rhp-empty">✅ ไม่มี Downtime ประเภทนี้</div>';
+  } else {
+    var sorted = rows.slice().sort(function(a, b) {
+      var aS = a[DT_COL.START] || '', bS = b[DT_COL.START] || '';
+      return aS < bS ? -1 : aS > bS ? 1 : 0;
+    });
+
+    sorted.slice(0, MAX).forEach(function(r, i) {
+      var machine  = (r[DT_COL.MACHINE]  || '').trim() || '—';
+      var startT   = fmtDTTime(r[DT_COL.START] || '') || '—';
+      var endT     = fmtDTTime(r[DT_COL.END]   || '') || '?';
+      var desc     = (r[DT_COL.DESC]     || '').trim() || '—';
+      var dur      = (r[DT_COL.DURATION] || '').trim() || '—';
+      var shiftRaw = (r[DT_COL.SHIFT]    || '').trim().toLowerCase();
+      var shiftEm  = shiftRaw === 'd' ? '☀️' : shiftRaw === 'n' ? '🌙' : '';
+      var isOngoing= !fmtDTTime(r[DT_COL.END] || '');
+
+      /* หาสีของเครื่องจักร */
+      var mc = '#03a9f4';
+      for (var ei = 0; ei < EQUIP_DEF.length; ei++) {
+        if (EQUIP_DEF[ei].key === machine) { mc = EQUIP_DEF[ei].color; break; }
       }
-    } else if (idx >= 0) {
-      /* อัปเดตตำแหน่งตาม mouse */
-      positionPopup(popup, e.clientX, e.clientY);
-    }
-  });
 
-  canvas.addEventListener('mouseleave', function() {
-    hideTimer = setTimeout(hidePopup, 120);
-  });
-
-  /* ป้องกัน popup หายตอนเลื่อน mouse เข้า popup (ถ้า pointer-events เปิด) */
-  popup.addEventListener('mouseenter', function() { clearTimeout(hideTimer); });
-  popup.addEventListener('mouseleave', function() { hideTimer = setTimeout(hidePopup, 120); });
-}
-
-/* ----------------------------------------------------------
-   7.  BIND TYPE RADAR HOVER EVENTS (Type of Downtime radar)
-       @param {Chart} typeRadarChart — Chart.js instance ของ Type radar
-       @param {Array} typeDefEntries — array ของ { key, label, color }
-   ---------------------------------------------------------- */
-function bindTypeRadarHover(typeRadarChart, typeDefEntries) {
-  if (!typeRadarChart || !typeRadarChart.canvas) return;
-
-  var popup   = getOrCreateRadarPopup('type-radar-popup');
-  var canvas  = typeRadarChart.canvas;
-  var lastIdx = -1;
-  var hideTimer = null;
-
-  function showPopup(idx, mouseX, mouseY) {
-    if (idx < 0 || idx >= typeDefEntries.length) { hidePopup(); return; }
-    var def = typeDefEntries[idx];
-
-    /* ดึง rows ที่ตรงกับ Type */
-    var shiftInfo = getCurrentShiftFilter();
-    var allRows = (typeof DT_ROWS !== 'undefined') ? DT_ROWS :
-                  (typeof window.dtRows !== 'undefined') ? window.dtRows : [];
-
-    var rows = allRows.filter(function(r) {
-      var typeMatch = (r[DT_COL.TYPE] || '').trim() === def.key;
-      if (!typeMatch) return false;
-      if (shiftInfo.filter) {
-        return (r[DT_COL.SHIFT] || '').trim().toLowerCase() === shiftInfo.filter;
-      }
-      return true;
+      html += '<div class="rhp-item">' +
+        '<div class="rhp-item-top">' +
+          '<span class="rhp-num">' + (i + 1) + '</span>' +
+          '<span class="rhp-machine" style="color:' + mc + ';">' + escHtml(machine) + '</span>' +
+          (shiftEm ? '<span class="rhp-shift-em">' + shiftEm + '</span>' : '') +
+          '<span class="rhp-dur">' + (isOngoing ? '<span style="color:#ff9800;">ONGOING</span>' : escHtml(dur)) + '</span>' +
+        '</div>' +
+        '<div class="rhp-time">' + escHtml(startT) + ' → ' + (isOngoing ? '<span style="color:#ff9800;font-weight:700;">?</span>' : escHtml(endT)) + '</div>' +
+        '<div class="rhp-desc">' + escHtml(desc) + '</div>' +
+        '</div>';
     });
 
-    popup.innerHTML = buildRadarTypePopupHtml(def, rows, shiftInfo.label);
-    popup.style.display = 'block';
-    requestAnimationFrame(function() {
-      positionPopup(popup, mouseX, mouseY);
-    });
+    if (rows.length > MAX) {
+      html += '<div class="rhp-more">+' + (rows.length - MAX) + ' more records…</div>';
+    }
   }
 
-  function hidePopup() {
-    popup.style.display = 'none';
-    lastIdx = -1;
-  }
-
-  canvas.addEventListener('mousemove', function(e) {
-    clearTimeout(hideTimer);
-    var idx = getRadarNearestIdx(typeRadarChart, e.clientX, e.clientY);
-    if (idx !== lastIdx) {
-      lastIdx = idx;
-      idx >= 0 ? showPopup(idx, e.clientX, e.clientY) : hidePopup();
-    } else if (idx >= 0) {
-      positionPopup(popup, e.clientX, e.clientY);
-    }
-  });
-
-  canvas.addEventListener('mouseleave', function() {
-    hideTimer = setTimeout(hidePopup, 120);
-  });
-
-  popup.addEventListener('mouseenter', function() { clearTimeout(hideTimer); });
-  popup.addEventListener('mouseleave', function() { hideTimer = setTimeout(hidePopup, 120); });
+  html += '</div>';
+  return html;
 }
 
-/* ----------------------------------------------------------
-   8.  CSS สำหรับ Popup (inject ครั้งเดียว)
-   ---------------------------------------------------------- */
-(function injectRadarPopupCSS() {
-  if (document.getElementById('radar-popup-style')) return;
-  var style = document.createElement('style');
-  style.id = 'radar-popup-style';
-  style.textContent = `
-    .radar-hover-popup { scrollbar-width: thin; scrollbar-color: #444 transparent; }
-    .radar-hover-popup::-webkit-scrollbar { width: 4px; }
-    .radar-hover-popup::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
-
-    .rhp-header {
-      display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
-      padding: 10px 12px; border-radius: 9px 9px 0 0;
-      font-weight: 700; font-size: 0.8rem;
-    }
-    .rhp-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: rgba(255,255,255,0.9); flex-shrink: 0;
-    }
-    .rhp-title  { flex: 1; color: #fff; }
-    .rhp-shift-badge {
-      background: rgba(0,0,0,0.25); color: #fff;
-      border-radius: 4px; padding: 1px 6px; font-size: 0.68rem;
-    }
-    .rhp-count {
-      background: rgba(255,255,255,0.15); color: #fff;
-      border-radius: 4px; padding: 1px 7px; font-size: 0.7rem;
-    }
-
-    .rhp-body  { padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
-    .rhp-empty { color: #81c784; font-size: 0.78rem; padding: 6px 2px; }
-    .rhp-more  { color: #90a4ae; font-size: 0.7rem; text-align: center; padding: 4px 0; }
-
-    .rhp-item {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 6px; padding: 7px 9px;
-      display: flex; flex-direction: column; gap: 3px;
-    }
-    .rhp-item-top {
-      display: flex; align-items: center; flex-wrap: wrap; gap: 5px;
-    }
-    .rhp-num     { color: #90a4ae; font-size: 0.68rem; font-weight: 700; min-width: 18px; }
-    .rhp-machine { color: #e0e6f0; font-weight: 700; font-size: 0.78rem; flex: 1; }
-    .rhp-dur     { color: #ef5350; font-weight: 700; font-size: 0.75rem; margin-left: auto; }
-    .rhp-type-badge {
-      border-radius: 4px; padding: 1px 6px;
-      font-size: 0.65rem; font-weight: 700;
-    }
-    .rhp-shift-em { font-size: 0.68rem; }
-    .rhp-time  { color: #78909c; font-size: 0.7rem; }
-    .rhp-desc  {
-      color: #b0bec5; font-size: 0.72rem;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-  `;
-  document.head.appendChild(style);
-})();
-
-/* ----------------------------------------------------------
-   9.  HOW TO CALL — วิธีใช้งาน
-   ---------------------------------------------------------- */
-/*
-   หลังจากสร้าง Chart.js radar chart สำหรับ "Downtime of Equipment" แล้ว:
-
-   ตัวอย่าง defEntries ต้องสอดคล้องกับ chart.data.labels:
-   var equipmentDefs = [
-     { key: 'BWE 1',  label: 'BWE 1',  color: '#e91e63' },
-     { key: 'BWE 2',  label: 'BWE 2',  color: '#9c27b0' },
-     { key: 'CR 1',   label: 'CR 1',   color: '#00bcd4' },
-     { key: 'CR 2',   label: 'CR 2',   color: '#4caf50' },
-     { key: 'CR 3',   label: 'CR 3',   color: '#ff9800' },
-     { key: 'SPD',    label: 'SPD',    color: '#2196f3' },
-     { key: 'System', label: 'System', color: '#607d8b' }
-   ];
-
-   bindEquipmentRadarHover(myEquipmentRadarChart, equipmentDefs);
-
-   // สำหรับ Type radar:
-   var typeDefs = [
-     { key: 'OPT',       label: 'OPT',       color: '#2196f3' },
-     { key: 'EE',        label: 'EE',         color: '#9c27b0' },
-     { key: 'ME',        label: 'ME',         color: '#4caf50' },
-     { key: 'Plan',      label: 'Plan',       color: '#ff9800' },
-     { key: 'Uncontrol', label: 'Uncontrol',  color: '#f44336' },
-     // ... เพิ่มตามที่มีใน dashboard
-   ];
-   bindTypeRadarHover(myTypeRadarChart, typeDefs);
-*/
-
-/* Position popup ให้ไม่เกินขอบหน้าจอ */
-function positionPopup(popupEl, mouseX, mouseY) {
-  popupEl.style.display = 'block';
-  popupEl.style.visibility = 'hidden';
-  var pw = popupEl.offsetWidth  || 300;
-  var ph = popupEl.offsetHeight || 200;
-  popupEl.style.visibility = '';
-  popupEl.style.display = 'none';
-
-  var margin = 16;
-  var posX = mouseX + margin;
-  var posY = mouseY - ph / 2;
-
-  if (posX + pw + 8 > window.innerWidth)  posX = mouseX - pw - margin;
-  if (posX < 8)                            posX = 8;
-  if (posY + ph + 8 > window.innerHeight) posY = window.innerHeight - ph - 8;
-  if (posY < 8)                            posY = 8;
-
-  popupEl.style.left = posX + 'px';
-  popupEl.style.top  = posY + 'px';
-}
-
-/* ══ Attach hover to Radar Equipment ══ */
+/* ── 5. Attach hover events สำหรับ Equipment radar ── */
 function attachEquipRadarHover(canvasEl, popupEl) {
-  var lastIdx = -1;
+  var lastIdx  = -1;
   var hideTimer = null;
 
   function showAtIdx(idx, mouseX, mouseY) {
-    if (idx < 0 || idx >= EQUIP_DEF.length) { hidePopup(); return; }
+    if (idx < 0 || idx >= EQUIP_DEF.length) { doHide(); return; }
     var def = EQUIP_DEF[idx];
 
-    /* Filter rows ตาม Machine Name key */
-    var rows = dtCurrentRows.filter(function(r){
+    /* กรอง rows ตาม Machine Name key */
+    var rows = dtCurrentRows.filter(function(r) {
       return (r[DT_COL.MACHINE] || '').trim() === def.key;
     });
 
-    var shiftLabel = currentShift === 'day' ? '☀️ Day Shift' : currentShift === 'night' ? '🌙 Night Shift' : '';
+    var shiftLabel = currentShift === 'day'   ? '☀️ Day Shift'   :
+                     currentShift === 'night' ? '🌙 Night Shift' : '';
+
     popupEl.innerHTML = buildRadarPopupHtml(def, rows, shiftLabel);
-    positionPopup(popupEl, mouseX, mouseY);
-    popupEl.classList.add('show');
+    popupEl.style.display = 'block';
+    /* วัดขนาด popup หลัง render แล้ววางตำแหน่ง */
+    requestAnimationFrame(function() {
+      positionRadarPopup(popupEl, mouseX, mouseY);
+      popupEl.classList.add('show');
+    });
   }
 
-  function hidePopup() {
+  function doHide() {
     popupEl.classList.remove('show');
+    popupEl.style.display = 'none';
     lastIdx = -1;
   }
 
@@ -1565,42 +1409,47 @@ function attachEquipRadarHover(canvasEl, popupEl) {
     if (idx !== lastIdx) {
       lastIdx = idx;
       if (idx >= 0) showAtIdx(idx, e.clientX, e.clientY);
-      else hidePopup();
+      else doHide();
     } else if (idx >= 0) {
-      /* Update position when same idx but mouse moved */
-      positionPopup(popupEl, e.clientX, e.clientY);
-      if (!popupEl.classList.contains('show')) popupEl.classList.add('show');
+      /* อัปเดตตำแหน่งตาม mouse movement */
+      positionRadarPopup(popupEl, e.clientX, e.clientY);
     }
   });
 
   canvasEl.addEventListener('mouseleave', function() {
-    hideTimer = setTimeout(function(){ hidePopup(); }, 150);
+    hideTimer = setTimeout(doHide, 200);
   });
 }
 
-/* ══ Attach hover to Radar Type ══ */
+/* ── 6. Attach hover events สำหรับ Type radar ── */
 function attachTypeRadarHover(canvasEl, popupEl) {
-  var lastIdx = -1;
+  var lastIdx  = -1;
   var hideTimer = null;
 
   function showAtIdx(idx, mouseX, mouseY) {
-    if (idx < 0 || idx >= TYPE_DEF.length) { hidePopup(); return; }
+    if (idx < 0 || idx >= TYPE_DEF.length) { doHide(); return; }
     var def = TYPE_DEF[idx];
 
-    /* Filter rows ตาม TYPEMACHINE หรือ TYPE column */
-    var rows = dtCurrentRows.filter(function(r){
+    /* กรอง rows ตาม TYPE column */
+    var rows = dtCurrentRows.filter(function(r) {
       var t = (r[DT_COL.TYPEMACHINE] || r[DT_COL.TYPE] || '').trim();
       return t === def.key;
     });
 
-    var shiftLabel = currentShift === 'day' ? '☀️ Day Shift' : currentShift === 'night' ? '🌙 Night Shift' : '';
+    var shiftLabel = currentShift === 'day'   ? '☀️ Day Shift'   :
+                     currentShift === 'night' ? '🌙 Night Shift' : '';
+
     popupEl.innerHTML = buildRadarTypePopupHtml(def, rows, shiftLabel);
-    positionPopup(popupEl, mouseX, mouseY);
-    popupEl.classList.add('show');
+    popupEl.style.display = 'block';
+    requestAnimationFrame(function() {
+      positionRadarPopup(popupEl, mouseX, mouseY);
+      popupEl.classList.add('show');
+    });
   }
 
-  function hidePopup() {
+  function doHide() {
     popupEl.classList.remove('show');
+    popupEl.style.display = 'none';
     lastIdx = -1;
   }
 
@@ -1611,15 +1460,14 @@ function attachTypeRadarHover(canvasEl, popupEl) {
     if (idx !== lastIdx) {
       lastIdx = idx;
       if (idx >= 0) showAtIdx(idx, e.clientX, e.clientY);
-      else hidePopup();
+      else doHide();
     } else if (idx >= 0) {
-      positionPopup(popupEl, e.clientX, e.clientY);
-      if (!popupEl.classList.contains('show')) popupEl.classList.add('show');
+      positionRadarPopup(popupEl, e.clientX, e.clientY);
     }
   });
 
   canvasEl.addEventListener('mouseleave', function() {
-    hideTimer = setTimeout(function(){ hidePopup(); }, 150);
+    hideTimer = setTimeout(doHide, 200);
   });
 }
 
@@ -1656,30 +1504,11 @@ function initRadarEquip(){
     options:radarOptions()
   });
 
-  /* Attach hover popup */
+  /* Attach hover ที่ canvas */
   attachEquipRadarHover(
     document.getElementById('radarEquipChart'),
     document.getElementById('radarEquipPopup')
   );
-
-  /* Legend items hover = show popup */
-  document.getElementById('radarEquipLegend').addEventListener('mouseover', function(e) {
-    var item = e.target.closest('[data-equip-idx]');
-    if (!item) return;
-    var idx = parseInt(item.dataset.equipIdx, 10);
-    if (isNaN(idx)) return;
-    var def = EQUIP_DEF[idx];
-    var rows = dtCurrentRows.filter(function(r){ return (r[DT_COL.MACHINE]||'').trim()===def.key; });
-    var shiftLabel = currentShift==='day'?'☀️ Day Shift':currentShift==='night'?'🌙 Night Shift':'';
-    var popupEl = document.getElementById('radarEquipPopup');
-    popupEl.innerHTML = buildRadarPopupHtml(def, rows, shiftLabel);
-    var rect = item.getBoundingClientRect();
-    positionPopup(popupEl, rect.left, rect.top + rect.height/2);
-    popupEl.classList.add('show');
-  });
-  document.getElementById('radarEquipLegend').addEventListener('mouseleave', function() {
-    document.getElementById('radarEquipPopup').classList.remove('show');
-  });
 }
 
 function initRadarType(){
@@ -1703,27 +1532,6 @@ function initRadarType(){
     document.getElementById('radarTypeChart'),
     document.getElementById('radarTypePopup')
   );
-
-  document.getElementById('radarTypeLegend').addEventListener('mouseover', function(e) {
-    var item = e.target.closest('[data-type-idx]');
-    if (!item) return;
-    var idx = parseInt(item.dataset.typeIdx, 10);
-    if (isNaN(idx)) return;
-    var def = TYPE_DEF[idx];
-    var rows = dtCurrentRows.filter(function(r){
-      var t=(r[DT_COL.TYPEMACHINE]||r[DT_COL.TYPE]||'').trim();
-      return t===def.key;
-    });
-    var shiftLabel = currentShift==='day'?'☀️ Day Shift':currentShift==='night'?'🌙 Night Shift':'';
-    var popupEl = document.getElementById('radarTypePopup');
-    popupEl.innerHTML = buildRadarTypePopupHtml(def, rows, shiftLabel);
-    var rect = item.getBoundingClientRect();
-    positionPopup(popupEl, rect.left, rect.top + rect.height/2);
-    popupEl.classList.add('show');
-  });
-  document.getElementById('radarTypeLegend').addEventListener('mouseleave', function() {
-    document.getElementById('radarTypePopup').classList.remove('show');
-  });
 }
 
 /* ══════════ FETCH DOWNTIME ══════════ */
@@ -1793,25 +1601,91 @@ function renderRadarForDate(wd){
   });
   radarEquipChart.data.datasets[0].data=equipCounts; radarEquipChart.update();
 
-  /* Legend with data-equip-idx for hover */
+  /* Legend สำหรับ Equipment — hover ที่ legend item ก็แสดง popup ด้วย */
   document.getElementById('radarEquipLegend').innerHTML=EQUIP_DEF.map(function(def,i){
-    return '<div class="radar-legend-item" data-equip-idx="'+i+'">'+
-      '<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div>'+
+    return '<div class="radar-legend-item" data-equip-idx="'+i+'" style="cursor:pointer;">'+
+      '<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+escHtml(def.label)+'</span></div>'+
       '<span class="radar-legend-val">'+equipCounts[i]+'</span></div>';
   }).join('');
 
+  /* Legend hover popup สำหรับ Equipment */
+  (function(){
+    var legendEl = document.getElementById('radarEquipLegend');
+    var popupEl  = document.getElementById('radarEquipPopup');
+    var hideTimer = null;
+
+    legendEl.addEventListener('mouseover', function(e) {
+      var item = e.target.closest('[data-equip-idx]');
+      if (!item) return;
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      var idx = parseInt(item.dataset.equipIdx, 10);
+      if (isNaN(idx) || idx < 0 || idx >= EQUIP_DEF.length) return;
+      var def = EQUIP_DEF[idx];
+      var rows2 = dtCurrentRows.filter(function(r){ return (r[DT_COL.MACHINE]||'').trim() === def.key; });
+      var shiftLabel = currentShift === 'day' ? '☀️ Day Shift' : currentShift === 'night' ? '🌙 Night Shift' : '';
+      popupEl.innerHTML = buildRadarPopupHtml(def, rows2, shiftLabel);
+      popupEl.style.display = 'block';
+      var rect = item.getBoundingClientRect();
+      requestAnimationFrame(function(){
+        positionRadarPopup(popupEl, rect.left, rect.top + rect.height / 2);
+        popupEl.classList.add('show');
+      });
+    });
+    legendEl.addEventListener('mouseleave', function() {
+      hideTimer = setTimeout(function(){
+        popupEl.classList.remove('show');
+        popupEl.style.display = 'none';
+      }, 200);
+    });
+  })();
+
   /* Type radar */
   var typeCounts=TYPE_DEF.map(function(def){
-    return shiftRows.filter(function(r){return(r[DT_COL.TYPEMACHINE]||'').trim()===def.key;}).length;
+    return shiftRows.filter(function(r){return(r[DT_COL.TYPEMACHINE]||'').trim()===def.key||
+      (!(r[DT_COL.TYPEMACHINE]||'').trim()&&(r[DT_COL.TYPE]||'').trim()===def.key);}).length;
   });
   radarTypeChart.data.datasets[0].data=typeCounts; radarTypeChart.update();
 
-  /* Legend with data-type-idx for hover */
+  /* Legend สำหรับ Type */
   document.getElementById('radarTypeLegend').innerHTML=TYPE_DEF.map(function(def,i){
-    return '<div class="radar-legend-item" data-type-idx="'+i+'">'+
-      '<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+def.label+'</span></div>'+
+    return '<div class="radar-legend-item" data-type-idx="'+i+'" style="cursor:pointer;">'+
+      '<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+escHtml(def.label)+'</span></div>'+
       '<span class="radar-legend-val">'+typeCounts[i]+'</span></div>';
   }).join('');
+
+  /* Legend hover popup สำหรับ Type */
+  (function(){
+    var legendEl = document.getElementById('radarTypeLegend');
+    var popupEl  = document.getElementById('radarTypePopup');
+    var hideTimer = null;
+
+    legendEl.addEventListener('mouseover', function(e) {
+      var item = e.target.closest('[data-type-idx]');
+      if (!item) return;
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      var idx = parseInt(item.dataset.typeIdx, 10);
+      if (isNaN(idx) || idx < 0 || idx >= TYPE_DEF.length) return;
+      var def = TYPE_DEF[idx];
+      var rows2 = dtCurrentRows.filter(function(r){
+        var t = (r[DT_COL.TYPEMACHINE] || r[DT_COL.TYPE] || '').trim();
+        return t === def.key;
+      });
+      var shiftLabel = currentShift === 'day' ? '☀️ Day Shift' : currentShift === 'night' ? '🌙 Night Shift' : '';
+      popupEl.innerHTML = buildRadarTypePopupHtml(def, rows2, shiftLabel);
+      popupEl.style.display = 'block';
+      var rect = item.getBoundingClientRect();
+      requestAnimationFrame(function(){
+        positionRadarPopup(popupEl, rect.left, rect.top + rect.height / 2);
+        popupEl.classList.add('show');
+      });
+    });
+    legendEl.addEventListener('mouseleave', function() {
+      hideTimer = setTimeout(function(){
+        popupEl.classList.remove('show');
+        popupEl.style.display = 'none';
+      }, 200);
+    });
+  })();
 
   document.getElementById('radarEquipTotal').textContent='Total: '+equipCounts.reduce(function(a,b){return a+b;},0)+' events';
   document.getElementById('radarTypeTotal').textContent='Total: '+typeCounts.reduce(function(a,b){return a+b;},0)+' events';
