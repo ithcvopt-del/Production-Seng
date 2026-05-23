@@ -1471,7 +1471,10 @@ function toggleEquipPopup(idx, refX, refY) {
   var def = EQUIP_DEF[idx];
   if (!def) return;
   var rows = dtCurrentRows.filter(function(r) {
-    return (r[DT_COL.MACHINE] || '').trim() === def.key;
+    var machine=(r[DT_COL.MACHINE]||'').trim();
+    if(TYPE_MACHINE_KEYS.indexOf(machine)===-1) return false;  // ← กรอง machine
+    var t = (r[DT_COL.TYPEMACHINE] || r[DT_COL.TYPE] || '').trim();
+    return t === def.key;
   });
   var shiftLabel = currentShift === 'day'   ? '☀️ Day Shift' :
                    currentShift === 'night' ? '🌙 Night Shift' : '';
@@ -1696,9 +1699,13 @@ function renderRadarForDate(wd){
   });
 
   /* ── Type radar ── */
-  var typeCounts=TYPE_DEF.map(function(def){
-    return shiftRows.filter(function(r){return(r[DT_COL.TYPEMACHINE]||'').trim()===def.key||
-      (!(r[DT_COL.TYPEMACHINE]||'').trim()&&(r[DT_COL.TYPE]||'').trim()===def.key);}).length;
+var typeCounts=TYPE_DEF.map(function(def){
+    return shiftRows.filter(function(r){
+      var machine=(r[DT_COL.MACHINE]||'').trim();
+      if(TYPE_MACHINE_KEYS.indexOf(machine)===-1) return false;  // ← กรอง machine
+      return(r[DT_COL.TYPEMACHINE]||'').trim()===def.key||
+        (!(r[DT_COL.TYPEMACHINE]||'').trim()&&(r[DT_COL.TYPE]||'').trim()===def.key);
+    }).length;
   });
   radarTypeChart.data.datasets[0].data=typeCounts; radarTypeChart.update();
 
