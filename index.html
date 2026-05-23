@@ -445,13 +445,14 @@
     position: fixed; z-index: 9999; background: #fff;
     border: 1.5px solid #dde1e8; border-radius: 10px;
     box-shadow: 0 8px 32px rgba(21,35,126,.18), 0 2px 10px rgba(0,0,0,.12);
-    pointer-events: none; min-width: 230px; max-width: 340px;
+    pointer-events: none; min-width: 250px; max-width: 340px;
     display: none; overflow: hidden; font-family: 'Sarabun', Arial, sans-serif;
     animation: tooltipFadeIn .12s ease;
   }
   @keyframes tooltipFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
   .bct-header { background: linear-gradient(135deg, #1a237e, #1565c0); padding: 6px 12px; display: flex; align-items: center; justify-content: space-between; }
   .bct-time { font-family: 'Chakra Petch', monospace; font-size: 0.85rem; font-weight: 700; color: #fff; }
+  .bct-window { font-family: 'Chakra Petch', monospace; font-size: 0.7rem; color: rgba(255,255,255,.75); margin-left: 6px; }
   .bct-total-badge { font-family: 'Chakra Petch', monospace; font-size: 0.78rem; font-weight: 800; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.25); border-radius: 12px; padding: 1px 8px; color: #fff; }
   .bct-body { padding: 8px 12px; }
   .bct-row { display: flex; align-items: center; gap: 6px; padding: 2px 0; border-bottom: 1px solid #f0f2f5; }
@@ -460,28 +461,66 @@
   .bct-label { font-size: 0.78rem; color: #374151; flex: 1; }
   .bct-val { font-family: 'Chakra Petch', monospace; font-size: 0.78rem; font-weight: 700; color: #0d47a1; text-align: right; }
   .bct-below-warning { margin: 6px 12px 0; padding: 4px 8px; background: rgba(255,152,0,.08); border: 1px solid rgba(255,152,0,.35); border-radius: 6px; font-family: 'Chakra Petch', monospace; font-size: 0.68rem; font-weight: 700; color: #e65100; display: flex; align-items: center; gap: 4px; }
-  .bct-dt-section { border-top: 2px dashed rgba(239,83,80,.3); margin: 0; padding: 6px 12px 8px; background: rgba(255,245,245,.6); }
-  .bct-dt-title { font-family: 'Chakra Petch', monospace; font-size: 0.68rem; font-weight: 700; color: #b71c1c; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .6px; }
-  .bct-dt-item { display: flex; flex-direction: column; gap: 1px; padding: 3px 0; border-bottom: 1px solid rgba(239,83,80,.15); }
-  .bct-dt-item:last-child { border-bottom: none; }
-  .bct-dt-machine { font-family: 'Chakra Petch', monospace; font-size: 0.72rem; font-weight: 800; color: #0d47a1; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-  .bct-dt-desc { font-size: 0.68rem; color: #374151; font-family: 'Sarabun', Arial, sans-serif; line-height: 1.3; word-break: break-word; white-space: normal; }
-  .bct-dt-meta { font-size: 0.68rem; color: #546e7a; font-family: 'Chakra Petch', monospace; }
-  .bct-dt-more { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; color: #90a4ae; text-align: center; margin-top: 3px; }
-  .bct-no-dt { font-family: 'Chakra Petch', monospace; font-size: 0.68rem; color: #90a4ae; text-align: center; padding: 4px 0; }
 
-  /* ══ overlap tag สำหรับ downtime ที่ "ทับ" ชั่วโมงนี้ (ไม่ได้เริ่มในชั่วโมงนี้) ══ */
-  .bct-dt-overlap-tag {
-    display: inline-block;
-    font-family: 'Chakra Petch', Arial, sans-serif;
-    font-size: 0.60rem; font-weight: 700;
-    background: rgba(255,152,0,.15);
-    color: #e65100;
-    border: 1px solid rgba(255,152,0,.4);
-    border-radius: 3px;
-    padding: 0 4px;
-    white-space: nowrap;
+  /* ═══ DT Section in Bar Tooltip ═══ */
+  .bct-dt-section {
+    border-top: 2px dashed rgba(239,83,80,.3);
+    margin: 0; padding: 7px 12px 10px;
+    background: rgba(255,245,245,.6);
   }
+  .bct-dt-title {
+    font-family: 'Chakra Petch', monospace; font-size: 0.68rem;
+    font-weight: 700; color: #b71c1c; margin-bottom: 6px;
+    text-transform: uppercase; letter-spacing: .6px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .bct-dt-count-badge {
+    font-family: 'Chakra Petch', monospace; font-size: 0.62rem;
+    font-weight: 800; background: #ef5350; color: #fff;
+    border-radius: 10px; padding: 0 6px; line-height: 1.5;
+  }
+  .bct-dt-item {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 5px 6px; margin-bottom: 4px;
+    background: #fff; border: 1px solid rgba(239,83,80,.18);
+    border-left: 3px solid var(--dt-color, #ef5350);
+    border-radius: 0 5px 5px 0;
+  }
+  .bct-dt-item:last-child { margin-bottom: 0; }
+  .bct-dt-machine {
+    font-family: 'Chakra Petch', monospace; font-size: 0.73rem;
+    font-weight: 800; color: #0d47a1;
+    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
+  }
+  .bct-dt-type-chip {
+    font-family: 'Chakra Petch', Arial, sans-serif; font-size: 0.60rem;
+    font-weight: 700; padding: 0px 5px; border-radius: 3px;
+    background: rgba(86,119,252,.12); color: #5677fc;
+    border: 1px solid rgba(86,119,252,.25);
+  }
+  /* overlap indicator bar */
+  .bct-dt-overlap-bar {
+    height: 4px; border-radius: 2px; margin: 2px 0;
+    background: linear-gradient(90deg, #ef5350, #ff8a65);
+    position: relative; overflow: visible;
+  }
+  .bct-dt-timeline {
+    font-family: 'Chakra Petch', monospace; font-size: 0.66rem;
+    color: #546e7a; display: flex; align-items: center; gap: 3px;
+  }
+  .bct-dt-time-full { color: #0d47a1; font-weight: 700; }
+  .bct-dt-overlap-label {
+    font-size: 0.60rem; color: #b71c1c; font-weight: 700;
+    background: rgba(183,28,28,.08); border: 1px solid rgba(183,28,28,.2);
+    border-radius: 3px; padding: 0 4px; white-space: nowrap;
+  }
+  .bct-dt-desc {
+    font-size: 0.68rem; color: #374151;
+    font-family: 'Sarabun', Arial, sans-serif; line-height: 1.3;
+    word-break: break-word; white-space: normal;
+  }
+  .bct-dt-more { font-family: 'Chakra Petch', monospace; font-size: 0.65rem; color: #90a4ae; text-align: center; margin-top: 4px; }
+  .bct-no-dt { font-family: 'Chakra Petch', monospace; font-size: 0.68rem; color: #90a4ae; text-align: center; padding: 6px 0; }
 
   /* ══ Radar Click Popup ══ */
   .radar-click-popup {
@@ -620,6 +659,7 @@
 <body>
 
 <div id="barCustomTooltip"></div>
+
 <div class="radar-click-popup" id="radarEquipPopup"></div>
 <div class="radar-click-popup" id="radarTypePopup"></div>
 
@@ -852,10 +892,26 @@
 var BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 var CSV_URLS = [ BASE + '?gid=1971585139&single=true&output=csv' ];
 var COL = { DT:0, BCM_CR:1, CR1:2, CR2:3, CR3:4, WDATE:6, BWE1:7, BWE2:8, HOUR_S3:11, VALUE:23 };
+
 var C = { bwe1:'#6B007B', bwe2:'#F48FB1', cr1:'#2baf2b', cr2:'#72D572', cr3:'#CDDC39' };
+
 var allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 var radarEquipChart=null, radarTypeChart=null, donutChart=null;
 
+/* ═══════════════════════════════════════════════════════════
+   MACHINE COLOR MAP — ใช้แมป Machine Name → color สำหรับ tooltip
+   ═══════════════════════════════════════════════════════════ */
+var MACHINE_COLOR_MAP = {
+  'Bucket Wheel #1': '#6B007B',
+  'Bucket Wheel #2': '#F48FB1',
+  'Crusher #1':      '#2baf2b',
+  'Crusher #2':      '#72D572',
+  'Crusher #3':      '#CDDC39',
+  'Spreader':        '#4db6ac',
+  'System':          '#03a9f4',
+};
+
+/* ══════════ MACHINE FILTER STATE ══════════ */
 var MACHINE_DEF = [
   { label:'Bucket Wheel #1', color:'#6B007B' },
   { label:'Bucket Wheel #2', color:'#F48FB1' },
@@ -868,8 +924,10 @@ var MACHINE_DEF = [
 var selectedMachines = null;
 var pendingMachines  = null;
 
+/* ══════════ DT CONFIG ══════════ */
 var DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 var DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
+
 var DT_COL = { MACHINE:0, START:1, END:2, DURATION:3, DESC:5, DATE:6, SHIFT:7, TYPE:9, TYPEMACHINE:11 };
 
 var EQUIP_DEF = [
@@ -891,7 +949,9 @@ var TYPE_DEF = [
 ];
 
 var TYPE_MACHINE_KEYS = [
-  'Bucket Wheel #1','Bucket Wheel #2','Crusher #1','Crusher #2','Crusher #3','Spreader','System'
+  'Bucket Wheel #1','Bucket Wheel #2',
+  'Crusher #1','Crusher #2','Crusher #3',
+  'Spreader','System'
 ];
 
 var TYPE_COLORS = {
@@ -901,8 +961,14 @@ var TYPE_COLORS = {
 };
 
 var dtAllRows=[], dtCurrentRows=[], dtActiveFilter='ALL';
+
+/* ══════════ POPUP STATE ══════════ */
 var equipPopupOpenIdx = -1;
 var typePopupOpenIdx  = -1;
+
+/* ══════════ BAR CHART LABELS CACHE ══════════ */
+/* เก็บ labels ปัจจุบันไว้เพื่อให้ tooltip ใช้ค้นหา window */
+var currentBarLabels = [];
 
 /* ══════════ HELPERS ══════════ */
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -916,6 +982,108 @@ function fmtDTTime(s){
   m=s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
   if(m) return m[1].padStart(2,'0')+':'+m[2];
   return null;
+}
+
+/* แปลง "HH:MM" → minutes from midnight (0-1439) */
+function hhmm2min(s){
+  if(!s) return null;
+  var p=s.split(':'); if(p.length<2) return null;
+  var h=parseInt(p[0],10), m=parseInt(p[1],10);
+  if(isNaN(h)||isNaN(m)) return null;
+  return h*60+m;
+}
+
+/*
+ * ═══════════════════════════════════════════════════════════
+ *  getDowntimesForHour  —  REVISED OVERLAP-BASED VERSION
+ *
+ *  แต่ละ bar label คือเวลาที่ record ถูกบันทึก เช่น "9:00"
+ *  window ของ bar นั้น = [prevLabel, thisLabel]
+ *  ถ้าไม่มี prevLabel → window = [thisLabel - 60min, thisLabel]
+ *
+ *  DT ทับซ้อน window ถ้า:
+ *    dtStart < windowEnd  AND  (dtEnd > windowStart หรือ DT ยัง ongoing)
+ *
+ *  รองรับ cross-midnight: ชั่วโมง 0-7 ของ Night Shift
+ *  ถือเป็น 24-31 (extended) เพื่อให้เรียงต่อเนื่องกับ 20-23
+ * ═══════════════════════════════════════════════════════════
+ */
+function getDowntimesForHour(labelStr, labelIdx){
+  if(!dtCurrentRows||!dtCurrentRows.length) return [];
+
+  /* 1. หา window end จาก label ปัจจุบัน */
+  var parts=(labelStr||'').split(':');
+  var wEndH=parseInt(parts[0],10);
+  if(isNaN(wEndH)) return [];
+  var wEndMin=wEndH*60+(parseInt(parts[1],10)||0);
+
+  /* 2. หา window start จาก label ก่อนหน้า (ถ้ามี) */
+  var wStartMin;
+  if(labelIdx>0 && currentBarLabels[labelIdx-1]){
+    var prevParts=currentBarLabels[labelIdx-1].split(':');
+    var pH=parseInt(prevParts[0],10), pm=parseInt(prevParts[1],10)||0;
+    wStartMin=pH*60+pm;
+  } else {
+    wStartMin=wEndMin-60; /* ไม่มี prev → assume 1hr window */
+  }
+
+  /* 3. Normalize: รองรับ cross-midnight (Night Shift 00:xx-07:xx = 24:xx-31:xx) */
+  /* ถ้า wEndMin < wStartMin แสดงว่าข้ามเที่ยงคืน → +1440 */
+  if(wEndMin < wStartMin) wEndMin += 1440;
+
+  /* 4. filter DT ที่ overlap */
+  return dtCurrentRows.filter(function(r){
+    var startRaw = fmtDTTime(r[DT_COL.START]||'');
+    if(!startRaw) return false;
+
+    var dtStartMin = hhmm2min(startRaw);
+    if(dtStartMin===null) return false;
+
+    /* normalize DT start เทียบกับ window */
+    /* ถ้า DT start อยู่ฝั่ง "วันถัดไป" (cross-midnight) */
+    if(dtStartMin < 8*60 && wStartMin >= 20*60){
+      /* Night shift: DT ที่ start 00:xx-07:xx จริงๆ คือหลัง 24:00 */
+      dtStartMin += 1440;
+    }
+
+    var dtEndStr = fmtDTTime(r[DT_COL.END]||'');
+    var isOngoing = !dtEndStr;
+
+    if(isOngoing){
+      /* Ongoing: ทับซ้อนถ้า dtStart < wEnd */
+      return dtStartMin < wEndMin;
+    }
+
+    var dtEndMin = hhmm2min(dtEndStr);
+    if(dtEndMin===null) return false;
+
+    /* normalize DT end */
+    if(dtEndMin < 8*60 && wStartMin >= 20*60){
+      dtEndMin += 1440;
+    }
+    /* ถ้า dtEnd น้อยกว่า dtStart แสดงว่า DT ข้ามเที่ยงคืนเช่นกัน */
+    if(dtEndMin <= dtStartMin) dtEndMin += 1440;
+
+    /* Overlap check: dtStart < wEnd AND dtEnd > wStart */
+    return dtStartMin < wEndMin && dtEndMin > wStartMin;
+  });
+}
+
+/* คำนวณ overlap duration (minutes) ระหว่าง DT กับ window */
+function calcOverlapMinutes(dtStartStr, dtEndStr, wStartMin, wEndMin){
+  var dtStartMin=hhmm2min(dtStartStr);
+  var dtEndMin=dtEndStr?hhmm2min(dtEndStr):null;
+  if(dtStartMin===null) return 0;
+
+  /* normalize cross-midnight */
+  if(dtStartMin<8*60&&wStartMin>=20*60) dtStartMin+=1440;
+  if(dtEndMin!==null&&dtEndMin<8*60&&wStartMin>=20*60) dtEndMin+=1440;
+  if(dtEndMin!==null&&dtEndMin<=dtStartMin) dtEndMin+=1440;
+  if(wEndMin<wStartMin) wEndMin+=1440;
+
+  var overlapStart=Math.max(dtStartMin,wStartMin);
+  var overlapEnd=dtEndMin!==null?Math.min(dtEndMin,wEndMin):wEndMin;
+  return Math.max(0,overlapEnd-overlapStart);
 }
 
 function normDateG(s){
@@ -1108,69 +1276,10 @@ var targetLinePlugin={
   }
 };
 
-/* ══════════════════════════════════════════════════════
-   ★ getDowntimesForHour — แก้ใหม่ใช้ OVERLAP CHECK ★
-   
-   Bar label "HH:MM" = ผลผลิตในช่วงเวลา (HH-1):MM → HH:MM
-   เช่น bar "09:00" คือช่วง 08:00–09:00
-   
-   แสดง Downtime ถ้า Downtime ทับซ้อนกับช่วงเวลา bar นั้น
-   เงื่อนไข: dtStart < barEnd  AND  dtEnd > barStart
-   
-   ชั่วโมงก่อนเที่ยงคืน (00:xx–07:xx) = ชั่วโมง +24 (Night shift)
-   เพื่อให้เปรียบเทียบกับ 08:xx–23:xx ได้ถูกต้อง
-══════════════════════════════════════════════════════ */
-function getDowntimesForHour(labelStr) {
-  if (!dtCurrentRows || !dtCurrentRows.length) return [];
-
-  var parts = labelStr.split(':');
-  if (parts.length < 2) return [];
-
-  var barEndH = parseInt(parts[0], 10);
-  var barEndM = parseInt(parts[1], 10) || 0;
-
-  /* Normalize: ชั่วโมงก่อน 08:00 ถือว่าเป็น +24 (ข้ามเที่ยงคืน Night shift) */
-  if (barEndH < 8) barEndH += 24;
-  var barEnd   = barEndH * 60 + barEndM;   /* นาทีสิ้นสุดของ bar */
-  var barStart = barEnd - 60;              /* นาทีเริ่มต้นของ bar (1 ชั่วโมงก่อน) */
-
-  return dtCurrentRows.filter(function(r) {
-    var stStr = fmtDTTime(r[DT_COL.START] || '');
-    if (!stStr) return false;
-
-    /* แปลง Start Time → นาทีรวม (normalize เที่ยงคืน) */
-    var stParts = stStr.split(':');
-    var stH = parseInt(stParts[0], 10);
-    var stM = parseInt(stParts[1], 10) || 0;
-    if (stH < 8) stH += 24;
-    var dtStart = stH * 60 + stM;
-
-    /* แปลง End Time → นาทีรวม */
-    var dtEnd;
-    var etStr = fmtDTTime(r[DT_COL.END] || '');
-    if (etStr) {
-      var etParts = etStr.split(':');
-      var etH = parseInt(etParts[0], 10);
-      var etM = parseInt(etParts[1], 10) || 0;
-      if (etH < 8) etH += 24;
-      dtEnd = etH * 60 + etM;
-      /* กัน edge case: ถ้า end น้อยกว่า start (ข้ามวันผิดปกติ) */
-      if (dtEnd <= dtStart) dtEnd = dtStart + 1;
-    } else {
-      /* Ongoing (ยังไม่มี End Time) → ให้ทับซ้อนไปถึงสิ้นวัน shift */
-      dtEnd = 32 * 60; /* 32:00 = หลัง 07:00 วันถัดไป */
-    }
-
-    /*
-      ★ OVERLAP CHECK ★
-      Downtime ทับซ้อนกับ bar window ถ้า:
-        dtStart < barEnd  AND  dtEnd > barStart
-    */
-    return dtStart < barEnd && dtEnd > barStart;
-  });
-}
-
-/* ══════════ Bar Tooltip ══════════ */
+/* ═══════════════════════════════════════════════════════════
+   BAR TOOLTIP  —  REVISED
+   แสดง Downtime ที่ overlap กับ window ของ bar นั้นๆ
+   ═══════════════════════════════════════════════════════════ */
 var barTooltipEl=null;
 function getBarTooltipEl(){ if(!barTooltipEl) barTooltipEl=document.getElementById('barCustomTooltip'); return barTooltipEl; }
 function hideBarTooltip(){ getBarTooltipEl().style.display='none'; }
@@ -1179,76 +1288,110 @@ function showBarTooltip(context){
   var tooltip=context.tooltip, el=getBarTooltipEl();
   if(tooltip.opacity===0){hideBarTooltip();return;}
   var dp=tooltip.dataPoints; if(!dp||!dp.length){hideBarTooltip();return;}
-  var label=dp[0].label, total=dp.reduce(function(s,p){return s+(p.parsed.y||0);},0);
-  var belowTarget=total<4800, dsColors=['#259B24','#7b1fa2','#f48fb1'], html='';
 
-  html+='<div class="bct-header"><span class="bct-time">🕐 '+label+'</span><span class="bct-total-badge">'+total.toLocaleString()+' BCM</span></div>';
+  var dataIdx = dp[0].dataIndex;
+  var label   = dp[0].label;
+  var total   = dp.reduce(function(s,p){return s+(p.parsed.y||0);},0);
+  var belowTarget = total < 4800;
+
+  /* ── คำนวณ window ──────────────────────────── */
+  var parts = (label||'').split(':');
+  var wEndH = parseInt(parts[0],10)||0;
+  var wEndMin = wEndH*60+(parseInt(parts[1],10)||0);
+  var wStartMin;
+  if(dataIdx>0 && currentBarLabels[dataIdx-1]){
+    var pp=currentBarLabels[dataIdx-1].split(':');
+    wStartMin=parseInt(pp[0],10)*60+(parseInt(pp[1],10)||0);
+  } else {
+    wStartMin=wEndMin-60;
+  }
+  if(wEndMin<wStartMin) wEndMin+=1440;
+  var wStartLabel=String(Math.floor(((wStartMin+1440)%1440)/60)).padStart(2,'0')+':'+String(wStartMin%60).padStart(2,'0');
+  /* fix: wStartMin อาจ negative ถ้า label แรก */
+  if(wStartMin<0){ wStartLabel=String(Math.floor((wStartMin+1440)/60)).padStart(2,'0')+':'+String(((wStartMin%60)+60)%60).padStart(2,'0'); }
+
+  var dsColors=['#259B24','#7b1fa2','#f48fb1'];
+  var html='';
+
+  /* ── Header ── */
+  html+='<div class="bct-header">'
+      +'<span class="bct-time">🕐 '+escHtml(wStartLabel)+' – '+escHtml(label)+'</span>'
+      +'<span class="bct-total-badge">'+total.toLocaleString()+' BCM</span>'
+      +'</div>';
+
+  /* ── BCM per machine ── */
   html+='<div class="bct-body">';
   dp.forEach(function(p,i){
     var color=dsColors[i]||'#90a4ae';
-    html+='<div class="bct-row"><div class="bct-dot" style="background:'+color+'"></div><span class="bct-label">'+escHtml(p.dataset.label)+'</span><span class="bct-val">'+(p.parsed.y||0).toLocaleString()+'</span></div>';
+    html+='<div class="bct-row">'
+        +'<div class="bct-dot" style="background:'+color+'"></div>'
+        +'<span class="bct-label">'+escHtml(p.dataset.label)+'</span>'
+        +'<span class="bct-val">'+(p.parsed.y||0).toLocaleString()+'</span>'
+        +'</div>';
   });
   html+='</div>';
 
+  /* ── Below target warning ── */
   if(belowTarget){
     var gap=4800-total;
-    html+='<div class="bct-below-warning">⚠ Below target by '+gap.toLocaleString()+' BCM</div>';
-
-    /* ★ ดึง Downtime ที่ทับซ้อนกับชั่วโมงนี้ (ใช้ Overlap Check) ★ */
-    var dts = getDowntimesForHour(label);
-
-    html+='<div class="bct-dt-section"><div class="bct-dt-title">⏱ Downtime overlapping '+label+' window</div>';
-    if(!dts.length){
-      html+='<div class="bct-no-dt">No downtime records overlap this hour</div>';
-    } else {
-      var MAX=6;
-      dts.slice(0,MAX).forEach(function(r){
-        var machine = escHtml((r[DT_COL.MACHINE]||'').trim());
-        var startT  = fmtDTTime(r[DT_COL.START]||'')||'—';
-        var endT    = fmtDTTime(r[DT_COL.END]||'')||'?';
-        var desc    = escHtml((r[DT_COL.DESC]||'').trim()||'—');
-        var duration= (r[DT_COL.DURATION]||'').trim()||'—';
-        var typeRaw = (r[DT_COL.TYPE]||'').trim()||'';
-        var tc      = TYPE_COLORS[typeRaw]||'#90a4ae';
-
-        /*
-          ★ แสดง tag "ทับ" ถ้า Downtime ไม่ได้เริ่มในชั่วโมงนี้ (เริ่มก่อนหน้า)
-          เช่น BWE#2 เริ่ม 07:00 แต่แสดงใน bar 08:00–12:00 → tag "ต่อเนื่อง"
-        */
-        var barEndH2 = parseInt(label.split(':')[0],10);
-        if(barEndH2<8) barEndH2+=24;
-        var barStartHHMM = (barEndH2-1 < 24 ? barEndH2-1 : barEndH2-1-24);
-        var barStartStr  = String(barStartHHMM<0?barStartHHMM+24:barStartHHMM).padStart(2,'0')+':00';
-
-        var stH2 = parseInt((startT||'00').split(':')[0],10);
-        if(stH2<8) stH2+=24;
-        var bsH2 = barEndH2-1;
-        var isOverlap = stH2 !== bsH2; /* เริ่มคนละชั่วโมงกับ bar start */
-
-        var overlapTag = isOverlap
-          ? ' <span class="bct-dt-overlap-tag">▶ ต่อเนื่องจาก '+escHtml(startT)+'</span>'
-          : '';
-
-        var typeTag = typeRaw
-          ? ' <span style="font-family:\'Chakra Petch\',monospace;font-size:0.62rem;font-weight:700;background:'+tc+'22;color:'+tc+';border:1px solid '+tc+'55;border-radius:3px;padding:0 4px;">'+escHtml(typeRaw)+'</span>'
-          : '';
-
-        html+='<div class="bct-dt-item">';
-        html+='<div class="bct-dt-machine">'+machine+typeTag+overlapTag+'</div>';
-        html+='<div class="bct-dt-meta">'+escHtml(startT)+' → '+(endT==='?'?'<span style="color:#ff9800;font-weight:700;">? (Ongoing)</span>':escHtml(endT))+'&nbsp;&nbsp;('+escHtml(duration)+')</div>';
-        html+='<div class="bct-dt-desc">'+desc+'</div>';
-        html+='</div>';
-      });
-      if(dts.length>MAX) html+='<div class="bct-dt-more">+'+(dts.length-MAX)+' more records…</div>';
-    }
-    html+='</div>';
+    html+='<div class="bct-below-warning">⚠ Below target by '+gap.toLocaleString()+' BCM/Hr</div>';
   }
+
+  /* ── Downtime Section (เสมอ: แสดงทั้ง below และ on-target) ── */
+  var dts = getDowntimesForHour(label, dataIdx);
+
+  html+='<div class="bct-dt-section">'
+      +'<div class="bct-dt-title">⏱ Downtime ในช่วง '+escHtml(wStartLabel)+' – '+escHtml(label)
+      +'<span class="bct-dt-count-badge">'+dts.length+'</span></div>';
+
+  if(!dts.length){
+    html+='<div class="bct-no-dt">✅ ไม่มี Downtime ในช่วงเวลานี้</div>';
+  } else {
+    /* เรียงตาม start time */
+    var sorted=dts.slice().sort(function(a,b){
+      return (a[DT_COL.START]||'')<(b[DT_COL.START]||'')?-1:1;
+    });
+    var MAX=6;
+    sorted.slice(0,MAX).forEach(function(r){
+      var machine  = (r[DT_COL.MACHINE]||'').trim()||'—';
+      var startStr = fmtDTTime(r[DT_COL.START]||'')||'—';
+      var endStr   = fmtDTTime(r[DT_COL.END]||'');
+      var typeRaw  = (r[DT_COL.TYPE]||'').trim()||'—';
+      var desc     = (r[DT_COL.DESC]||'').trim()||'—';
+      var isOngoing= !endStr;
+      var mc       = MACHINE_COLOR_MAP[machine]||'#90a4ae';
+      var tc       = TYPE_COLORS[typeRaw]||'#90a4ae';
+
+      /* คำนวณ overlap duration */
+      var overlapMin = calcOverlapMinutes(startStr, endStr, wStartMin, wEndMin);
+      var overlapLabel = overlapMin>0?(overlapMin+' min overlap'):'';
+
+      html+='<div class="bct-dt-item" style="--dt-color:'+mc+';">'
+          /* machine + type */
+          +'<div class="bct-dt-machine">'
+          +escHtml(machine)
+          +'<span class="bct-dt-type-chip" style="background:'+tc+'18;color:'+tc+';border-color:'+tc+'55;">'+escHtml(typeRaw)+'</span>'
+          +(overlapLabel?'<span class="bct-dt-overlap-label">⧖ '+escHtml(overlapLabel)+'</span>':'')
+          +'</div>'
+          /* full DT time range */
+          +'<div class="bct-dt-timeline">'
+          +'<span class="bct-dt-time-full">'+escHtml(startStr)+' → '+(isOngoing?'<span style="color:#ff9800;font-weight:700;">⚡ ONGOING</span>':escHtml(endStr))+'</span>'
+          +'</div>'
+          /* description */
+          +'<div class="bct-dt-desc">'+escHtml(desc)+'</div>'
+          +'</div>';
+    });
+    if(sorted.length>MAX){
+      html+='<div class="bct-dt-more">+ '+(sorted.length-MAX)+' more records…</div>';
+    }
+  }
+  html+='</div>'; /* end bct-dt-section */
 
   el.innerHTML=html; el.style.display='block';
   var canvas=context.chart.canvas, rect=canvas.getBoundingClientRect();
   var caretX=rect.left+tooltip.caretX, caretY=rect.top+tooltip.caretY;
   el.style.visibility='hidden'; el.style.display='block';
-  var elW=el.offsetWidth||280, elH=el.offsetHeight||200;
+  var elW=el.offsetWidth||290, elH=el.offsetHeight||200;
   el.style.visibility='';
   var margin=14, posX=caretX+margin, posY=caretY-elH/2;
   if(posX+elW+8>window.innerWidth) posX=caretX-elW-margin;
@@ -1335,9 +1478,9 @@ function updateDonut(grandTotal){
   else{gapLabelEl.textContent='⚠ Below Target';gapLabelEl.style.color='#c62828';gapEl.className='donut-stat-val red';}
 }
 
-/* ════════════════════════════════════
-   RADAR POPUP SYSTEM (เหมือนเดิม)
-════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════
+   RADAR POPUP SYSTEM (unchanged from original)
+   ════════════════════════════════════════════════════════════════ */
 function positionRadarPopup(popupEl, refX, refY) {
   var margin=14, pw=popupEl.offsetWidth||320, ph=popupEl.offsetHeight||260;
   var vw=window.innerWidth, vh=window.innerHeight;
@@ -1350,7 +1493,8 @@ function positionRadarPopup(popupEl, refX, refY) {
 }
 
 function closeAllRadarPopups() {
-  var ep=document.getElementById('radarEquipPopup'), tp=document.getElementById('radarTypePopup');
+  var ep=document.getElementById('radarEquipPopup');
+  var tp=document.getElementById('radarTypePopup');
   ep.classList.remove('show'); ep.style.display='none';
   tp.classList.remove('show'); tp.style.display='none';
   equipPopupOpenIdx=-1; typePopupOpenIdx=-1;
@@ -1367,21 +1511,20 @@ function getRadarNearestIdx(chart, clientX, clientY) {
   var dx=mx-cx, dy=my-cy, dist=Math.sqrt(dx*dx+dy*dy);
   var outerR=r.drawingArea||80;
   if(dist<5||dist>outerR*1.5) return -1;
-  var angleRad=Math.atan2(dy,dx);
-  var angleDeg=(angleRad*180/Math.PI+90+360)%360;
+  var angleRad=Math.atan2(dy,dx), angleDeg=(angleRad*180/Math.PI+90+360)%360;
   var step=360/n;
   return Math.round(angleDeg/step)%n;
 }
 
 function buildEquipPopupHtml(def, rows, shiftLabel) {
   var color=def.color||'#1565c0';
-  var html='<div class="rcp-header" style="background:linear-gradient(135deg,'+color+'dd,'+color+'99);">'+
-    '<div class="rcp-dot" style="background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.6);"></div>'+
-    '<span class="rcp-title">⚙ '+escHtml(def.label)+' — '+escHtml(def.key)+'</span>'+
-    (shiftLabel?'<span class="rcp-shift-badge">'+escHtml(shiftLabel)+'</span>':'')+
-    '<span class="rcp-count">'+rows.length+' events</span>'+
-    '<button class="rcp-close-btn" onclick="closeAllRadarPopups();event.stopPropagation();">✕</button>'+
-    '</div><div class="rcp-body">';
+  var html='<div class="rcp-header" style="background:linear-gradient(135deg,'+color+'dd,'+color+'99);">'
+    +'<div class="rcp-dot" style="background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.6);"></div>'
+    +'<span class="rcp-title">⚙ '+escHtml(def.label)+' — '+escHtml(def.key)+'</span>'
+    +(shiftLabel?'<span class="rcp-shift-badge">'+escHtml(shiftLabel)+'</span>':'')
+    +'<span class="rcp-count">'+rows.length+' events</span>'
+    +'<button class="rcp-close-btn" onclick="closeAllRadarPopups();event.stopPropagation();">✕</button>'
+    +'</div><div class="rcp-body">';
   if(!rows.length){
     html+='<div class="rcp-empty">✅ ไม่มี Downtime ในช่วงเวลานี้</div>';
   } else {
@@ -1392,14 +1535,14 @@ function buildEquipPopupHtml(def, rows, shiftLabel) {
       var dur=(r[DT_COL.DURATION]||'').trim()||'—', shiftRaw=(r[DT_COL.SHIFT]||'').trim().toLowerCase();
       var shiftEm=shiftRaw==='d'?'☀️':shiftRaw==='n'?'🌙':'';
       var tc=TYPE_COLORS[typeRaw]||'#90a4ae', isOngoing=!fmtDTTime(r[DT_COL.END]||'');
-      html+='<div class="rcp-item"><div class="rcp-item-top">'+
-        '<span class="rcp-num">'+(i+1)+'</span>'+
-        '<span class="rcp-machine" style="color:'+color+';">'+escHtml(def.key)+'</span>'+
-        '<span class="rcp-type-badge" style="background:'+tc+'22;color:'+tc+';border:1px solid '+tc+'55;">'+escHtml(typeRaw)+'</span>'+
-        (shiftEm?'<span class="rcp-shift-em">'+shiftEm+'</span>':'')+
-        '<span class="rcp-dur">'+(isOngoing?'<span style="color:#ff9800;font-weight:900;">⚡ ONGOING</span>':escHtml(dur))+'</span>'+
-        '</div><div class="rcp-time">🕐 '+escHtml(startT)+' → '+(isOngoing?'<span style="color:#ff9800;font-weight:700;">?</span>':escHtml(endT))+'</div>'+
-        '<div class="rcp-desc">📝 '+escHtml(desc)+'</div></div>';
+      html+='<div class="rcp-item"><div class="rcp-item-top">'
+        +'<span class="rcp-num">'+(i+1)+'</span>'
+        +'<span class="rcp-machine" style="color:'+color+';">'+escHtml(def.key)+'</span>'
+        +'<span class="rcp-type-badge" style="background:'+tc+'22;color:'+tc+';border:1px solid '+tc+'55;">'+escHtml(typeRaw)+'</span>'
+        +(shiftEm?'<span class="rcp-shift-em">'+shiftEm+'</span>':'')
+        +'<span class="rcp-dur">'+(isOngoing?'<span style="color:#ff9800;font-weight:900;">⚡ ONGOING</span>':escHtml(dur))+'</span>'
+        +'</div><div class="rcp-time">🕐 '+escHtml(startT)+' → '+(isOngoing?'<span style="color:#ff9800;font-weight:700;">?</span>':escHtml(endT))+'</div>'
+        +'<div class="rcp-desc">📝 '+escHtml(desc)+'</div></div>';
     });
   }
   html+='</div>';
@@ -1411,28 +1554,28 @@ function buildTypePopupHtml(def, rows, shiftLabel) {
   var machineCounts={};
   TYPE_MACHINE_KEYS.forEach(function(mk){machineCounts[mk]=0;});
   rows.forEach(function(r){var m=(r[DT_COL.MACHINE]||'').trim();if(machineCounts.hasOwnProperty(m))machineCounts[m]++;});
-  var html='<div class="rcp-header" style="background:linear-gradient(135deg,'+color+'dd,'+color+'99);">'+
-    '<div class="rcp-dot" style="background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.6);"></div>'+
-    '<span class="rcp-title">📋 Type: '+escHtml(def.label)+'</span>'+
-    (shiftLabel?'<span class="rcp-shift-badge">'+escHtml(shiftLabel)+'</span>':'')+
-    '<span class="rcp-count">'+rows.length+' events</span>'+
-    '<button class="rcp-close-btn" onclick="closeAllRadarPopups();event.stopPropagation();">✕</button>'+
-    '</div><div class="rcp-body">';
+  var html='<div class="rcp-header" style="background:linear-gradient(135deg,'+color+'dd,'+color+'99);">'
+    +'<div class="rcp-dot" style="background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.6);"></div>'
+    +'<span class="rcp-title">📋 Type: '+escHtml(def.label)+'</span>'
+    +(shiftLabel?'<span class="rcp-shift-badge">'+escHtml(shiftLabel)+'</span>':'')
+    +'<span class="rcp-count">'+rows.length+' events</span>'
+    +'<button class="rcp-close-btn" onclick="closeAllRadarPopups();event.stopPropagation();">✕</button>'
+    +'</div><div class="rcp-body">';
   if(!rows.length){
     html+='<div class="rcp-empty">✅ ไม่มี Downtime ประเภทนี้</div>';
   } else {
-    html+='<div style="padding:6px 12px 5px;border-bottom:2px solid #e8eaf0;background:#f8f9fc;">';
-    html+='<div style="font-family:\'Chakra Petch\',monospace;font-size:0.65rem;font-weight:700;color:#546e7a;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">🏭 Machine Breakdown</div>';
-    html+='<div style="display:flex;flex-wrap:wrap;gap:4px;">';
+    html+='<div style="padding:6px 12px 5px;border-bottom:2px solid #e8eaf0;background:#f8f9fc;">'
+      +'<div style="font-family:\'Chakra Petch\',monospace;font-size:0.65rem;font-weight:700;color:#546e7a;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">🏭 Machine Breakdown</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:4px;">';
     TYPE_MACHINE_KEYS.forEach(function(mk){
       var cnt=machineCounts[mk]||0; if(!cnt) return;
       var mcolor='#90a4ae', mlabel=mk;
       for(var ei=0;ei<EQUIP_DEF.length;ei++){if(EQUIP_DEF[ei].key===mk){mcolor=EQUIP_DEF[ei].color;mlabel=EQUIP_DEF[ei].label;break;}}
-      html+='<div style="display:flex;align-items:center;gap:3px;background:'+mcolor+'18;border:1px solid '+mcolor+'55;border-radius:4px;padding:2px 7px;">'+
-        '<div style="width:7px;height:7px;border-radius:50%;background:'+mcolor+';flex-shrink:0;"></div>'+
-        '<span style="font-family:\'Chakra Petch\',monospace;font-size:0.66rem;font-weight:700;color:'+mcolor+';">'+escHtml(mlabel)+'</span>'+
-        '<span style="font-family:\'Chakra Petch\',monospace;font-size:0.66rem;font-weight:800;color:#1a237e;margin-left:2px;">×'+cnt+'</span>'+
-        '</div>';
+      html+='<div style="display:flex;align-items:center;gap:3px;background:'+mcolor+'18;border:1px solid '+mcolor+'55;border-radius:4px;padding:2px 7px;">'
+        +'<div style="width:7px;height:7px;border-radius:50%;background:'+mcolor+';flex-shrink:0;"></div>'
+        +'<span style="font-family:\'Chakra Petch\',monospace;font-size:0.66rem;font-weight:700;color:'+mcolor+';">'+escHtml(mlabel)+'</span>'
+        +'<span style="font-family:\'Chakra Petch\',monospace;font-size:0.66rem;font-weight:800;color:#1a237e;margin-left:2px;">×'+cnt+'</span>'
+        +'</div>';
     });
     html+='</div></div>';
     var sorted=rows.slice().sort(function(a,b){return(a[DT_COL.START]||'')<(b[DT_COL.START]||'')?-1:1;});
@@ -1445,13 +1588,13 @@ function buildTypePopupHtml(def, rows, shiftLabel) {
       var isOngoing=!fmtDTTime(r[DT_COL.END]||'');
       var mc='#03a9f4';
       for(var ei=0;ei<EQUIP_DEF.length;ei++){if(EQUIP_DEF[ei].key===machine){mc=EQUIP_DEF[ei].color;break;}}
-      html+='<div class="rcp-item"><div class="rcp-item-top">'+
-        '<span class="rcp-num">'+(i+1)+'</span>'+
-        '<span class="rcp-machine" style="color:'+mc+';">'+escHtml(machine)+'</span>'+
-        (shiftEm?'<span class="rcp-shift-em">'+shiftEm+'</span>':'')+
-        '<span class="rcp-dur">'+(isOngoing?'<span style="color:#ff9800;font-weight:900;">⚡ ONGOING</span>':escHtml(dur))+'</span>'+
-        '</div><div class="rcp-time">🕐 '+escHtml(startT)+' → '+(isOngoing?'<span style="color:#ff9800;font-weight:700;">?</span>':escHtml(endT))+'</div>'+
-        '<div class="rcp-desc">📝 '+escHtml(desc)+'</div></div>';
+      html+='<div class="rcp-item"><div class="rcp-item-top">'
+        +'<span class="rcp-num">'+(i+1)+'</span>'
+        +'<span class="rcp-machine" style="color:'+mc+';">'+escHtml(machine)+'</span>'
+        +(shiftEm?'<span class="rcp-shift-em">'+shiftEm+'</span>':'')
+        +'<span class="rcp-dur">'+(isOngoing?'<span style="color:#ff9800;font-weight:900;">⚡ ONGOING</span>':escHtml(dur))+'</span>'
+        +'</div><div class="rcp-time">🕐 '+escHtml(startT)+' → '+(isOngoing?'<span style="color:#ff9800;font-weight:700;">?</span>':escHtml(endT))+'</div>'
+        +'<div class="rcp-desc">📝 '+escHtml(desc)+'</div></div>';
     });
   }
   html+='</div>';
@@ -1459,8 +1602,10 @@ function buildTypePopupHtml(def, rows, shiftLabel) {
 }
 
 function toggleEquipPopup(idx, refX, refY) {
-  var popupEl=document.getElementById('radarEquipPopup'), typePopupEl=document.getElementById('radarTypePopup');
-  typePopupEl.classList.remove('show'); typePopupEl.style.display='none'; typePopupOpenIdx=-1; updateTypeLegendActive(-1);
+  var popupEl=document.getElementById('radarEquipPopup');
+  var typePopupEl=document.getElementById('radarTypePopup');
+  typePopupEl.classList.remove('show'); typePopupEl.style.display='none';
+  typePopupOpenIdx=-1; updateTypeLegendActive(-1);
   if(equipPopupOpenIdx===idx){popupEl.classList.remove('show');popupEl.style.display='none';equipPopupOpenIdx=-1;updateEquipLegendActive(-1);return;}
   var def=EQUIP_DEF[idx]; if(!def) return;
   var rows=dtCurrentRows.filter(function(r){return(r[DT_COL.MACHINE]||'').trim()===def.key;});
@@ -1472,8 +1617,10 @@ function toggleEquipPopup(idx, refX, refY) {
 }
 
 function toggleTypePopup(idx, refX, refY) {
-  var popupEl=document.getElementById('radarTypePopup'), equipPopupEl=document.getElementById('radarEquipPopup');
-  equipPopupEl.classList.remove('show'); equipPopupEl.style.display='none'; equipPopupOpenIdx=-1; updateEquipLegendActive(-1);
+  var popupEl=document.getElementById('radarTypePopup');
+  var equipPopupEl=document.getElementById('radarEquipPopup');
+  equipPopupEl.classList.remove('show'); equipPopupEl.style.display='none';
+  equipPopupOpenIdx=-1; updateEquipLegendActive(-1);
   if(typePopupOpenIdx===idx){popupEl.classList.remove('show');popupEl.style.display='none';typePopupOpenIdx=-1;updateTypeLegendActive(-1);return;}
   var def=TYPE_DEF[idx]; if(!def) return;
   var rows=dtCurrentRows.filter(function(r){
@@ -1488,25 +1635,33 @@ function toggleTypePopup(idx, refX, refY) {
   typePopupOpenIdx=idx; updateTypeLegendActive(idx);
 }
 
-function updateEquipLegendActive(activeIdx){
-  document.querySelectorAll('#radarEquipLegend .radar-legend-item').forEach(function(el,i){el.classList.toggle('active-popup',i===activeIdx);});
-}
-function updateTypeLegendActive(activeIdx){
-  document.querySelectorAll('#radarTypeLegend .radar-legend-item').forEach(function(el,i){el.classList.toggle('active-popup',i===activeIdx);});
-}
+function updateEquipLegendActive(activeIdx){document.querySelectorAll('#radarEquipLegend .radar-legend-item').forEach(function(el,i){el.classList.toggle('active-popup',i===activeIdx);});}
+function updateTypeLegendActive(activeIdx){document.querySelectorAll('#radarTypeLegend .radar-legend-item').forEach(function(el,i){el.classList.toggle('active-popup',i===activeIdx);});}
 
 function radarOptions(){
   var fs=getChartFontSize();
-  return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},
+  return {
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{enabled:false}},
     scales:{r:{beginAtZero:true,
       ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:'700'},color:'#37474f',backdropColor:'rgba(255,255,255,0.75)',backdropPadding:2,maxTicksLimit:4},
       pointLabels:{font:{family:"'Chakra Petch',monospace",size:fs+1,weight:'800'},color:'#0d47a1',padding:6},
-      grid:{color:'rgba(0,0,0,.15)'},angleLines:{color:'rgba(0,0,0,.2)'}}}};
+      grid:{color:'rgba(0,0,0,.15)'},angleLines:{color:'rgba(0,0,0,.2)'},
+    }}
+  };
 }
 
 function initRadarEquip(){
   var ctx=document.getElementById('radarEquipChart').getContext('2d');
-  radarEquipChart=new Chart(ctx,{type:'radar',data:{labels:EQUIP_DEF.map(function(e){return e.label;}),datasets:[{label:'Downtime Count',data:new Array(EQUIP_DEF.length).fill(0),backgroundColor:'rgba(21,101,192,.13)',borderColor:'#1565c0',borderWidth:2,pointBackgroundColor:EQUIP_DEF.map(function(e){return e.color;}),pointBorderColor:'#fff',pointBorderWidth:1.5,pointRadius:4,pointHoverRadius:6}]},options:radarOptions()});
+  radarEquipChart=new Chart(ctx,{
+    type:'radar',
+    data:{labels:EQUIP_DEF.map(function(e){return e.label;}),
+      datasets:[{label:'Downtime Count',data:new Array(EQUIP_DEF.length).fill(0),
+        backgroundColor:'rgba(21,101,192,.13)',borderColor:'#1565c0',borderWidth:2,
+        pointBackgroundColor:EQUIP_DEF.map(function(e){return e.color;}),
+        pointBorderColor:'#fff',pointBorderWidth:1.5,pointRadius:4,pointHoverRadius:6}]},
+    options:radarOptions()
+  });
   document.getElementById('radarEquipChart').addEventListener('click',function(e){
     e.stopPropagation();
     if(!radarEquipChart) return;
@@ -1517,7 +1672,15 @@ function initRadarEquip(){
 
 function initRadarType(){
   var ctx=document.getElementById('radarTypeChart').getContext('2d');
-  radarTypeChart=new Chart(ctx,{type:'radar',data:{labels:TYPE_DEF.map(function(t){return t.label;}),datasets:[{label:'Count',data:new Array(TYPE_DEF.length).fill(0),backgroundColor:'rgba(55,71,79,.13)',borderColor:'#546e7a',borderWidth:2,pointBackgroundColor:TYPE_DEF.map(function(t){return t.color;}),pointBorderColor:'#fff',pointBorderWidth:1.5,pointRadius:4,pointHoverRadius:6}]},options:radarOptions()});
+  radarTypeChart=new Chart(ctx,{
+    type:'radar',
+    data:{labels:TYPE_DEF.map(function(t){return t.label;}),
+      datasets:[{label:'Count',data:new Array(TYPE_DEF.length).fill(0),
+        backgroundColor:'rgba(55,71,79,.13)',borderColor:'#546e7a',borderWidth:2,
+        pointBackgroundColor:TYPE_DEF.map(function(t){return t.color;}),
+        pointBorderColor:'#fff',pointBorderWidth:1.5,pointRadius:4,pointHoverRadius:6}]},
+    options:radarOptions()
+  });
   document.getElementById('radarTypeChart').addEventListener('click',function(e){
     e.stopPropagation();
     if(!radarTypeChart) return;
@@ -1535,13 +1698,13 @@ document.getElementById('radarTypePopup').addEventListener('touchmove',function(
 
 /* ══════════ FETCH DOWNTIME ══════════ */
 async function fetchDowntime(){
-  try{
+  try {
     var res=await fetch(DT_URL+'&_cb='+Date.now());
     if(!res.ok) return;
     var text=await res.text();
     var rows=Papa.parse(text,{skipEmptyLines:true}).data;
     dtAllRows=rows.slice(1).filter(function(r){var d=(r[DT_COL.DATE]||'').trim();return d.length>=8;});
-  }catch(e){console.warn('DT fetch failed:',e);}
+  } catch(e){ console.warn('DT fetch failed:',e); }
 }
 
 /* ══════════ DT TABLE ══════════ */
@@ -1558,13 +1721,20 @@ function renderDTTable(filterType){
   else{ongoingBadge.classList.remove('show');}
   document.getElementById('dtCountBadge').textContent=rows.length+' records';
   var tbody=document.getElementById('dtTableBody');
-  if(!rows.length){tbody.innerHTML='<tr><td colspan="7" class="dt-empty">No downtime records for this date'+(dtActiveFilter!=='ALL'?' / type':'')+(selectedMachines!==null?' / machine':'')+'</td></tr>';return;}
+  if(!rows.length){
+    tbody.innerHTML='<tr><td colspan="7" class="dt-empty">No downtime records for this date'+(dtActiveFilter!=='ALL'?' / type':'')+(selectedMachines!==null?' / machine':'')+'</td></tr>';
+    return;
+  }
   tbody.innerHTML=rows.map(function(r){
     var machine=(r[DT_COL.MACHINE]||'').trim();
-    var startT=fmtDTTime(r[DT_COL.START]||''), endRaw=fmtDTTime(r[DT_COL.END]||'');
-    var desc=(r[DT_COL.DESC]||'').trim()||'—', typeRaw=(r[DT_COL.TYPE]||'').trim();
-    var duration=(r[DT_COL.DURATION]||'').trim()||'—', shiftRaw=(r[DT_COL.SHIFT]||'').trim().toLowerCase();
-    var typeClass='type-'+typeRaw, isOngoing=!endRaw;
+    var startT=fmtDTTime(r[DT_COL.START]||'');
+    var endRaw=fmtDTTime(r[DT_COL.END]||'');
+    var desc=(r[DT_COL.DESC]||'').trim()||'—';
+    var typeRaw=(r[DT_COL.TYPE]||'').trim();
+    var duration=(r[DT_COL.DURATION]||'').trim()||'—';
+    var shiftRaw=(r[DT_COL.SHIFT]||'').trim().toLowerCase();
+    var typeClass='type-'+typeRaw;
+    var isOngoing=!endRaw;
     var rowClass=isOngoing?' class="row-no-end"':'';
     var shiftCell=shiftRaw==='d'?'<span class="shift-badge shift-badge-d">☀️Day</span>':shiftRaw==='n'?'<span class="shift-badge shift-badge-n">🌙Night</span>':'<span style="color:var(--muted);font-size:.65rem;">—</span>';
     var endCell=endRaw?'<span class="time-cell">'+escHtml(endRaw)+'</span>':'<span class="end-unknown" title="Still Running — No End Time">?</span>';
@@ -1575,24 +1745,27 @@ document.getElementById('dtFilterWrap').addEventListener('click',function(e){
   var btn=e.target.closest('.dt-filter-btn'); if(!btn) return; renderDTTable(btn.dataset.type);
 });
 
-/* ══════════ RENDER RADAR ══════════ */
+/* ══════════ RENDER RADAR FOR DATE ══════════ */
 function renderRadarForDate(wd){
   var rows=dtAllRows.filter(function(r){return normDateG(r[DT_COL.DATE]||'')===wd;});
   var shiftRows=rows;
-  if(currentShift==='day') shiftRows=rows.filter(function(r){return(r[DT_COL.SHIFT]||'').trim().toLowerCase()==='d';});
+  if(currentShift==='day')   shiftRows=rows.filter(function(r){return(r[DT_COL.SHIFT]||'').trim().toLowerCase()==='d';});
   else if(currentShift==='night') shiftRows=rows.filter(function(r){return(r[DT_COL.SHIFT]||'').trim().toLowerCase()==='n';});
   dtCurrentRows=shiftRows;
   dtActiveFilter='ALL'; selectedMachines=null; updateMachineFilterUI();
   renderDTTable('ALL');
   closeAllRadarPopups();
 
-  var equipCounts=EQUIP_DEF.map(function(def){return shiftRows.filter(function(r){return(r[DT_COL.MACHINE]||'').trim()===def.key;}).length;});
+  var equipCounts=EQUIP_DEF.map(function(def){
+    return shiftRows.filter(function(r){return(r[DT_COL.MACHINE]||'').trim()===def.key;}).length;
+  });
   radarEquipChart.data.datasets[0].data=equipCounts; radarEquipChart.update();
 
   document.getElementById('radarEquipLegend').innerHTML=EQUIP_DEF.map(function(def,i){
-    return '<div class="radar-legend-item" data-equip-idx="'+i+'" title="คลิกเพื่อดู Downtime ของ '+escHtml(def.key)+'">'+
-      '<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+escHtml(def.label)+'</span></div>'+
-      '<span class="radar-legend-val" style="color:'+def.color+'">'+equipCounts[i]+'</span></div>';
+    return '<div class="radar-legend-item" data-equip-idx="'+i+'" title="คลิกเพื่อดู Downtime ของ '+escHtml(def.key)+'">'
+      +'<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+escHtml(def.label)+'</span></div>'
+      +'<span class="radar-legend-val" style="color:'+def.color+'">'+equipCounts[i]+'</span>'
+      +'</div>';
   }).join('');
 
   document.getElementById('radarEquipLegend').querySelectorAll('[data-equip-idx]').forEach(function(item){
@@ -1614,9 +1787,10 @@ function renderRadarForDate(wd){
   radarTypeChart.data.datasets[0].data=typeCounts; radarTypeChart.update();
 
   document.getElementById('radarTypeLegend').innerHTML=TYPE_DEF.map(function(def,i){
-    return '<div class="radar-legend-item" data-type-idx="'+i+'" title="คลิกเพื่อดู Downtime ประเภท '+escHtml(def.label)+'">'+
-      '<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+escHtml(def.label)+'</span></div>'+
-      '<span class="radar-legend-val" style="color:'+def.color+'">'+typeCounts[i]+'</span></div>';
+    return '<div class="radar-legend-item" data-type-idx="'+i+'" title="คลิกเพื่อดู Downtime ประเภท '+escHtml(def.label)+'">'
+      +'<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+escHtml(def.label)+'</span></div>'
+      +'<span class="radar-legend-val" style="color:'+def.color+'">'+typeCounts[i]+'</span>'
+      +'</div>';
   }).join('');
 
   document.getElementById('radarTypeLegend').querySelectorAll('[data-type-idx]').forEach(function(item){
@@ -1673,7 +1847,7 @@ function processCSV(text){
   allRows=rows.slice(1).filter(function(r){
     var dt=(r[COL.DT]||'').trim();
     if(!dt||/date|time/i.test(dt)) return false;
-    return!isNaN(parseDT(dt));
+    return !isNaN(parseDT(dt));
   });
   allRows.forEach(function(r){r._wd=getWorkingDate(r[COL.DT]||'');});
   allRows=allRows.filter(function(r){return r._wd;});
@@ -1691,6 +1865,10 @@ function renderForDate(wd){
   var allForDate=allRows.filter(function(r){return r._wd===wd;}).sort(function(a,b){return shiftHour(a)-shiftHour(b);});
   var rows=filterByShift(allForDate,currentShift);
   var labels=rows.map(function(r){return fmtTime(r[COL.DT]||'');});
+
+  /* ══ อัพเดท cache labels ══ */
+  currentBarLabels=labels;
+
   var dataB=rows.map(function(r){return parseNum(r[COL.BCM_CR]);});
   var dataCR1=rows.map(function(r){return parseNum(r[COL.CR1]);});
   var dataCR2=rows.map(function(r){return parseNum(r[COL.CR2]);});
@@ -1713,21 +1891,27 @@ function renderForDate(wd){
   var sBWE1=sum(dataH),sBWE2=sum(dataI),sCR1=sum(dataCR1),sCR2=sum(dataCR2),sCR3=sum(dataCR3);
   var grand=sBWE1+sBWE2+sCR1+sCR2+sCR3;
 
-  pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3]; pieChart.update();
+  pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3];
+  pieChart.update();
 
   var pieItems=[
-    {label:'BWE 1',val:sBWE1,color:C.bwe1},{label:'BWE 2',val:sBWE2,color:C.bwe2},
-    {label:'CR 1',val:sCR1,color:C.cr1},{label:'CR 2',val:sCR2,color:C.cr2},{label:'CR 3',val:sCR3,color:C.cr3},
+    {label:'BWE 1',val:sBWE1,color:C.bwe1},
+    {label:'BWE 2',val:sBWE2,color:C.bwe2},
+    {label:'CR 1', val:sCR1, color:C.cr1},
+    {label:'CR 2', val:sCR2, color:C.cr2},
+    {label:'CR 3', val:sCR3, color:C.cr3},
   ];
   document.getElementById('pieLegend').innerHTML=pieItems.map(function(p){
     return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'</div></div>';
   }).join('');
+
   document.getElementById('grandTotal').textContent=grand.toLocaleString()+' BCM';
 
   function parseHHMM(s){s=(s||'').trim();var m=s.match(/^(\d+):(\d{2})$/);if(!m)return 0;return parseInt(m[1])*60+parseInt(m[2]);}
   var totalMinutes=rows.reduce(function(s,r){return s+parseHHMM(r[COL.HOUR_S3]);},0);
   var th=Math.floor(totalMinutes/60),tm=String(totalMinutes%60).padStart(2,'0');
   document.getElementById('clockBox').textContent=th+':'+tm+' Hr.';
+
   var totalHoursDecimal=totalMinutes/60;
   var productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
   document.getElementById('productivityBox').textContent=productivity>0?productivity.toLocaleString()+' BCM/Hr':'—';
@@ -1739,7 +1923,8 @@ function renderForDate(wd){
 }
 
 function buildPicker(){
-  var sel=document.getElementById('datePicker'); sel.innerHTML='';
+  var sel=document.getElementById('datePicker');
+  sel.innerHTML='';
   availableDates.forEach(function(d){var o=document.createElement('option');o.value=d;o.textContent=toDisplay(d);sel.appendChild(o);});
   sel.value=availableDates[availableDates.length-1]; syncNav();
 }
@@ -1758,7 +1943,12 @@ document.getElementById('btnNext').addEventListener('click',function(){
   if(idx<availableDates.length-1){sel.value=availableDates[idx+1];renderForDate(sel.value);}
 });
 document.getElementById('btnRefresh').addEventListener('click',function(){
-  fetchData().then(function(){fetchDowntime().then(function(){var wd=document.getElementById('datePicker').value;if(wd) renderRadarForDate(wd);});});
+  fetchData().then(function(){
+    fetchDowntime().then(function(){
+      var wd=document.getElementById('datePicker').value;
+      if(wd) renderRadarForDate(wd);
+    });
+  });
 });
 
 var resizeTimer;
@@ -1766,11 +1956,22 @@ window.addEventListener('resize',function(){
   clearTimeout(resizeTimer);
   resizeTimer=setTimeout(function(){
     var fs=getChartFontSize();
-    [bcmChart,perfChart].forEach(function(ch){if(!ch)return;ch.options.scales.x.ticks.font.size=fs;ch.options.scales.y.ticks.font.size=fs;ch.update('none');});
-    [radarEquipChart,radarTypeChart].forEach(function(ch){if(!ch)return;ch.options.scales.r.ticks.font.size=fs;ch.options.scales.r.pointLabels.font.size=fs+1;ch.update('none');});
+    [bcmChart,perfChart].forEach(function(ch){
+      if(!ch) return;
+      ch.options.scales.x.ticks.font.size=fs;
+      ch.options.scales.y.ticks.font.size=fs;
+      ch.update('none');
+    });
+    [radarEquipChart,radarTypeChart].forEach(function(ch){
+      if(!ch) return;
+      ch.options.scales.r.ticks.font.size=fs;
+      ch.options.scales.r.pointLabels.font.size=fs+1;
+      ch.update('none');
+    });
     var popup=document.getElementById('machineFilterPopup');
     if(popup.classList.contains('show')) closeMachinePopup();
-    hideBarTooltip(); closeAllRadarPopups();
+    hideBarTooltip();
+    closeAllRadarPopups();
   },200);
 });
 
@@ -1802,20 +2003,24 @@ fetchData().then(function(){
 
   function doRefresh(){
     var wd=document.getElementById('datePicker').value;
-    fetchData().then(function(){fetchDowntime().then(function(){
-      var sel=document.getElementById('datePicker');
-      if(availableDates.indexOf(wd)>=0){sel.value=wd;renderForDate(wd);}
-      else{var latest=availableDates[availableDates.length-1];sel.value=latest;renderForDate(latest);}
-      if(wd) renderRadarForDate(sel.value);
-    });});
+    fetchData().then(function(){
+      fetchDowntime().then(function(){
+        var sel=document.getElementById('datePicker');
+        if(availableDates.indexOf(wd)>=0){sel.value=wd;renderForDate(wd);}
+        else{var latest=availableDates[availableDates.length-1];sel.value=latest;renderForDate(latest);}
+        if(wd) renderRadarForDate(sel.value);
+      });
+    });
     remaining=INTERVAL;
   }
 
   function advanceToToday(){
-    fetchData().then(function(){fetchDowntime().then(function(){
-      var sel=document.getElementById('datePicker'),latest=availableDates[availableDates.length-1];
-      if(latest){sel.value=latest;renderForDate(latest);}
-    });});
+    fetchData().then(function(){
+      fetchDowntime().then(function(){
+        var sel=document.getElementById('datePicker'),latest=availableDates[availableDates.length-1];
+        if(latest){sel.value=latest;renderForDate(latest);}
+      });
+    });
     remaining=INTERVAL;
   }
 
