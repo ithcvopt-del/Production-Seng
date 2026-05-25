@@ -1430,7 +1430,7 @@ function initPieChart(){
   pieChart=new Chart(ctx,{
     type:'pie',
     data:{labels:['BWE 1','BWE 2','CR 1','CR 2','CR 3'],datasets:[{data:[0,0,0,0,0],backgroundColor:[C.bwe1,C.bwe2,C.cr1,C.cr2,C.cr3],borderColor:'#fff',borderWidth:2,hoverOffset:8}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#dde1e8',borderWidth:1,titleColor:'#1a1f2e',bodyColor:'#374151',titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},callbacks:{label:function(c){return ' '+c.label+': '+c.parsed.toLocaleString();}}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#dde1e8',borderWidth:1,titleColor:'#1a1f2e',bodyColor:'#374151',titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:'700'},callbacks:{label:function(c){return ' '+c.label+': '+c.parsed.toLocaleString()+' BCM';}}}}}
   });
 }
 
@@ -1902,7 +1902,7 @@ function renderForDate(wd){
     {label:'CR 3', val:sCR3, color:C.cr3},
   ];
   document.getElementById('pieLegend').innerHTML=pieItems.map(function(p){
-    return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'ฺBCM</div></div>';
+    return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'ฺ BCM</div></div>';
   }).join('');
 
   document.getElementById('grandTotal').textContent=grand.toLocaleString()+' BCM';
