@@ -41,13 +41,14 @@ jobs:
           })();
           "
 
-      - name: Send to Telegram
+    - name: Send to Telegram
         env:
-          TELEGRAM_TOKEN: ${{8850634904:AAEiWQmAJP_He7-FGWBGcuB65valtl8fc08}}
+          TELEGRAM_TOKEN: ${{ 8850634904:AAEiWQmAJP_He7-FGWBGcuB65valtl8fc08 }}
           TELEGRAM_CHAT_ID: ${{ -1003993703369 }}
         run: |
           TIMESTAMP=$(TZ='Asia/Bangkok' date '+%d/%m/%Y %H:%M')
-          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto" \
-            -F chat_id="${TELEGRAM_CHAT_ID}" \
-            -F photo=@dashboard.png \
-            -F caption="📊 BCM Production Dashboard — ${TIMESTAMP} (ICT)"
+          curl -s -X POST \
+            "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto" \
+            -F "chat_id=${TELEGRAM_CHAT_ID}" \
+            -F "photo=@dashboard.png" \
+            -F "caption=📊 BCM Production Dashboard — ${TIMESTAMP} (ICT)"
