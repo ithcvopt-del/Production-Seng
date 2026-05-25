@@ -1,0 +1,53 @@
+name: Send Dashboard to Telegram
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  screenshot-and-send:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install chromium --with-deps
+
+      - name: Screenshot Dashboard
+        run: |
+          node -e "
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch();
+            const page = await browser.newPage();
+            await page.setViewportSize({ width: 1440, height: 900 });
+            await page.goto('https://ithcvopt-del.github.io/Production-Seng/', {
+              waitUntil: 'networkidle'
+            });
+            await page.waitForTimeout(5000);
+            await page.screenshot({ path: 'dashboard.png', fullPage: false });
+            await browser.close();
+          })();
+          "
+
+      - name: Send to Telegram
+        env:
+          TELEGRAM_TOKEN: ${{8850634904:AAEiWQmAJP_He7-FGWBGcuB65valtl8fc08}}
+          TELEGRAM_CHAT_ID: ${{ -1003993703369 }}
+        run: |
+          TIMESTAMP=$(TZ='Asia/Bangkok' date '+%d/%m/%Y %H:%M')
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto" \
+            -F chat_id="${TELEGRAM_CHAT_ID}" \
+            -F photo=@dashboard.png \
+            -F caption="📊 BCM Production Dashboard — ${TIMESTAMP} (ICT)"
