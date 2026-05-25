@@ -24,10 +24,13 @@ def screenshot():
     print(f"📸 กำลังถ่าย screenshot จาก {DASHBOARD_URL}")
     with sync_playwright() as p:
         browser = p.chromium.launch(args=["--no-sandbox", "--disable-setuid-sandbox"])
-        page = browser.new_page(viewport={"width": 1920, "height": 1080})
+        page = browser.new_page(
+            viewport={"width": 1920, "height": 1200},  # สูงขึ้นเพื่อให้เห็น Dashboard ครบ
+            device_scale_factor=2,                      # Retina 2x → รูปคมชัดขึ้น 2 เท่า
+        )
         page.goto(DASHBOARD_URL, wait_until="networkidle", timeout=60_000)
-        page.wait_for_timeout(2_000)   # รอ chart/animation render
-        page.screenshot(path=SCREENSHOT_PATH, full_page=False)
+        page.wait_for_timeout(3_000)   # รอ chart/animation render ให้ครบ
+        page.screenshot(path=SCREENSHOT_PATH, full_page=True)  # จับทั้งหมดแม้ scroll ได้
         browser.close()
     print(f"✅ screenshot บันทึกที่ {SCREENSHOT_PATH}")
 
