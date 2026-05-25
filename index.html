@@ -1902,7 +1902,7 @@ function renderForDate(wd){
     {label:'CR 3', val:sCR3, color:C.cr3},
   ];
   document.getElementById('pieLegend').innerHTML=pieItems.map(function(p){
-    return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+'ฺ BCM</div></div>';
+    return '<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+' BCM</div></div>';
   }).join('');
 
   document.getElementById('grandTotal').textContent=grand.toLocaleString()+' BCM';
