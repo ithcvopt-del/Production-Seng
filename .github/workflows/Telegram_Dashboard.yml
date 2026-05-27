@@ -2,10 +2,8 @@ name: Dashboard Screenshot to Telegram
 
 on:
   schedule:
-    # ทุกชั่วโมง นาทีที่ 06 (cron ใช้เวลา UTC, ICT = UTC+7)
-    # XX:06 ICT = (XX-7):06 UTC  →  นาทีที่ 06 ของทุกชั่วโมง UTC ตรงกับ ICT พอดี
     - cron: "6 * * * *"
-  workflow_dispatch: # กดรันมือได้จาก GitHub UI
+  workflow_dispatch:
 
 jobs:
   send-dashboard:
@@ -19,9 +17,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install Python dependencies
+        run: pip install requests playwright
+
+      - name: Install Playwright browsers + system deps  # ✅ แยก step ชัดเจน
         run: |
-          pip install requests playwright
           playwright install chromium
           playwright install-deps chromium
 
