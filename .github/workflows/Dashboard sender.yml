@@ -2,9 +2,6 @@ name: Send Dashboard to Telegram
 
 on:
   schedule:
-    # GitHub Actions ใช้ UTC — ICT = UTC+7 ดังนั้นนาที :06 ของ ICT = UTC 00:06, 01:06 … 23:06
-    # ครอบคลุม 07:06 – 23:06 ICT  (= 00:06 – 16:06 UTC)
-    # และ 00:06 – 06:06 ICT วันถัดไป (= 17:06 – 23:06 UTC วันก่อน)
     - cron: '6 0 * * *'    # 07:06 ICT
     - cron: '6 1 * * *'    # 08:06 ICT
     - cron: '6 2 * * *'    # 09:06 ICT
@@ -29,8 +26,6 @@ on:
     - cron: '6 21 * * *'   # 04:06 ICT
     - cron: '6 22 * * *'   # 05:06 ICT
     - cron: '6 23 * * *'   # 06:06 ICT
-
-  # ทดสอบ run ด้วยมือได้จาก Actions tab
   workflow_dispatch:
 
 jobs:
@@ -39,33 +34,30 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      # 1. Checkout repository
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      # 3. Install Python dependencies
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # 4. Install Playwright + Chromium
-      - name: Install Playwright Chromium
+      - name: Install Playwright Chromium (Ubuntu 24 fix)
         run: |
-          pip install playwright
           playwright install chromium
+          sudo apt-get update
           sudo apt-get install -y \
-            libnss3 libnspr4 libdbus-1-3 libatk1.0-0 \
-            libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 \
-            libxcomposite1 libxdamage1 libxfixes3 libxrandr2 \
-            libgbm1 libasound2t64 libpango-1.0-0 libcairo2
+            libnss3 libnspr4 libdbus-1-3 \
+            libatk1.0-0t64 libatk-bridge2.0-0t64 \
+            libcups2t64 libdrm2 libxkbcommon0 \
+            libxcomposite1 libxdamage1 libxfixes3 \
+            libxrandr2 libgbm1 libasound2t64 \
+            libpango-1.0-0 libcairo2 libatspi2.0-0t64
 
-      # 5. Run the script
       - name: Capture & Send Dashboard
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
