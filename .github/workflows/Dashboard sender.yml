@@ -1,0 +1,68 @@
+name: Send Dashboard to Telegram
+
+on:
+  schedule:
+    # GitHub Actions ใช้ UTC — ICT = UTC+7 ดังนั้นนาที :06 ของ ICT = UTC 00:06, 01:06 … 23:06
+    # ครอบคลุม 07:06 – 23:06 ICT  (= 00:06 – 16:06 UTC)
+    # และ 00:06 – 06:06 ICT วันถัดไป (= 17:06 – 23:06 UTC วันก่อน)
+    - cron: '6 0 * * *'    # 07:06 ICT
+    - cron: '6 1 * * *'    # 08:06 ICT
+    - cron: '6 2 * * *'    # 09:06 ICT
+    - cron: '6 3 * * *'    # 10:06 ICT
+    - cron: '6 4 * * *'    # 11:06 ICT
+    - cron: '6 5 * * *'    # 12:06 ICT
+    - cron: '6 6 * * *'    # 13:06 ICT
+    - cron: '6 7 * * *'    # 14:06 ICT
+    - cron: '6 8 * * *'    # 15:06 ICT
+    - cron: '6 9 * * *'    # 16:06 ICT
+    - cron: '6 10 * * *'   # 17:06 ICT
+    - cron: '6 11 * * *'   # 18:06 ICT
+    - cron: '6 12 * * *'   # 19:06 ICT
+    - cron: '6 13 * * *'   # 20:06 ICT
+    - cron: '6 14 * * *'   # 21:06 ICT
+    - cron: '6 15 * * *'   # 22:06 ICT
+    - cron: '6 16 * * *'   # 23:06 ICT
+    - cron: '6 17 * * *'   # 00:06 ICT
+    - cron: '6 18 * * *'   # 01:06 ICT
+    - cron: '6 19 * * *'   # 02:06 ICT
+    - cron: '6 20 * * *'   # 03:06 ICT
+    - cron: '6 21 * * *'   # 04:06 ICT
+    - cron: '6 22 * * *'   # 05:06 ICT
+    - cron: '6 23 * * *'   # 06:06 ICT
+
+  # ทดสอบ run ด้วยมือได้จาก Actions tab
+  workflow_dispatch:
+
+jobs:
+  send-dashboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 3. Install Python dependencies
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 4. Install Playwright + Chromium
+      - name: Install Playwright Chromium
+        run: |
+          playwright install chromium
+          playwright install-deps chromium
+
+      # 5. Run the script
+      - name: Capture & Send Dashboard
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python dashboard_sender.py
