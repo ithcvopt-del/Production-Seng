@@ -1,0 +1,32 @@
+name: Dashboard Screenshot to Telegram
+
+on:
+  schedule:
+    # ทุกชั่วโมง นาทีที่ 06 (cron ใช้เวลา UTC, ICT = UTC+7)
+    # XX:06 ICT = (XX-7):06 UTC  →  นาทีที่ 06 ของทุกชั่วโมง UTC ตรงกับ ICT พอดี
+    - cron: "6 * * * *"
+  workflow_dispatch: # กดรันมือได้จาก GitHub UI
+
+jobs:
+  send-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install requests playwright
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run screenshot & send
+        env:
+          TELEGRAM_TOKEN: ${{ 8850634904:AAEiWQmAJP_He7-FGWBGcuB65valtl8fc08 }}
+          TELEGRAM_CHAT_ID: ${{ -1003993703369 }}
+        run: python screenshot_telegram.py
