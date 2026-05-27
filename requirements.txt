@@ -1,0 +1,5 @@
+.github/
+  workflows/
+    dashboard-telegram.yml     ← GitHub Actions workflow
+scripts/
+  send_dashboard.py            ← Python script หลัก
