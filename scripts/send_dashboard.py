@@ -1,169 +1,259 @@
 #!/usr/bin/env python3
 """
-send_dashboard.py — แก้ปัญหา:
-1. นำทาง Dashboard ไปยังวันที่ที่ถูกต้องก่อน capture
-2. Logic วันที่: hour < 8 ICT → เมื่อวาน, hour >= 8 → วันนี้
+send_dashboard.py
+─────────────────
+Capture a high-resolution screenshot of the Production dashboard
+and send it to a Telegram group every hour.
+
+Date logic (ICT = GMT+7):
+  • 08:06 ICT on day D  →  07:06 ICT on day D+1  : send graph for day D
+  • 07:06 ICT on day D  →  (i.e. hour < 8)        : send graph for day D-1
 """
 
-import os, sys, time, requests, pytz
+import os
+import sys
+import time
+import requests
+import pytz
 from datetime import datetime, timedelta
 from pathlib import Path
+from PIL import Image
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeoutError
 
-# ── Config ─────────────────────────────────────────────────────────
-DASHBOARD_URL    = os.environ.get("DASHBOARD_URL", "https://ithcvopt-del.github.io/Production-Seng/")
-TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN", "")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
-TZ_ICT           = pytz.timezone("Asia/Bangkok")
+# ═══════════════════════════════════════════════════════════════════
+# CONFIG
+# ═══════════════════════════════════════════════════════════════════
+DASHBOARD_URL   = os.environ.get("DASHBOARD_URL",   "https://ithcvopt-del.github.io/Production-Seng/")
+TELEGRAM_TOKEN  = os.environ.get("TELEGRAM_TOKEN",  "")
+TELEGRAM_CHAT_ID= os.environ.get("TELEGRAM_CHAT_ID","")
+OVERRIDE_DATE   = os.environ.get("OVERRIDE_DATE",   "").strip()   # DD-MM-YYYY
 
-def get_report_date():
-    """คืนวันที่รายงาน: ICT hour < 8 → เมื่อวาน, >= 8 → วันนี้"""
-    now = datetime.now(TZ_ICT)
-    d   = now.date() if now.hour >= 8 else (now - timedelta(days=1)).date()
-    result = d.strftime("%d-%m-%Y")   # DD-MM-YYYY
-    print(f"[DATE] ICT={now.strftime('%d/%m/%Y %H:%M')} → report={result}")
-    return result
+TZ_ICT = pytz.timezone("Asia/Bangkok")   # ICT = GMT+7 (ใช้ได้กับลาว)
 
-def navigate_to_date(page, target_date_str):
+SCREENSHOT_PATH = Path("/tmp/dashboard_{date}.png")
+VIEWPORT_W      = 1920
+VIEWPORT_H      = 1080
+DEVICE_SCALE    = 2          # retina → ภาพ 3840×2160 จริง
+PAGE_WAIT_MS    = 8000       # รอให้กราฟ render ครบ (ms)
+MAX_RETRIES     = 3
+
+
+# ═══════════════════════════════════════════════════════════════════
+# DATE LOGIC
+# ═══════════════════════════════════════════════════════════════════
+def get_report_date() -> str:
     """
-    คลิกปุ่ม < > บน Dashboard จนกว่าจะได้วันที่ที่ต้องการ
-    target_date_str: DD-MM-YYYY
+    คืนค่าวันที่รายงาน (DD-MM-YYYY ตาม ICT)
+    - ถ้า override_date มีค่า → ใช้ค่านั้น
+    - ถ้า ICT hour >= 8 → วันนี้
+    - ถ้า ICT hour < 8  → เมื่อวาน
     """
-    target = datetime.strptime(target_date_str, "%d-%m-%Y").date()
-    print(f"[NAV] Target date: {target_date_str}")
+    if OVERRIDE_DATE:
+        print(f"[DATE] Using override date: {OVERRIDE_DATE}")
+        return OVERRIDE_DATE
 
-    for attempt in range(60):   # max 60 ครั้ง (กัน infinite loop)
-        # อ่านวันที่ปัจจุบันบน Dashboard
-        try:
-            date_text = page.locator("text=/\\d{2}-\\d{2}-\\d{4}/").first.inner_text(timeout=3000)
-            current = datetime.strptime(date_text.strip(), "%d-%m-%Y").date()
-            print(f"[NAV] Dashboard shows: {date_text.strip()}")
-        except Exception as e:
-            print(f"[NAV] Cannot read date: {e}")
-            break
-
-        if current == target:
-            print(f"[NAV] ✅ Date matched!")
-            page.wait_for_timeout(3000)   # รอ chart reload
-            break
-        elif current > target:
-            # คลิก < (ย้อนหลัง)
-            try:
-                page.locator("button:has-text('<'), [aria-label*='prev'], [aria-label*='back']").first.click()
-                print(f"[NAV] Clicked < (back)")
-            except:
-                # ลอง XPath
-                page.evaluate("() => { const btns = document.querySelectorAll('button'); for(const b of btns){ if(b.textContent.trim()==='<') { b.click(); break; } } }")
-            page.wait_for_timeout(1500)
-        else:
-            # คลิก > (ไปข้างหน้า)
-            try:
-                page.locator("button:has-text('>'), [aria-label*='next']").first.click()
-                print(f"[NAV] Clicked > (forward)")
-            except:
-                page.evaluate("() => { const btns = document.querySelectorAll('button'); for(const b of btns){ if(b.textContent.trim()==='>')  { b.click(); break; } } }")
-            page.wait_for_timeout(1500)
+    now_ict = datetime.now(TZ_ICT)
+    if now_ict.hour >= 8:
+        report_date = now_ict.date()
     else:
-        print(f"[NAV] ⚠️ Could not navigate to target date after 60 attempts")
+        report_date = (now_ict - timedelta(days=1)).date()
 
-def capture(url, out_path, report_date):
+    date_str = report_date.strftime("%d-%m-%Y")
+    print(f"[DATE] ICT now={now_ict.strftime('%Y-%m-%d %H:%M')} → report date={date_str}")
+    return date_str
+
+
+def get_send_time_str() -> str:
+    """คืนสตริงเวลา ICT ตอนนี้ สำหรับ caption"""
+    return datetime.now(TZ_ICT).strftime("%d/%m/%Y %H:%M")
+
+
+# ═══════════════════════════════════════════════════════════════════
+# SCREENSHOT
+# ═══════════════════════════════════════════════════════════════════
+def capture_screenshot(url: str, out_path: Path) -> Path:
+    """ถ่าย screenshot ด้วย Playwright แบบ high-resolution"""
     print(f"[CAPTURE] Opening {url}")
+
     with sync_playwright() as pw:
         browser = pw.chromium.launch(
             headless=True,
-            args=["--no-sandbox","--disable-setuid-sandbox",
-                  "--disable-dev-shm-usage","--disable-gpu"]
+            args=[
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-gpu",
+                "--force-device-scale-factor=2",
+            ],
         )
-        ctx = browser.new_context(
-            viewport={"width": 1920, "height": 1080},
-            device_scale_factor=2,
+        context = browser.new_context(
+            viewport={"width": VIEWPORT_W, "height": VIEWPORT_H},
+            device_scale_factor=DEVICE_SCALE,
             locale="th-TH",
-            timezone_id="Asia/Bangkok"
+            timezone_id="Asia/Bangkok",
         )
-        page = ctx.new_page()
+        page = context.new_page()
 
-        # โหลด Dashboard
+        # ─── Load page ───────────────────────────────────────────
         try:
-            page.goto(url, wait_until="networkidle", timeout=40000)
+            page.goto(url, wait_until="networkidle", timeout=30_000)
         except PWTimeoutError:
-            page.goto(url, wait_until="domcontentloaded", timeout=25000)
+            print("[CAPTURE] networkidle timeout – continuing anyway")
+            page.goto(url, wait_until="domcontentloaded", timeout=20_000)
 
-        # รอ chart render ครั้งแรก
-        print("[CAPTURE] Waiting for initial render...")
-        page.wait_for_timeout(6000)
+        # ─── รอให้ chart / graph render ────────────────────────────
+        print(f"[CAPTURE] Waiting {PAGE_WAIT_MS} ms for charts to render …")
+        page.wait_for_timeout(PAGE_WAIT_MS)
 
-        # นำทางไปวันที่ที่ถูกต้อง
-        navigate_to_date(page, report_date)
-
-        # รอ chart render หลังเปลี่ยนวันที่
-        page.wait_for_timeout(5000)
-
-        # ซ่อน scrollbar
+        # ─── ซ่อน scrollbar ────────────────────────────────────────
         page.add_style_tag(content="""
             ::-webkit-scrollbar { display: none !important; }
             * { scrollbar-width: none !important; }
         """)
 
-        page.screenshot(path=str(out_path), full_page=True, type="png")
+        # ─── Screenshot ────────────────────────────────────────────
+        page.screenshot(
+            path=str(out_path),
+            full_page=True,
+            type="png",
+        )
         browser.close()
 
-    size_mb = out_path.stat().st_size / 1024 / 1024
-    print(f"[CAPTURE] ✅ Saved {out_path} ({size_mb:.1f} MB)")
-    return size_mb
+    # ─── Post-process: เพิ่ม sharpness (optional) ─────────────────
+    try:
+        img = Image.open(out_path)
+        print(f"[CAPTURE] Screenshot size: {img.size[0]}×{img.size[1]} px")
+        img.save(out_path, format="PNG", optimize=False, compress_level=1)
+    except Exception as e:
+        print(f"[CAPTURE] PIL post-process warning: {e}")
 
-def send_telegram(photo_path, report_date):
-    now_str = datetime.now(TZ_ICT).strftime("%d/%m/%Y %H:%M")
-    caption = (
+    print(f"[CAPTURE] Saved → {out_path}")
+    return out_path
+
+
+# ═══════════════════════════════════════════════════════════════════
+# TELEGRAM
+# ═══════════════════════════════════════════════════════════════════
+def build_caption(report_date: str, send_time: str) -> str:
+    """สร้าง caption สำหรับภาพ"""
+    return (
         f"📊 *Production Dashboard*\n"
         f"━━━━━━━━━━━━━━━━━━━━\n"
         f"📅 รายงานวันที่: *{report_date}*\n"
-        f"🕐 ส่งเมื่อ: `{now_str} ICT`\n"
+        f"🕐 ส่งเมื่อ: `{send_time} ICT`\n"
         f"━━━━━━━━━━━━━━━━━━━━\n"
-        f"🔗 [ดู Dashboard]({DASHBOARD_URL})"
+        f"🔗 [ดู Dashboard เต็ม]({DASHBOARD_URL})"
     )
-    size_mb = photo_path.stat().st_size / 1024 / 1024
-    method  = "sendPhoto" if size_mb <= 10 else "sendDocument"
-    field   = "photo"     if size_mb <= 10 else "document"
 
-    print(f"[TELEGRAM] Sending via {method} ({size_mb:.1f} MB)...")
-    with open(photo_path, "rb") as f:
-        r = requests.post(
-            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/{method}",
-            data={"chat_id": TELEGRAM_CHAT_ID,
-                  "caption": caption, "parse_mode": "Markdown"},
-            files={field: ("dashboard.png", f, "image/png")},
-            timeout=60
-        )
-    if r.status_code == 200:
-        print(f"[TELEGRAM] ✅ Sent! id={r.json()['result']['message_id']}")
-        return True
-    else:
-        print(f"[TELEGRAM] ❌ {r.status_code}: {r.text}")
+
+def send_photo_to_telegram(photo_path: Path, caption: str) -> bool:
+    """ส่งรูปภาพพร้อม caption ไปยัง Telegram"""
+    if not TELEGRAM_TOKEN:
+        print("[TELEGRAM] ERROR: TELEGRAM_TOKEN is not set")
+        return False
+    if not TELEGRAM_CHAT_ID:
+        print("[TELEGRAM] ERROR: TELEGRAM_CHAT_ID is not set")
         return False
 
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
+    file_size_mb = photo_path.stat().st_size / 1024 / 1024
+    print(f"[TELEGRAM] Sending photo ({file_size_mb:.1f} MB) to chat {TELEGRAM_CHAT_ID} …")
+
+    with open(photo_path, "rb") as f:
+        resp = requests.post(
+            url,
+            data={
+                "chat_id": TELEGRAM_CHAT_ID,
+                "caption": caption,
+                "parse_mode": "Markdown",
+                "disable_notification": False,
+            },
+            files={"photo": ("dashboard.png", f, "image/png")},
+            timeout=60,
+        )
+
+    if resp.status_code == 200:
+        msg_id = resp.json().get("result", {}).get("message_id", "?")
+        print(f"[TELEGRAM] ✅ Sent! message_id={msg_id}")
+        return True
+    else:
+        print(f"[TELEGRAM] ❌ Failed: {resp.status_code} – {resp.text}")
+        return False
+
+
+def send_document_to_telegram(photo_path: Path, caption: str) -> bool:
+    """
+    Fallback: ส่งเป็น document แทน photo
+    (Telegram จำกัดภาพ sendPhoto ที่ 10 MB, sendDocument รองรับ 50 MB)
+    """
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendDocument"
+    print("[TELEGRAM] Trying sendDocument as fallback …")
+
+    with open(photo_path, "rb") as f:
+        resp = requests.post(
+            url,
+            data={
+                "chat_id": TELEGRAM_CHAT_ID,
+                "caption": caption,
+                "parse_mode": "Markdown",
+            },
+            files={"document": ("dashboard.png", f, "image/png")},
+            timeout=60,
+        )
+
+    if resp.status_code == 200:
+        print(f"[TELEGRAM] ✅ Sent as document!")
+        return True
+    else:
+        print(f"[TELEGRAM] ❌ Document fallback failed: {resp.status_code} – {resp.text}")
+        return False
+
+
+# ═══════════════════════════════════════════════════════════════════
+# MAIN
+# ═══════════════════════════════════════════════════════════════════
 def main():
-    if not TELEGRAM_TOKEN:
-        print("[ERROR] TELEGRAM_TOKEN not set"); sys.exit(1)
-    if not TELEGRAM_CHAT_ID:
-        print("[ERROR] TELEGRAM_CHAT_ID not set"); sys.exit(1)
-
     report_date = get_report_date()
-    out_path    = Path(f"/tmp/dashboard_{report_date.replace('-','')}.png")
+    send_time   = get_send_time_str()
+    out_path    = SCREENSHOT_PATH.with_name(f"dashboard_{report_date.replace('-','')}.png")
 
-    for attempt in range(1, 4):
+    # ─── Capture (with retry) ───────────────────────────────────────
+    for attempt in range(1, MAX_RETRIES + 1):
         try:
-            capture(DASHBOARD_URL, out_path, report_date)
+            capture_screenshot(DASHBOARD_URL, out_path)
             break
         except Exception as e:
-            print(f"[CAPTURE] Attempt {attempt}/3 failed: {e}")
-            if attempt == 3:
+            print(f"[CAPTURE] Attempt {attempt}/{MAX_RETRIES} failed: {e}")
+            if attempt == MAX_RETRIES:
+                print("[CAPTURE] All attempts failed. Aborting.")
                 sys.exit(1)
             time.sleep(5)
 
-    if not send_telegram(out_path, report_date):
+    # ─── Send to Telegram ───────────────────────────────────────────
+    caption = build_caption(report_date, send_time)
+    file_size_mb = out_path.stat().st_size / 1024 / 1024
+
+    # Telegram sendPhoto limit = 10 MB; ถ้าเกินใช้ sendDocument
+    if file_size_mb <= 10:
+        success = send_photo_to_telegram(out_path, caption)
+    else:
+        print(f"[TELEGRAM] File too large for sendPhoto ({file_size_mb:.1f} MB) → using sendDocument")
+        success = send_document_to_telegram(out_path, caption)
+
+    if not success:
+        # Last resort: ส่ง text message แทน
+        print("[TELEGRAM] Sending text-only message as last resort …")
+        text_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+        requests.post(text_url, data={
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": caption + "\n\n⚠️ ไม่สามารถส่งภาพได้ กรุณาเปิด link โดยตรง",
+            "parse_mode": "Markdown",
+            "disable_web_page_preview": False,
+        }, timeout=30)
         sys.exit(1)
 
     print("[DONE] ✅ Complete!")
+
 
 if __name__ == "__main__":
     main()
