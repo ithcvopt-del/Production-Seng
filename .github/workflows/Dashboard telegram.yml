@@ -14,21 +14,28 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Python dependencies
-        run: pip install playwright pytz requests pillow
+        shell: cmd
+        run: |
+          pip install playwright pytz requests pillow --quiet
 
       - name: Install Playwright Chromium
-        run: python -m playwright install chromium
+        shell: cmd
+        run: |
+          python -m playwright install chromium
 
       - name: Capture and Send to Telegram
+        shell: cmd
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python scripts/send_dashboard.py
+        run: |
+          python scripts/send_dashboard.py
 
       - name: Upload screenshot
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: screenshot-${{ github.run_id }}
-          path: C:\Windows\Temp\dashboard_*.png
+          path: ${{ github.workspace }}\screenshot_*.png
           retention-days: 3
+          if-no-files-found: ignore
