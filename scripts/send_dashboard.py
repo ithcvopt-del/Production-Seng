@@ -215,7 +215,7 @@ def send_document_to_telegram(photo_path: Path, caption: str) -> bool:
 def main():
     report_date = get_report_date()
     send_time   = get_send_time_str()
-    out_path    = SCREENSHOT_PATH.with_name(f"dashboard_{report_date.replace('-','')}.png")
+   out_path = Path(os.environ.get("GITHUB_WORKSPACE", ".")) / f"screenshot_{report_date.replace('-', '')}.png"
 
     # ─── Capture (with retry) ───────────────────────────────────────
     for attempt in range(1, MAX_RETRIES + 1):
