@@ -8,7 +8,7 @@ on:
 jobs:
   send-dashboard:
     runs-on: self-hosted
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
