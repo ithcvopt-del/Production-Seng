@@ -8,23 +8,16 @@ on:
 jobs:
   send-dashboard:
     runs-on: self-hosted
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install playwright pytz requests pillow
+      - name: Install Python dependencies
+        run: pip install playwright pytz requests pillow
 
       - name: Install Playwright Chromium
-        run: python -m playwright install chromium --with-deps
+        run: python -m playwright install chromium
 
       - name: Capture and Send to Telegram
         env:
@@ -37,5 +30,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: screenshot-${{ github.run_id }}
-          path: /tmp/dashboard_*.png
+          path: C:\Windows\Temp\dashboard_*.png
           retention-days: 3
