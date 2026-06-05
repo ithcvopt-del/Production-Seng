@@ -181,12 +181,24 @@
   .bar-chart-wrap { position: relative; width: 100%; height: var(--bar-h); }
   .perf-chart-wrap { position: relative; width: 100%; height: var(--perf-h); }
   canvas { display: block; }
+
+  /* ══ CARD HEAD ROW — head + productivity inline ══ */
+  .card-head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
   .card-head {
     font-family: 'Chakra Petch', Arial, sans-serif;
     font-size: var(--fs-sm); font-weight: 700; color: #0d47a1;
-    margin-bottom: 3px;
     display: flex; align-items: center; gap: 6px;
+    margin-bottom: 0; /* reset when inside card-head-row */
   }
+  /* fallback: standalone card-head (not in row) keeps original margin */
+  .card > .card-head { margin-bottom: 3px; }
   .card-head.red { color: #b71c1c; }
   .card-head.teal { color: #004d40; }
   .card-head::before {
@@ -196,6 +208,35 @@
   }
   .card-head.red::before  { background: linear-gradient(180deg,#c62828,#ef5350); }
   .card-head.teal::before { background: linear-gradient(180deg,#00695c,#26a69a); }
+
+  /* ══ PRODUCTIVITY INLINE BADGE (on bar chart card) ══ */
+  .bar-productivity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fffbeb;
+    border: 1.5px solid #fcd34d;
+    border-radius: 7px;
+    padding: 3px 10px;
+    flex-shrink: 0;
+  }
+  .bar-productivity-label {
+    font-family: 'Chakra Petch', Arial, sans-serif;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: #b45309;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .bar-productivity-value {
+    font-family: 'Chakra Petch', monospace;
+    font-size: 0.80rem;
+    font-weight: 800;
+    color: #d97706;
+    white-space: nowrap;
+  }
+
   .legend {
     display: flex; gap: 8px; flex-wrap: wrap;
     margin-top: 2px;
@@ -279,10 +320,15 @@
     transform: translate(-50%, -50%);
     text-align: center; pointer-events: none;
   }
+  /* ══ CHANGE 2: Donut % — bigger, bolder ══ */
   .donut-pct {
     font-family: 'Chakra Petch', monospace;
-    font-size: 1.15rem; font-weight: 900; color: #ff9800;
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: #ff9800;
     line-height: 1;
+    letter-spacing: -1px;
+    text-shadow: 0 1px 4px rgba(0,0,0,.12);
   }
   .donut-sub {
     font-family: 'Chakra Petch', monospace;
@@ -498,7 +544,6 @@
     background: rgba(86,119,252,.12); color: #5677fc;
     border: 1px solid rgba(86,119,252,.25);
   }
-  /* overlap indicator bar */
   .bct-dt-overlap-bar {
     height: 4px; border-radius: 2px; margin: 2px 0;
     background: linear-gradient(90deg, #ef5350, #ff8a65);
@@ -617,6 +662,7 @@
     .radar-wrap { width: 190px; height: 190px; }
     .dt-table-wrap { max-height: 680px; }
     .donut-wrap { width: 130px; height: 130px; }
+    .donut-pct { font-size: 2rem !important; }
   }
   @media (min-width: 1400px) and (max-width: 1799px) {
     :root { --bar-h: 260px; --perf-h: 150px; }
@@ -624,6 +670,7 @@
     .pie-wrap  { width: 160px; height: 160px; }
     .radar-wrap { width: 170px; height: 170px; }
     .dt-table-wrap { max-height: 600px; }
+    .donut-pct { font-size: 1.7rem !important; }
   }
   @media (max-width: 1199px) {
     .body-row { flex-wrap: wrap; }
@@ -645,6 +692,7 @@
     .page { padding: 8px; gap: 8px; }
     .body-row { flex-wrap: wrap; }
     .right-col { width: 100%; flex-direction: row; flex-wrap: wrap; }
+    .bar-productivity-badge { display: none; }
   }
   @media (max-width: 599px) {
     .right-col { flex-direction: column; }
@@ -725,7 +773,14 @@
           <div class="spinner"></div>
           <div class="overlay-msg" id="overlayMsg">LOADING DATA…</div>
         </div>
-        <div class="card-head">Machine Production Per Hour</div>
+        <!-- ══ CHANGE 1: card-head-row with inline productivity badge ══ -->
+        <div class="card-head-row">
+          <div class="card-head">Machine Production Per Hour</div>
+          <div class="bar-productivity-badge">
+            <span class="bar-productivity-label">⚡ Productivity</span>
+            <span class="bar-productivity-value" id="barProductivityValue">— BCM/Hr</span>
+          </div>
+        </div>
         <div class="bar-chart-wrap">
           <canvas id="bcmChart"></canvas>
         </div>
@@ -828,6 +883,7 @@
             <div class="donut-wrap">
               <canvas id="donutChart"></canvas>
               <div class="donut-center">
+                <!-- ══ CHANGE 2: donut-pct now 1.55rem + text-shadow via CSS ══ -->
                 <div class="donut-pct" id="donutPct">—%</div>
                 <div class="donut-sub">Achievement</div>
               </div>
@@ -898,9 +954,6 @@ var C = { bwe1:'#6B007B', bwe2:'#F48FB1', cr1:'#2baf2b', cr2:'#72D572', cr3:'#CD
 var allRows=[], availableDates=[], bcmChart=null, pieChart=null, perfChart=null;
 var radarEquipChart=null, radarTypeChart=null, donutChart=null;
 
-/* ═══════════════════════════════════════════════════════════
-   MACHINE COLOR MAP — ใช้แมป Machine Name → color สำหรับ tooltip
-   ═══════════════════════════════════════════════════════════ */
 var MACHINE_COLOR_MAP = {
   'Bucket Wheel #1': '#6B007B',
   'Bucket Wheel #2': '#F48FB1',
@@ -911,7 +964,6 @@ var MACHINE_COLOR_MAP = {
   'System':          '#03a9f4',
 };
 
-/* ══════════ MACHINE FILTER STATE ══════════ */
 var MACHINE_DEF = [
   { label:'Bucket Wheel #1', color:'#6B007B' },
   { label:'Bucket Wheel #2', color:'#F48FB1' },
@@ -924,7 +976,6 @@ var MACHINE_DEF = [
 var selectedMachines = null;
 var pendingMachines  = null;
 
-/* ══════════ DT CONFIG ══════════ */
 var DT_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrCQ3IiMeLNYcvQ-17DHRwXFGJ-giDOeBZ805WbjMJcVjL8OrKt7XspFq-Zf8VLWmLynA0vHBWYvJ8/pub';
 var DT_URL  = DT_BASE + '?gid=2057594931&single=true&output=csv';
 
@@ -962,12 +1013,9 @@ var TYPE_COLORS = {
 
 var dtAllRows=[], dtCurrentRows=[], dtActiveFilter='ALL';
 
-/* ══════════ POPUP STATE ══════════ */
 var equipPopupOpenIdx = -1;
 var typePopupOpenIdx  = -1;
 
-/* ══════════ BAR CHART LABELS CACHE ══════════ */
-/* เก็บ labels ปัจจุบันไว้เพื่อให้ tooltip ใช้ค้นหา window */
 var currentBarLabels = [];
 
 /* ══════════ HELPERS ══════════ */
@@ -984,7 +1032,6 @@ function fmtDTTime(s){
   return null;
 }
 
-/* แปลง "HH:MM" → minutes from midnight (0-1439) */
 function hhmm2min(s){
   if(!s) return null;
   var p=s.split(':'); if(p.length<2) return null;
@@ -993,94 +1040,46 @@ function hhmm2min(s){
   return h*60+m;
 }
 
-/*
- * ═══════════════════════════════════════════════════════════
- *  getDowntimesForHour  —  REVISED OVERLAP-BASED VERSION
- *
- *  แต่ละ bar label คือเวลาที่ record ถูกบันทึก เช่น "9:00"
- *  window ของ bar นั้น = [prevLabel, thisLabel]
- *  ถ้าไม่มี prevLabel → window = [thisLabel - 60min, thisLabel]
- *
- *  DT ทับซ้อน window ถ้า:
- *    dtStart < windowEnd  AND  (dtEnd > windowStart หรือ DT ยัง ongoing)
- *
- *  รองรับ cross-midnight: ชั่วโมง 0-7 ของ Night Shift
- *  ถือเป็น 24-31 (extended) เพื่อให้เรียงต่อเนื่องกับ 20-23
- * ═══════════════════════════════════════════════════════════
- */
 function getDowntimesForHour(labelStr, labelIdx){
   if(!dtCurrentRows||!dtCurrentRows.length) return [];
-
-  /* 1. หา window end จาก label ปัจจุบัน */
   var parts=(labelStr||'').split(':');
   var wEndH=parseInt(parts[0],10);
   if(isNaN(wEndH)) return [];
   var wEndMin=wEndH*60+(parseInt(parts[1],10)||0);
-
-  /* 2. หา window start จาก label ก่อนหน้า (ถ้ามี) */
   var wStartMin;
   if(labelIdx>0 && currentBarLabels[labelIdx-1]){
     var prevParts=currentBarLabels[labelIdx-1].split(':');
     var pH=parseInt(prevParts[0],10), pm=parseInt(prevParts[1],10)||0;
     wStartMin=pH*60+pm;
   } else {
-    wStartMin=wEndMin-60; /* ไม่มี prev → assume 1hr window */
+    wStartMin=wEndMin-60;
   }
-
-  /* 3. Normalize: รองรับ cross-midnight (Night Shift 00:xx-07:xx = 24:xx-31:xx) */
-  /* ถ้า wEndMin < wStartMin แสดงว่าข้ามเที่ยงคืน → +1440 */
   if(wEndMin < wStartMin) wEndMin += 1440;
-
-  /* 4. filter DT ที่ overlap */
   return dtCurrentRows.filter(function(r){
     var startRaw = fmtDTTime(r[DT_COL.START]||'');
     if(!startRaw) return false;
-
     var dtStartMin = hhmm2min(startRaw);
     if(dtStartMin===null) return false;
-
-    /* normalize DT start เทียบกับ window */
-    /* ถ้า DT start อยู่ฝั่ง "วันถัดไป" (cross-midnight) */
-    if(dtStartMin < 8*60 && wStartMin >= 20*60){
-      /* Night shift: DT ที่ start 00:xx-07:xx จริงๆ คือหลัง 24:00 */
-      dtStartMin += 1440;
-    }
-
+    if(dtStartMin < 8*60 && wStartMin >= 20*60){ dtStartMin += 1440; }
     var dtEndStr = fmtDTTime(r[DT_COL.END]||'');
     var isOngoing = !dtEndStr;
-
-    if(isOngoing){
-      /* Ongoing: ทับซ้อนถ้า dtStart < wEnd */
-      return dtStartMin < wEndMin;
-    }
-
+    if(isOngoing){ return dtStartMin < wEndMin; }
     var dtEndMin = hhmm2min(dtEndStr);
     if(dtEndMin===null) return false;
-
-    /* normalize DT end */
-    if(dtEndMin < 8*60 && wStartMin >= 20*60){
-      dtEndMin += 1440;
-    }
-    /* ถ้า dtEnd น้อยกว่า dtStart แสดงว่า DT ข้ามเที่ยงคืนเช่นกัน */
+    if(dtEndMin < 8*60 && wStartMin >= 20*60){ dtEndMin += 1440; }
     if(dtEndMin <= dtStartMin) dtEndMin += 1440;
-
-    /* Overlap check: dtStart < wEnd AND dtEnd > wStart */
     return dtStartMin < wEndMin && dtEndMin > wStartMin;
   });
 }
 
-/* คำนวณ overlap duration (minutes) ระหว่าง DT กับ window */
 function calcOverlapMinutes(dtStartStr, dtEndStr, wStartMin, wEndMin){
   var dtStartMin=hhmm2min(dtStartStr);
   var dtEndMin=dtEndStr?hhmm2min(dtEndStr):null;
   if(dtStartMin===null) return 0;
-
-  /* normalize cross-midnight */
   if(dtStartMin<8*60&&wStartMin>=20*60) dtStartMin+=1440;
   if(dtEndMin!==null&&dtEndMin<8*60&&wStartMin>=20*60) dtEndMin+=1440;
   if(dtEndMin!==null&&dtEndMin<=dtStartMin) dtEndMin+=1440;
   if(wEndMin<wStartMin) wEndMin+=1440;
-
   var overlapStart=Math.max(dtStartMin,wStartMin);
   var overlapEnd=dtEndMin!==null?Math.min(dtEndMin,wEndMin):wEndMin;
   return Math.max(0,overlapEnd-overlapStart);
@@ -1276,10 +1275,7 @@ var targetLinePlugin={
   }
 };
 
-/* ═══════════════════════════════════════════════════════════
-   BAR TOOLTIP  —  REVISED
-   แสดง Downtime ที่ overlap กับ window ของ bar นั้นๆ
-   ═══════════════════════════════════════════════════════════ */
+/* ══ BAR TOOLTIP ══ */
 var barTooltipEl=null;
 function getBarTooltipEl(){ if(!barTooltipEl) barTooltipEl=document.getElementById('barCustomTooltip'); return barTooltipEl; }
 function hideBarTooltip(){ getBarTooltipEl().style.display='none'; }
@@ -1294,7 +1290,6 @@ function showBarTooltip(context){
   var total   = dp.reduce(function(s,p){return s+(p.parsed.y||0);},0);
   var belowTarget = total < 4800;
 
-  /* ── คำนวณ window ──────────────────────────── */
   var parts = (label||'').split(':');
   var wEndH = parseInt(parts[0],10)||0;
   var wEndMin = wEndH*60+(parseInt(parts[1],10)||0);
@@ -1307,19 +1302,16 @@ function showBarTooltip(context){
   }
   if(wEndMin<wStartMin) wEndMin+=1440;
   var wStartLabel=String(Math.floor(((wStartMin+1440)%1440)/60)).padStart(2,'0')+':'+String(wStartMin%60).padStart(2,'0');
-  /* fix: wStartMin อาจ negative ถ้า label แรก */
   if(wStartMin<0){ wStartLabel=String(Math.floor((wStartMin+1440)/60)).padStart(2,'0')+':'+String(((wStartMin%60)+60)%60).padStart(2,'0'); }
 
   var dsColors=['#259B24','#7b1fa2','#f48fb1'];
   var html='';
 
-  /* ── Header ── */
   html+='<div class="bct-header">'
       +'<span class="bct-time">🕐 '+escHtml(wStartLabel)+' – '+escHtml(label)+'</span>'
       +'<span class="bct-total-badge">'+total.toLocaleString()+' BCM</span>'
       +'</div>';
 
-  /* ── BCM per machine ── */
   html+='<div class="bct-body">';
   dp.forEach(function(p,i){
     var color=dsColors[i]||'#90a4ae';
@@ -1331,13 +1323,11 @@ function showBarTooltip(context){
   });
   html+='</div>';
 
-  /* ── Below target warning ── */
   if(belowTarget){
     var gap=4800-total;
     html+='<div class="bct-below-warning">⚠ Below target by '+gap.toLocaleString()+' BCM/Hr</div>';
   }
 
-  /* ── Downtime Section (เสมอ: แสดงทั้ง below และ on-target) ── */
   var dts = getDowntimesForHour(label, dataIdx);
 
   html+='<div class="bct-dt-section">'
@@ -1347,7 +1337,6 @@ function showBarTooltip(context){
   if(!dts.length){
     html+='<div class="bct-no-dt">✅ ไม่มี Downtime ในช่วงเวลานี้</div>';
   } else {
-    /* เรียงตาม start time */
     var sorted=dts.slice().sort(function(a,b){
       return (a[DT_COL.START]||'')<(b[DT_COL.START]||'')?-1:1;
     });
@@ -1361,23 +1350,18 @@ function showBarTooltip(context){
       var isOngoing= !endStr;
       var mc       = MACHINE_COLOR_MAP[machine]||'#90a4ae';
       var tc       = TYPE_COLORS[typeRaw]||'#90a4ae';
-
-      /* คำนวณ overlap duration */
       var overlapMin = calcOverlapMinutes(startStr, endStr, wStartMin, wEndMin);
       var overlapLabel = overlapMin>0?(overlapMin+' min overlap'):'';
 
       html+='<div class="bct-dt-item" style="--dt-color:'+mc+';">'
-          /* machine + type */
           +'<div class="bct-dt-machine">'
           +escHtml(machine)
           +'<span class="bct-dt-type-chip" style="background:'+tc+'18;color:'+tc+';border-color:'+tc+'55;">'+escHtml(typeRaw)+'</span>'
           +(overlapLabel?'<span class="bct-dt-overlap-label">⧖ '+escHtml(overlapLabel)+'</span>':'')
           +'</div>'
-          /* full DT time range */
           +'<div class="bct-dt-timeline">'
           +'<span class="bct-dt-time-full">'+escHtml(startStr)+' → '+(isOngoing?'<span style="color:#ff9800;font-weight:700;">⚡ ONGOING</span>':escHtml(endStr))+'</span>'
           +'</div>'
-          /* description */
           +'<div class="bct-dt-desc">'+escHtml(desc)+'</div>'
           +'</div>';
     });
@@ -1385,7 +1369,7 @@ function showBarTooltip(context){
       html+='<div class="bct-dt-more">+ '+(sorted.length-MAX)+' more records…</div>';
     }
   }
-  html+='</div>'; /* end bct-dt-section */
+  html+='</div>';
 
   el.innerHTML=html; el.style.display='block';
   var canvas=context.chart.canvas, rect=canvas.getBoundingClientRect();
@@ -1478,9 +1462,7 @@ function updateDonut(grandTotal){
   else{gapLabelEl.textContent='⚠ Below Target';gapLabelEl.style.color='#c62828';gapEl.className='donut-stat-val red';}
 }
 
-/* ════════════════════════════════════════════════════════════════
-   RADAR POPUP SYSTEM (unchanged from original)
-   ════════════════════════════════════════════════════════════════ */
+/* ════════ RADAR POPUP SYSTEM ════════ */
 function positionRadarPopup(popupEl, refX, refY) {
   var margin=14, pw=popupEl.offsetWidth||320, ph=popupEl.offsetHeight||260;
   var vw=window.innerWidth, vh=window.innerHeight;
@@ -1866,7 +1848,6 @@ function renderForDate(wd){
   var rows=filterByShift(allForDate,currentShift);
   var labels=rows.map(function(r){return fmtTime(r[COL.DT]||'');});
 
-  /* ══ อัพเดท cache labels ══ */
   currentBarLabels=labels;
 
   var dataB=rows.map(function(r){return parseNum(r[COL.BCM_CR]);});
@@ -1914,7 +1895,11 @@ function renderForDate(wd){
 
   var totalHoursDecimal=totalMinutes/60;
   var productivity=totalHoursDecimal>0?Math.round(grand/totalHoursDecimal):0;
-  document.getElementById('productivityBox').textContent=productivity>0?productivity.toLocaleString()+' BCM/Hr':'—';
+  var productivityText=productivity>0?productivity.toLocaleString()+' BCM/Hr':'—';
+
+  /* ══ CHANGE 1: อัพเดท productivity badge บน bar chart ด้วย ══ */
+  document.getElementById('productivityBox').textContent=productivityText;
+  document.getElementById('barProductivityValue').textContent=productivityText;
 
   updateTargetBox(); updateDonut(grand);
   document.getElementById('rowCount').textContent=rows.length+' rows · '+allRows.length+' total · '+availableDates.length+' dates · '+toDisplay(wd)+' · '+SHIFT_CONFIG[currentShift].label;
@@ -2033,7 +2018,6 @@ fetchData().then(function(){
   }
 
   function updateUI(){
-  console.log("test")
     var ratio=remaining/INTERVAL;
     progEl.style.strokeDashoffset=CIRCUMFERENCE*(1-ratio);
     var mins=Math.floor(remaining/60),secs=String(remaining%60).padStart(2,'0');
