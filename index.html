@@ -734,7 +734,7 @@
         /* ══ FIX 1: Legend แสดงตัวเลข BCM เท่านั้น ไม่มี (%) ══ */
         var pieItems=[{label:"BWE 1",val:sBWE1,color:C.bwe1},{label:"BWE 2",val:sBWE2,color:C.bwe2},{label:"CR 1",val:sCR1,color:C.cr1},{label:"CR 2",val:sCR2,color:C.cr2},{label:"CR 3",val:sCR3,color:C.cr3}];
         document.getElementById("pieLegend").innerHTML=pieItems.map(function(p){
-          return'<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+' <span style="color:#888;font-size:.65rem;">BCM</span></div></div>';
+          return'<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+' <span style="color:#212121;font-size:.75rem;">BCM</span></div></div>';
         }).join("");
 
         document.getElementById("grandTotal").textContent=grand.toLocaleString()+" BCM";
