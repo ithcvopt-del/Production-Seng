@@ -290,6 +290,31 @@
       @media(max-width:1199px){.body-row{flex-wrap:wrap;}.left-col{width:100%;}.right-col{width:100%;flex-direction:row;flex-wrap:wrap;}.right-col>.card{flex:1 1 280px;}}
       @media(max-width:767px){.top-bar{height:auto;min-height:unset;padding:7px 10px 6px;flex-direction:column;align-items:stretch;gap:5px;}.top-bar-row1{justify-content:space-between;}.logo-box{font-size:.72rem;padding:4px 8px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;}.auto-refresh-label{display:none;}.top-bar-row2{flex-wrap:nowrap;overflow-x:auto;}.ctrl-label{display:none;}.btn-shift{font-size:.72rem;padding:6px 10px;}.btn-nav{width:34px;height:34px;font-size:1.1rem;flex-shrink:0;}.date-select{font-size:.78rem;padding:6px 8px;min-width:100px;flex-shrink:0;}.btn-refresh{font-size:.72rem;padding:6px 10px;flex-shrink:0;}.page{padding:8px;gap:8px;}.body-row{flex-wrap:wrap;}.right-col{width:100%;flex-direction:row;flex-wrap:wrap;}}
       @media(max-width:599px){.right-col{flex-direction:column;}.dt-table{font-size:.68rem;}.dt-table thead th{font-size:.68rem;padding:5px 6px;}.dt-table tbody td{padding:3px 6px;}.footer{flex-direction:column;align-items:flex-start;}.radar-click-popup{max-width:calc(100vw - 24px);min-width:270px;}}
+    .weather-widget {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 6px;
+  padding: 4px 10px;
+  flex-shrink: 0;
+  cursor: default;
+}
+.weather-icon { font-size: 1.1rem; line-height: 1; }
+.weather-temp {
+  font-family: "Chakra Petch", monospace;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+.weather-desc {
+  font-family: "Sarabun", Arial, sans-serif;
+  font-size: var(--fs-xs);
+  color: rgba(255,255,255,.55);
+  white-space: nowrap;
+}
     </style>
   </head>
   <body>
@@ -313,6 +338,14 @@
           <span class="countdown-txt" id="countdownTxt">2:00</span>
         </div>
       </div>
+      <!-- Weather Widget -->
+<div class="weather-widget" id="weatherWidget" title="สภาพอากาศปัจจุบัน">
+  <span class="weather-icon" id="weatherIcon">⏳</span>
+  <div style="display:flex;flex-direction:column;line-height:1.2;">
+    <span class="weather-temp" id="weatherTemp">--°C</span>
+    <span class="weather-desc" id="weatherDesc">กำลังโหลด...</span>
+  </div>
+</div>
       <div class="controls top-bar-row2">
         <span class="ctrl-label">Shift</span>
         <div class="shift-group">
@@ -778,6 +811,49 @@
         function checkDateAdvance(){var now=new Date(),h=now.getHours(),m=now.getMinutes();if(h===7&&m>=0&&m<=20){var todayKey=toYMD(now);if(lastAdvanceDate!==todayKey){lastAdvanceDate=todayKey;advanceToToday();}}}
         function updateUI(){var ratio=remaining/INTERVAL;progEl.style.strokeDashoffset=CIRCUMFERENCE*(1-ratio);var mins=Math.floor(remaining/60),secs=String(remaining%60).padStart(2,"0");txtEl.textContent=mins+":"+secs;progEl.style.stroke=remaining<=10?"#ef5350":"#42a5f5";txtEl.style.color=remaining<=10?"#ef5350":"#42a5f5";}
         updateUI();setInterval(function(){remaining--;if(remaining<=0)doRefresh();checkDateAdvance();updateUI();},1000);
+        // ===== REAL-TIME WEATHER (Open-Meteo API - Free, No Key Required) =====
+const WEATHER_LAT = 19.694558;   // <-- ใส่ละติจูดโรงงานของคุณ
+const WEATHER_LON = 101.275510;  // <-- ใส่ลองจิจูดโรงงานของคุณ
+
+const WMO_ICONS = {
+  0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
+  45:'🌫️', 48:'🌫️',
+  51:'🌦️', 53:'🌦️', 55:'🌧️',
+  61:'🌧️', 63:'🌧️', 65:'🌧️',
+  71:'🌨️', 73:'🌨️', 75:'🌨️',
+  80:'🌦️', 81:'🌧️', 82:'⛈️',
+  95:'⛈️', 96:'⛈️', 99:'⛈️'
+};
+
+const WMO_THAI = {
+  0:'ท้องฟ้าแจ่มใส', 1:'ส่วนใหญ่แจ่มใส', 2:'มีเมฆบางส่วน', 3:'มีเมฆมาก',
+  45:'หมอกลง', 48:'หมอกน้ำแข็ง',
+  51:'ฝนปรอยๆ', 53:'ฝนปรอย', 55:'ฝนปรอยหนัก',
+  61:'ฝนเบา', 63:'ฝนปานกลาง', 65:'ฝนหนัก',
+  71:'หิมะเบา', 73:'หิมะ', 75:'หิมะหนัก',
+  80:'ฝนฟ้าคะนอง', 81:'ฝนหนัก', 82:'ฝนหนักมาก',
+  95:'พายุฝนฟ้าคะนอง', 96:'พายุลูกเห็บ', 99:'พายุรุนแรง'
+};
+
+async function fetchWeather() {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${WEATHER_LAT}&longitude=${WEATHER_LON}&current=temperature_2m,weathercode&timezone=auto`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const { temperature_2m, weathercode } = data.current;
+    const code = weathercode;
+
+    document.getElementById('weatherIcon').textContent = WMO_ICONS[code] ?? '🌡️';
+    document.getElementById('weatherTemp').textContent = `${Math.round(temperature_2m)}°C`;
+    document.getElementById('weatherDesc').textContent = WMO_THAI[code] ?? 'ไม่ทราบสภาพ';
+  } catch (e) {
+    document.getElementById('weatherDesc').textContent = 'ไม่สามารถโหลดได้';
+  }
+}
+
+// โหลดทันทีและอัปเดตทุก 10 นาที
+fetchWeather();
+setInterval(fetchWeather, 10 * 60 * 1000);          
       })();
     </script>
   </body>
