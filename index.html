@@ -812,8 +812,8 @@
         function updateUI(){var ratio=remaining/INTERVAL;progEl.style.strokeDashoffset=CIRCUMFERENCE*(1-ratio);var mins=Math.floor(remaining/60),secs=String(remaining%60).padStart(2,"0");txtEl.textContent=mins+":"+secs;progEl.style.stroke=remaining<=10?"#ef5350":"#42a5f5";txtEl.style.color=remaining<=10?"#ef5350":"#42a5f5";}
         updateUI();setInterval(function(){remaining--;if(remaining<=0)doRefresh();checkDateAdvance();updateUI();},1000);
         // ===== REAL-TIME WEATHER (Open-Meteo API - Free, No Key Required) =====
-const WEATHER_LAT = 19.710019;   // <-- ใส่ละติจูดโรงงานของคุณ
-const WEATHER_LON = 101.101.245234;  // <-- ใส่ลองจิจูดโรงงานของคุณ
+const WEATHER_LAT = 19.71040;   // <-- ใส่ละติจูดโรงงานของคุณ
+const WEATHER_LON = 101.24534;  // <-- ใส่ลองจิจูดโรงงานของคุณ
 
 const WMO_ICONS = {
   0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
@@ -850,7 +850,6 @@ async function fetchWeather() {
     document.getElementById('weatherDesc').textContent = 'ไม่สามารถโหลดได้';
   }
 }
-
 // โหลดทันทีและอัปเดตทุก 10 นาที
 fetchWeather();
 setInterval(fetchWeather, 5 * 60 * 1000);          
