@@ -775,7 +775,7 @@
       (function(){var INTERVAL=2*60,CIRCUMFERENCE=47.12,remaining=INTERVAL;var progEl=document.getElementById("countdownProg"),txtEl=document.getElementById("countdownTxt");var lastAdvanceDate=null;
         function doRefresh(){var wd=document.getElementById("datePicker").value;fetchData().then(function(){fetchDowntime().then(function(){var sel=document.getElementById("datePicker");if(availableDates.indexOf(wd)>=0){sel.value=wd;renderForDate(wd);}else{var latest=availableDates[availableDates.length-1];sel.value=latest;renderForDate(latest);}if(wd)renderRadarForDate(sel.value);});});remaining=INTERVAL;}
         function advanceToToday(){fetchData().then(function(){fetchDowntime().then(function(){var sel=document.getElementById("datePicker"),target=pickDefaultDate();if(target){sel.value=target;renderForDate(target);renderRadarForDate(target);}});});remaining=INTERVAL;}
-        function checkDateAdvance(){var now=new Date(),h=now.getHours(),m=now.getMinutes();if(h===7&&m>=0&&m<=15){var todayKey=toYMD(now);if(lastAdvanceDate!==todayKey){lastAdvanceDate=todayKey;advanceToToday();}}}
+        function checkDateAdvance(){var now=new Date(),h=now.getHours(),m=now.getMinutes();if(h===7&&m>=0&&m<=20){var todayKey=toYMD(now);if(lastAdvanceDate!==todayKey){lastAdvanceDate=todayKey;advanceToToday();}}}
         function updateUI(){var ratio=remaining/INTERVAL;progEl.style.strokeDashoffset=CIRCUMFERENCE*(1-ratio);var mins=Math.floor(remaining/60),secs=String(remaining%60).padStart(2,"0");txtEl.textContent=mins+":"+secs;progEl.style.stroke=remaining<=10?"#ef5350":"#42a5f5";txtEl.style.color=remaining<=10?"#ef5350":"#42a5f5";}
         updateUI();setInterval(function(){remaining--;if(remaining<=0)doRefresh();checkDateAdvance();updateUI();},1000);
       })();
