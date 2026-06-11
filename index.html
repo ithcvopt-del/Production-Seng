@@ -862,52 +862,77 @@
         function updateUI(){var ratio=remaining/INTERVAL;progEl.style.strokeDashoffset=CIRCUMFERENCE*(1-ratio);var mins=Math.floor(remaining/60),secs=String(remaining%60).padStart(2,"0");txtEl.textContent=mins+":"+secs;progEl.style.stroke=remaining<=10?"#ef5350":"#42a5f5";txtEl.style.color=remaining<=10?"#ef5350":"#42a5f5";}
         updateUI();
         setInterval(function(){remaining--;if(remaining<=0)doRefresh();checkDateAdvance();updateUI();},1000);
+/* ── Weather with Cache ── */
+var SITES = [{id:'BWE',lat:19.70390,lon:101.28441},{id:'CR',lat:19.703246,lon:101.288260},{id:'SPD',lat:19.709486,lon:101.245291}];
 
-        /* ── Weather ── */
-        var SITES=[{id:'BWE',lat:19.70390,lon:101.28441},{id:'CR',lat:19.703246,lon:101.288260},{id:'SPD',lat:19.709486,lon:101.245291}];
-        function getWeatherIcon(code){var hour=new Date().getHours();var isNight=hour>=19||hour<6;var ICONS_DAY={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};var ICONS_NIGHT={0:'🌟🌙',1:'✨🌙',2:'☁️🌙',3:'☁️',45:'🌫️',48:'🌫️',51:'🌧️',53:'🌧️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',80:'🌧️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};return isNight?(ICONS_NIGHT[code]??'🌙'):(ICONS_DAY[code]??'🌡️');}
-        var WMO_THAI={0:'แจ่มใส',1:'แจ่มใส',2:'มีเมฆ',3:'มืดครึ้ม',45:'หมอก',48:'หมอก',51:'ฝนปรอย',53:'ฝนปรอย',55:'ฝนปรอย',61:'ฝนเบา',63:'ฝนปานกลาง',65:'ฝนหนัก',80:'ฝนฟ้าคะนอง',81:'ฝนหนัก',82:'ฝนหนักมาก',95:'พายุ',96:'พายุลูกเห็บ',99:'พายุรุนแรง'};
-       // เพิ่ม retry logic และ delay เริ่มต้น
+function getWeatherIcon(code){var hour=new Date().getHours();var isNight=hour>=19||hour<6;var ICONS_DAY={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};var ICONS_NIGHT={0:'🌟🌙',1:'✨🌙',2:'☁️🌙',3:'☁️',45:'🌫️',48:'🌫️',51:'🌧️',53:'🌧️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',80:'🌧️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};return isNight?(ICONS_NIGHT[code]??'🌙'):(ICONS_DAY[code]??'🌡️');}
+var WMO_THAI={0:'แจ่มใส',1:'แจ่มใส',2:'มีเมฆ',3:'มืดครึ้ม',45:'หมอก',48:'หมอก',51:'ฝนปรอย',53:'ฝนปรอย',55:'ฝนปรอย',61:'ฝนเบา',63:'ฝนปานกลาง',65:'ฝนหนัก',80:'ฝนฟ้าคะนอง',81:'ฝนหนัก',82:'ฝนหนักมาก',95:'พายุ',96:'พายุลูกเห็บ',99:'พายุรุนแรง'};
+
+// ✅ 1. โหลด cache ก่อนทันที — ไม่มี error ตอนเปิดหน้า
+function loadCachedWeather() {
+    SITES.forEach(site => {
+        const cached = localStorage.getItem('weather_' + site.id);
+        if (cached) {
+            const d = JSON.parse(cached);
+            document.getElementById('icon-' + site.id).textContent = d.icon;
+            document.getElementById('temp-' + site.id).textContent = d.temp;
+            document.getElementById('desc-' + site.id).textContent = d.desc;
+        }
+    });
+}
+
+// ✅ 2. บันทึก cache เมื่อ fetch สำเร็จ
+function saveCache(id, icon, temp, desc) {
+    localStorage.setItem('weather_' + id, JSON.stringify({ icon, temp, desc }));
+}
+
+// ✅ 3. Fetch พร้อม retry — อัปเดต UI และ cache เมื่อได้ข้อมูล
 async function fetchWeatherWithRetry(site, retries = 3) {
     for (let attempt = 0; attempt < retries; attempt++) {
         try {
             const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 8000); // timeout 8 วิ
-            
+            const timeout = setTimeout(() => controller.abort(), 8000);
+
             const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + site.lat +
                 '&longitude=' + site.lon + '&current=temperature_2m,weathercode&timezone=auto';
-            
+
             const res = await fetch(url, { signal: controller.signal });
             clearTimeout(timeout);
-            
             if (!res.ok) throw new Error('HTTP ' + res.status);
-            
+
             const data = await res.json();
             const cur = data.current;
-            document.getElementById('icon-' + site.id).textContent = getWeatherIcon(cur.weathercode);
-            document.getElementById('temp-' + site.id).textContent = Math.round(cur.temperature_2m) + '°C';
-            document.getElementById('desc-' + site.id).textContent = WMO_THAI[cur.weathercode] ?? '-';
-            return; // สำเร็จแล้ว ออกได้เลย
-            
+            const icon = getWeatherIcon(cur.weathercode);
+            const temp = Math.round(cur.temperature_2m) + '°C';
+            const desc = WMO_THAI[cur.weathercode] ?? '-';
+
+            document.getElementById('icon-' + site.id).textContent = icon;
+            document.getElementById('temp-' + site.id).textContent = temp;
+            document.getElementById('desc-' + site.id).textContent = desc;
+
+            saveCache(site.id, icon, temp, desc); // บันทึกค่าใหม่
+            return;
+
         } catch (e) {
             if (attempt < retries - 1) {
-                await new Promise(r => setTimeout(r, 2000 * (attempt + 1))); // รอ 2, 4 วิ แล้ว retry
-            } else {
-                document.getElementById('desc-' + site.id).textContent = 'ไม่มีสัญญาณ';
+                await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
             }
+            // ❌ ไม่ set "error" อีกต่อไป — ถ้า fetch ไม่ได้ก็คงค่า cache ไว้
         }
     }
 }
 
 async function fetchWeatherAll() {
-    for (var i = 0; i < SITES.length; i++) {
-        await fetchWeatherWithRetry(SITES[i]);
+    for (const site of SITES) {
+        await fetchWeatherWithRetry(site);
     }
 }
 
-// รอ page โหลดเสร็จก่อน 1 วิ แล้วค่อย fetch
-setTimeout(fetchWeatherAll, 1000);
+// ✅ 4. ลำดับการทำงาน
+loadCachedWeather();              // แสดงค่าเก่าทันที
+setTimeout(fetchWeatherAll, 500); // fetch ใหม่เงียบๆ ใน background
 setInterval(fetchWeatherAll, 2 * 60 * 1000);
+    
       })();
     </script>
   </body>
