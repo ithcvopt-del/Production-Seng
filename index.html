@@ -735,7 +735,7 @@
         var totalEquipEvents=equipCounts.reduce(function(a,b){return a+b;},0);
         var totalEquipDurMin=equipDurMins.reduce(function(a,b){return a+b;},0);
         document.getElementById("radarEquipTotal").textContent="Total: "+totalEquipEvents+" events";
-        document.getElementById("radarEquipTotalDur").textContent="⏱ "+fmtMinToHHMM(totalEquipDurMin)+" Hr. รวม Downtime";
+        document.getElementById("radarEquipTotalDur").textContent="⏱ "+fmtMinToHHMM(totalEquipDurMin)+" Hr.";
 
         /* ── Type Radar ── */
         var typeCounts=TYPE_DEF.map(function(def){
@@ -782,7 +782,7 @@
         var totalTypeEvents=typeCounts.reduce(function(a,b){return a+b;},0);
         var totalTypeDurMin=typeDurMins.reduce(function(a,b){return a+b;},0);
         document.getElementById("radarTypeTotal").textContent="Total: "+totalTypeEvents+" events";
-        document.getElementById("radarTypeTotalDur").textContent="⏱ "+fmtMinToHHMM(totalTypeDurMin)+" Hr. รวม Downtime";
+        document.getElementById("radarTypeTotalDur").textContent="⏱ "+fmtMinToHHMM(totalTypeDurMin)+" Hr.";
       }
 
       async function fetchData(){showOverlay("LOADING DATA…");hideError();var lastErr="";for(var i=0;i<CSV_URLS.length;i++){try{var res=await fetch(CSV_URLS[i]+"&_cb="+Date.now());if(!res.ok){lastErr="HTTP "+res.status;continue;}var text=await res.text();if(!text||text.trim().length<10){lastErr="Empty";continue;}processCSV(text);return true;}catch(e){lastErr=e.message;}}showOverlay("Load failed");showError("Cannot fetch data: "+lastErr);return false;}
