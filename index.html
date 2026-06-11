@@ -20,6 +20,8 @@
       *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
       html{scroll-behavior:smooth;}
       body{background:var(--bg);color:var(--text);font-family:"Sarabun",Arial,sans-serif;min-height:100vh;}
+
+      /* ══════════ TOP BAR ══════════ */
       .top-bar{background:linear-gradient(135deg,#1a237e 0%,#283593 60%,#1565c0 100%);padding:0 12px;display:flex;align-items:center;justify-content:space-between;gap:4px;box-shadow:0 3px 16px rgba(21,35,126,.35);position:sticky;top:0;z-index:100;height:var(--topbar-h);min-height:var(--topbar-h);}
       .top-bar-left{display:flex;align-items:center;gap:10px;flex-shrink:0;}
       .logo-box{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:7px;padding:4px 10px;font-family:"Chakra Petch",Arial,sans-serif;font-size:var(--fs-base);font-weight:700;color:#fff;letter-spacing:1px;white-space:nowrap;}
@@ -47,11 +49,15 @@
       .btn-shift.active-night{background:linear-gradient(135deg,#311b92,#7b1fa2);color:#fff;}
       .top-bar-row1{display:flex;align-items:center;gap:6px;flex-shrink:0;}
       .top-bar-row2{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
-      .page{padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
-      .body-row{display:flex;gap:10px;align-items:flex-start;}
-      .left-col{display:flex;flex-direction:column;gap:8px;flex:1 1 0%;min-width:0;}
-      .right-col{display:flex;flex-direction:column;gap:8px;width:340px;flex-shrink:0;min-width:0;}
-      .card{background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:6px 12px 8px;position:relative;overflow:hidden;}
+
+      /* ══════════ LAYOUT ══════════ */
+      .page{padding:8px 10px;display:flex;flex-direction:column;gap:7px;}
+      .body-row{display:flex;gap:8px;align-items:flex-start;}
+      .left-col{display:flex;flex-direction:column;gap:7px;flex:1 1 0%;min-width:0;}
+      .right-col{display:flex;flex-direction:column;gap:6px;width:310px;flex-shrink:0;min-width:0;}
+
+      /* ══════════ CARDS ══════════ */
+      .card{background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:5px 10px 7px;position:relative;overflow:hidden;}
       .card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#1565c0,#42a5f5);border-radius:10px 10px 0 0;}
       .card.shift-day::before{background:linear-gradient(90deg,#f57f17,#ffca28);}
       .card.shift-night::before{background:linear-gradient(90deg,#311b92,#7b1fa2);}
@@ -67,7 +73,7 @@
       .card-head.red::before{background:linear-gradient(180deg,#c62828,#ef5350);}
       .card-head.teal::before{background:linear-gradient(180deg,#00695c,#26a69a);}
       .bar-head-row{display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap;}
-      .bar-productivity-badge{display:inline-flex;align-items:center;gap:5px;background:#fffbeb;border:1px solid #fcd34d;border-radius:5px;padding:2px 9px;margin-left: auto;margin-right: auto;}
+      .bar-productivity-badge{display:inline-flex;align-items:center;gap:5px;background:#fffbeb;border:1px solid #fcd34d;border-radius:5px;padding:2px 9px;margin-left:auto;margin-right:auto;}
       .bar-productivity-label{font-family:"Chakra Petch",Arial,sans-serif;font-size:.66rem;color:#b45309;letter-spacing:.8px;text-transform:uppercase;font-weight:700;}
       .bar-productivity-value{font-family:"Chakra Petch",monospace;font-size:.75rem;font-weight:800;color:#b45309;}
       .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px;justify-content:center;}
@@ -78,65 +84,71 @@
       .spinner{width:26px;height:26px;border:3px solid #e3e8f0;border-top-color:var(--blue);border-radius:50%;animation:spin .75s linear infinite;}
       @keyframes spin{to{transform:rotate(360deg);}}
       .overlay-msg{font-family:"Chakra Petch",Arial,sans-serif;font-size:var(--fs-xs);color:var(--muted);letter-spacing:1px;}
-      .pie-card{padding:8px 8px 8px;}
-      .pie-title{font-family:"Chakra Petch",Arial,sans-serif;font-size:var(--fs-sm);font-weight:700;color:#0d47a1;text-align:center;margin-bottom:6px;}
-      .pie-body{display:flex;gap:10px;align-items:center;}
-      .pie-wrap{width:140px;height:140px;flex-shrink:0;position:relative;}
+
+      /* ══════════ PIE CARD ══════════ */
+      .pie-card{padding:6px 8px 7px;}
+      .pie-title{font-family:"Chakra Petch",Arial,sans-serif;font-size:var(--fs-sm);font-weight:700;color:#0d47a1;text-align:center;margin-bottom:4px;}
+      .pie-body{display:flex;gap:8px;align-items:center;}
+      .pie-wrap{width:120px;height:120px;flex-shrink:0;position:relative;}
       #pieChart{position:absolute;top:0;left:0;width:100%!important;height:100%!important;}
       .pie-right{flex:2;display:flex;flex-direction:column;gap:2px;min-width:0;}
-      .pie-legend{display:flex;flex-direction:column;gap:2px;}
-      .pie-legend-item{display:flex;align-items:center;justify-content:space-between;font-size:var(--fs-xs);color:#1a1f2e;font-weight:700;padding:2px 0;border-bottom:1px solid #e8eaf0;}
-      .pie-legend-left{display:flex;align-items:center;gap:6px;font-weight:700;color:#1a237e;}
-      .pie-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-      .totals-row{display:flex;flex-direction:column;gap:5px;margin-top:6px;padding-top:6px;border-top:1px solid var(--border);}
-      .total-box{display:flex;align-items:center;justify-content:space-between;padding:4px 7px;background:#f8f9fc;border-radius:5px;border:1px solid var(--border);}
-      .total-label{font-family:"Chakra Petch",Arial,sans-serif;font-size:.66rem;color:#37474f;letter-spacing:.8px;text-transform:uppercase;font-weight:700;}
-      .total-value{font-family:"Chakra Petch",Arial,monospace;font-size:.75rem;font-weight:800;color:#0d47a1;}
-      .clock-box{font-family:"Chakra Petch",monospace;font-size:.75rem;font-weight:800;color:#004d40;}
-      .productivity-box{font-family:"Chakra Petch",monospace;font-size:.75rem;font-weight:800;color:#b45309;}
+      .pie-legend{display:flex;flex-direction:column;gap:1px;}
+      .pie-legend-item{display:flex;align-items:center;justify-content:space-between;font-size:.68rem;color:#1a1f2e;font-weight:700;padding:1px 0;border-bottom:1px solid #e8eaf0;}
+      .pie-legend-left{display:flex;align-items:center;gap:5px;font-weight:700;color:#1a237e;}
+      .pie-legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+      .totals-row{display:flex;flex-direction:column;gap:3px;margin-top:5px;padding-top:5px;border-top:1px solid var(--border);}
+      .total-box{display:flex;align-items:center;justify-content:space-between;padding:3px 6px;background:#f8f9fc;border-radius:5px;border:1px solid var(--border);}
+      .total-label{font-family:"Chakra Petch",Arial,sans-serif;font-size:.62rem;color:#37474f;letter-spacing:.8px;text-transform:uppercase;font-weight:700;}
+      .total-value{font-family:"Chakra Petch",Arial,monospace;font-size:.72rem;font-weight:800;color:#0d47a1;}
+      .clock-box{font-family:"Chakra Petch",monospace;font-size:.72rem;font-weight:800;color:#004d40;}
+      .productivity-box{font-family:"Chakra Petch",monospace;font-size:.72rem;font-weight:800;color:#b45309;}
       .total-box.productivity-card{background:#fffbeb;border-color:#fcd34d;}
       .total-box.productivity-card .total-label{color:#b45309;}
       .total-box.target-card{background:rgba(255,152,0,.08);border-color:rgba(255,152,0,.45);border-width:1px;border-style:dashed;}
       .total-box.target-card .total-label{color:#ff5722;}
-      .target-value{font-family:"Chakra Petch",monospace;font-size:.75rem;font-weight:900;color:#ff5722;white-space:nowrap;}
-      .donut-section{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
-      .donut-inner{display:flex;gap:10px;align-items:center;}
-      .donut-wrap{position:relative;width:110px;height:110px;flex-shrink:0;}
+      .target-value{font-family:"Chakra Petch",monospace;font-size:.72rem;font-weight:900;color:#ff5722;white-space:nowrap;}
+
+      /* ══════════ DONUT ══════════ */
+      .donut-section{margin-top:6px;padding-top:6px;border-top:1px solid var(--border);}
+      .donut-inner{display:flex;gap:8px;align-items:center;}
+      .donut-wrap{position:relative;width:90px;height:90px;flex-shrink:0;}
       .donut-wrap canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important;}
       .donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;}
-      .donut-pct{font-family:"Chakra Petch",monospace;font-size:1.35rem;font-weight:900;color:#ff9800;line-height:1;}
-      .donut-sub{font-family:"Chakra Petch",monospace;font-size:.62rem;color:var(--muted);letter-spacing:.5px;}
-      .donut-info{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0;}
-      .donut-title{font-family:"Chakra Petch",Arial,sans-serif;font-size:var(--fs-xs);font-weight:700;color:#ff9800;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
-      .donut-stat{display:flex;align-items:center;justify-content:space-between;font-size:var(--fs-xs);padding:2px 0;border-bottom:1px solid #f0f2f5;}
-      .donut-stat-label{font-family:"Chakra Petch",Arial,sans-serif;font-weight:700;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;}
-      .donut-stat-val{font-family:"Chakra Petch",monospace;font-weight:800;color:#1a237e;font-size:var(--fs-xs);}
+      .donut-pct{font-family:"Chakra Petch",monospace;font-size:1.1rem;font-weight:900;color:#ff9800;line-height:1;}
+      .donut-sub{font-family:"Chakra Petch",monospace;font-size:.55rem;color:var(--muted);letter-spacing:.5px;}
+      .donut-info{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;}
+      .donut-title{font-family:"Chakra Petch",Arial,sans-serif;font-size:.66rem;font-weight:700;color:#ff9800;text-transform:uppercase;letter-spacing:1px;margin-bottom:1px;}
+      .donut-stat{display:flex;align-items:center;justify-content:space-between;font-size:.66rem;padding:2px 0;border-bottom:1px solid #f0f2f5;}
+      .donut-stat-label{font-family:"Chakra Petch",Arial,sans-serif;font-weight:700;color:var(--muted);font-size:.63rem;text-transform:uppercase;letter-spacing:.5px;}
+      .donut-stat-val{font-family:"Chakra Petch",monospace;font-weight:800;color:#1a237e;font-size:.68rem;}
       .donut-stat-val.orange{color:#ff9800;}
       .donut-stat-val.green{color:#2e7d32;}
       .donut-stat-val.red{color:#c62828;}
       .donut-stat-val.blue{color:#1565c0;}
-      .donut-remaining{margin-top:3px;font-family:"Chakra Petch",monospace;font-size:.68rem;color:var(--muted);text-align:right;}
-      .radar-card{padding:8px 10px 10px;}
+      .donut-remaining{margin-top:3px;font-family:"Chakra Petch",monospace;font-size:.63rem;color:var(--muted);text-align:right;}
+
+      /* ══════════ RADAR CARD ══════════ */
+      .radar-card{padding:6px 8px 7px;}
       .radar-card::before{background:linear-gradient(90deg,#1a237e,#42a5f5);}
-      .radar-title{font-family:"Chakra Petch",Arial,sans-serif;font-size:var(--fs-sm);font-weight:700;color:#0d47a1;text-align:center;margin-bottom:5px;}
-      .radar-body{display:flex;gap:8px;align-items:center;}
-      .radar-wrap{flex-shrink:0;width:150px;height:150px;position:relative;}
+      .radar-title{font-family:"Chakra Petch",Arial,sans-serif;font-size:var(--fs-sm);font-weight:700;color:#0d47a1;text-align:center;margin-bottom:4px;}
+      .radar-body{display:flex;gap:6px;align-items:center;}
+      .radar-wrap{flex-shrink:0;width:130px;height:130px;position:relative;}
       .radar-wrap canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important;cursor:pointer;}
-      .radar-legend{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0;}
-      .radar-legend-item{display:flex;align-items:center;justify-content:space-between;font-size:var(--fs-xs);color:#1a1f2e;font-weight:700;padding:3px 6px;border-bottom:1px solid #e8eaf0;cursor:pointer;border-radius:4px;transition:background .12s,border-left .12s;user-select:none;border-left:3px solid transparent;}
+      .radar-legend{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0;}
+      .radar-legend-item{display:flex;align-items:center;justify-content:space-between;font-size:.66rem;color:#1a1f2e;font-weight:700;padding:2px 5px;border-bottom:1px solid #e8eaf0;cursor:pointer;border-radius:4px;transition:background .12s,border-left .12s;user-select:none;border-left:3px solid transparent;}
       .radar-legend-item:hover{background:#e8f0fe;border-left-color:#90caf9;}
       .radar-legend-item.active-popup{background:#e3f2fd;border-left:3px solid #1565c0;}
-      .radar-legend-left{display:flex;align-items:center;gap:5px;font-weight:800;color:#0d47a1;overflow:hidden;}
-      .radar-legend-left span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:var(--fs-xs);}
-      .radar-legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-      .radar-legend-val{font-family:"Chakra Petch",monospace;font-size:var(--fs-sm);font-weight:800;color:#0d47a1;min-width:18px;text-align:right;}
-      /* ── กล่องเวลา Downtime ใน Legend ── */
-      .radar-legend-dur{font-family:"Chakra Petch",monospace;font-size:.65rem;font-weight:700;color:#b71c1c;background:rgba(183,28,28,.08);border:1px solid rgba(183,28,28,.25);border-radius:4px;padding:1px 5px;white-space:nowrap;min-width:36px;text-align:center;margin-left:4px;}
-      .radar-legend-right{display:flex;align-items:center;gap:4px;flex-shrink:0;}
-      .radar-total{font-family:"Chakra Petch",monospace;font-size:var(--fs-xs);color:#1a237e;font-weight:800;text-align:center;margin-top:4px;}
-      /* ── กล่องชั่วโมงรวม Downtime ใต้ Total Events ── */
-      .radar-total-dur{display:inline-block;font-family:"Chakra Petch",monospace;font-size:var(--fs-xs);font-weight:800;color:#b71c1c;background:rgba(183,28,28,.08);border:1px solid rgba(183,28,28,.28);border-radius:5px;padding:2px 10px;text-align:center;margin-top:3px;letter-spacing:.3px;width:100%;}
-      .dt-table-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:6px;flex-wrap:wrap;}
+      .radar-legend-left{display:flex;align-items:center;gap:4px;font-weight:800;color:#0d47a1;overflow:hidden;}
+      .radar-legend-left span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.66rem;}
+      .radar-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+      .radar-legend-val{font-family:"Chakra Petch",monospace;font-size:.72rem;font-weight:800;color:#0d47a1;min-width:14px;text-align:right;}
+      .radar-legend-dur{font-family:"Chakra Petch",monospace;font-size:.6rem;font-weight:700;color:#b71c1c;background:rgba(183,28,28,.08);border:1px solid rgba(183,28,28,.25);border-radius:4px;padding:1px 4px;white-space:nowrap;min-width:32px;text-align:center;margin-left:3px;}
+      .radar-legend-right{display:flex;align-items:center;gap:3px;flex-shrink:0;}
+      .radar-total{font-family:"Chakra Petch",monospace;font-size:.66rem;color:#1a237e;font-weight:800;text-align:center;margin-top:3px;}
+      .radar-total-dur{display:inline-block;font-family:"Chakra Petch",monospace;font-size:.66rem;font-weight:800;color:#b71c1c;background:rgba(183,28,28,.08);border:1px solid rgba(183,28,28,.28);border-radius:5px;padding:2px 8px;text-align:center;margin-top:2px;letter-spacing:.3px;width:100%;}
+
+      /* ══════════ DT TABLE ══════════ */
+      .dt-table-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;gap:5px;flex-wrap:wrap;}
       .dt-count-badge{font-family:"Chakra Petch",monospace;font-size:var(--fs-xs);font-weight:700;color:#004d40;background:rgba(0,77,64,.08);border:1px solid rgba(0,77,64,.25);border-radius:20px;padding:2px 10px;white-space:nowrap;}
       .dt-filter-wrap{display:flex;gap:3px;align-items:center;flex-wrap:wrap;}
       .dt-filter-btn{font-family:"Chakra Petch",Arial,sans-serif;font-size:var(--fs-xs);font-weight:600;padding:2px 7px;border-radius:4px;border:1px solid transparent;cursor:pointer;background:#f0f2f5;color:var(--muted);transition:all .15s;white-space:nowrap;}
@@ -234,6 +246,8 @@
       .dt-ongoing-badge{display:none;font-family:"Chakra Petch",monospace;font-size:var(--fs-xs);font-weight:700;background:#ff9800;color:#fff;border-radius:20px;padding:2px 9px;white-space:nowrap;animation:pulse-orange 2s ease-in-out infinite;}
       .dt-ongoing-badge.show{display:inline-block;}
       @keyframes pulse-orange{0%,100%{box-shadow:0 0 0 0 rgba(255,152,0,.4);}50%{box-shadow:0 0 0 5px rgba(255,152,0,0);}}
+
+      /* ══════════ BAR TOOLTIP ══════════ */
       #barCustomTooltip{position:fixed;z-index:9999;background:#fff;border:1.5px solid #dde1e8;border-radius:10px;box-shadow:0 8px 32px rgba(21,35,126,.18),0 2px 10px rgba(0,0,0,.12);pointer-events:none;min-width:250px;max-width:340px;display:none;overflow:hidden;font-family:"Sarabun",Arial,sans-serif;animation:tooltipFadeIn .12s ease;}
       @keyframes tooltipFadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
       .bct-header{background:linear-gradient(135deg,#1a237e,#1565c0);padding:6px 12px;display:flex;align-items:center;justify-content:space-between;}
@@ -261,6 +275,8 @@
       .bct-dt-desc{font-size:.68rem;color:#374151;font-family:"Sarabun",Arial,sans-serif;line-height:1.3;word-break:break-word;white-space:normal;}
       .bct-dt-more{font-family:"Chakra Petch",monospace;font-size:.65rem;color:#90a4ae;text-align:center;margin-top:4px;}
       .bct-no-dt{font-family:"Chakra Petch",monospace;font-size:.68rem;color:#90a4ae;text-align:center;padding:6px 0;}
+
+      /* ══════════ RADAR CLICK POPUP ══════════ */
       .radar-click-popup{position:fixed;z-index:10000;background:#fff;border:1.5px solid #90caf9;border-radius:12px;box-shadow:0 12px 40px rgba(21,35,126,.25),0 4px 16px rgba(0,0,0,.15);pointer-events:auto;min-width:300px;max-width:400px;display:none;font-family:"Sarabun",Arial,sans-serif;animation:popupFadeIn .18s cubic-bezier(.34,1.2,.64,1);overflow:hidden;}
       @keyframes popupFadeIn{from{opacity:0;transform:scale(.95) translateY(-6px);}to{opacity:1;transform:scale(1) translateY(0);}}
       .radar-click-popup.show{display:block;}
@@ -288,18 +304,156 @@
       .rcp-desc{font-size:.73rem;color:#374151;font-family:"Sarabun",Arial,sans-serif;line-height:1.4;word-break:break-word;white-space:normal;}
       .rcp-empty{padding:18px 12px;text-align:center;font-family:"Chakra Petch",Arial,sans-serif;font-size:.75rem;color:#2e7d32;letter-spacing:.5px;background:#f1f8e9;}
       .rcp-more{padding:5px 12px;font-family:"Chakra Petch",monospace;font-size:.65rem;color:#90a4ae;text-align:center;border-top:1px solid #f0f2f5;background:#fafbfc;}
-      .radar-click-hint{font-family:"Chakra Petch",monospace;font-size:.6rem;color:#90a4ae;text-align:center;margin-top:3px;letter-spacing:.3px;padding:2px 4px;background:#f8f9fc;border-radius:4px;border:1px dashed #dde1e8;}
+      .radar-click-hint{font-family:"Chakra Petch",monospace;font-size:.58rem;color:#90a4ae;text-align:center;margin-top:2px;letter-spacing:.3px;padding:1px 4px;background:#f8f9fc;border-radius:4px;border:1px dashed #dde1e8;}
       #donutGapLabel{transition:color .3s ease;font-size:.65rem!important;white-space:nowrap;}
-      @media(min-width:1800px){:root{--topbar-h:62px;--fs-xs:.85rem;--fs-sm:.95rem;--fs-base:1.05rem;--fs-lg:1.2rem;--fs-xl:1.6rem;--fs-2xl:2rem;--bar-h:290px;--perf-h:170px;}.right-col{width:420px;}.pie-wrap{width:180px;height:180px;}.radar-wrap{width:190px;height:190px;}.dt-table-wrap{max-height:680px;}.donut-wrap{width:130px;height:130px;}}
-      @media(min-width:1400px) and (max-width:1799px){:root{--bar-h:260px;--perf-h:150px;}.right-col{width:380px;}.pie-wrap{width:160px;height:160px;}.radar-wrap{width:170px;height:170px;}.dt-table-wrap{max-height:600px;}}
-      @media(max-width:1199px){.body-row{flex-wrap:wrap;}.left-col{width:100%;}.right-col{width:100%;flex-direction:row;flex-wrap:wrap;}.right-col>.card{flex:1 1 280px;}}
-      @media(max-width:767px){.top-bar{height:auto;min-height:unset;padding:7px 10px 6px;flex-direction:column;align-items:stretch;gap:5px;}.top-bar-row1{justify-content:space-between;}.logo-box{font-size:.72rem;padding:4px 8px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;}.auto-refresh-label{display:none;}.top-bar-row2{flex-wrap:nowrap;overflow-x:auto;}.ctrl-label{display:none;}.btn-shift{font-size:.72rem;padding:6px 10px;}.btn-nav{width:34px;height:34px;font-size:1.1rem;flex-shrink:0;}.date-select{font-size:.78rem;padding:6px 8px;min-width:100px;flex-shrink:0;}.btn-refresh{font-size:.72rem;padding:6px 10px;flex-shrink:0;}.page{padding:8px;gap:8px;}.body-row{flex-wrap:wrap;}.right-col{width:100%;flex-direction:row;flex-wrap:wrap;}}
-      @media(max-width:599px){.right-col{flex-direction:column;}.dt-table{font-size:.68rem;}.dt-table thead th{font-size:.68rem;padding:5px 6px;}.dt-table tbody td{padding:3px 6px;}.footer{flex-direction:column;align-items:flex-start;}.radar-click-popup{max-width:calc(100vw - 24px);min-width:270px;}}
-.weather-group{display:flex;align-items:center;gap:4px;flex-shrink:0;}
-.weather-widget{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:4px 10px;flex-shrink:0;}
-.weather-site{font-family:"Chakra Petch",monospace;font-size:var(--fs-xs);color:var(--header-accent);font-weight:700;letter-spacing:.5px;}
-.weather-temp{font-family:"Chakra Petch",monospace;font-size:var(--fs-sm);font-weight:700;color:#fff;white-space:nowrap;}
-.weather-desc{font-size:var(--fs-xs);color:rgba(255,255,255,.55);white-space:nowrap;}
+
+      /* ══════════ WEATHER ══════════ */
+      .weather-group{display:flex;align-items:center;gap:3px;flex-shrink:0;}
+      .weather-widget{display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:3px 8px;flex-shrink:0;}
+      .weather-site{font-family:"Chakra Petch",monospace;font-size:.62rem;color:var(--header-accent);font-weight:700;letter-spacing:.5px;}
+      .weather-temp{font-family:"Chakra Petch",monospace;font-size:.75rem;font-weight:700;color:#fff;white-space:nowrap;}
+      .weather-desc{font-size:.6rem;color:rgba(255,255,255,.55);white-space:nowrap;}
+
+      /* ══════════════════════════════════════════════════════
+         RESPONSIVE — TV 55" (1920×1080 & above)
+         ══════════════════════════════════════════════════════ */
+      @media (min-width:1800px){
+        :root{
+          --topbar-h:58px;
+          --fs-xs:.78rem; --fs-sm:.9rem; --fs-base:1rem; --fs-lg:1.15rem;
+          --bar-h:270px; --perf-h:155px;
+        }
+        .page{padding:10px 16px;gap:9px;}
+        .body-row{gap:12px;}
+        .left-col{gap:9px;}
+        .right-col{width:340px;gap:8px;}
+        .pie-wrap{width:135px;height:135px;}
+        .radar-wrap{width:145px;height:145px;}
+        .donut-wrap{width:100px;height:100px;}
+        .donut-pct{font-size:1.25rem;}
+        .dt-table-wrap{max-height:640px;}
+        .card{padding:6px 12px 8px;}
+        .pie-card{padding:7px 10px 8px;}
+        .radar-card{padding:7px 10px 8px;}
+        .logo-box{font-size:1rem;}
+        .weather-temp{font-size:.85rem;}
+        .weather-site{font-size:.7rem;}
+        .weather-desc{font-size:.65rem;}
+        .pie-legend-item{font-size:.72rem;}
+        .total-box{padding:4px 7px;}
+        .total-label{font-size:.66rem;}
+        .total-value,.clock-box,.productivity-box,.target-value{font-size:.78rem;}
+      }
+
+      @media (min-width:1400px) and (max-width:1799px){
+        :root{--bar-h:250px;--perf-h:140px;}
+        .right-col{width:330px;}
+        .pie-wrap{width:128px;height:128px;}
+        .radar-wrap{width:138px;height:138px;}
+        .donut-wrap{width:96px;height:96px;}
+      }
+
+      /* ══════════════════════════════════════════════════════
+         RESPONSIVE — Tablet
+         ══════════════════════════════════════════════════════ */
+      @media(max-width:1199px){
+        .body-row{flex-wrap:wrap;}
+        .left-col{width:100%;}
+        .right-col{width:100%;flex-direction:row;flex-wrap:wrap;}
+        .right-col>.card{flex:1 1 280px;}
+      }
+
+      /* ══════════════════════════════════════════════════════
+         RESPONSIVE — Mobile (≤767px)
+         ══════════════════════════════════════════════════════ */
+      @media(max-width:767px){
+        :root{
+          --topbar-h:auto;
+          --fs-xs:.7rem; --fs-sm:.78rem; --fs-base:.88rem;
+          --bar-h:190px; --perf-h:120px;
+        }
+
+        /* top bar: stack in 2 rows */
+        .top-bar{
+          height:auto;min-height:unset;
+          padding:6px 10px 5px;
+          flex-direction:column;
+          align-items:stretch;
+          gap:5px;
+        }
+        .top-bar-row1{justify-content:space-between;flex-wrap:nowrap;}
+        .logo-box{
+          font-size:.68rem;padding:3px 7px;
+          flex:1;min-width:0;
+          overflow:hidden;text-overflow:ellipsis;
+          white-space:nowrap;
+        }
+        .weather-group{gap:2px;}
+        .weather-widget{padding:2px 5px;gap:3px;}
+        .weather-site{font-size:.56rem;}
+        .weather-temp{font-size:.68rem;}
+        .weather-desc{display:none;}/* hide text on mobile — too cramped */
+
+        .auto-refresh-label{display:none;}
+        .auto-refresh-wrap{padding:3px 5px;}
+
+        /* controls row: horizontal scroll */
+        .top-bar-row2{
+          flex-wrap:nowrap;
+          overflow-x:auto;
+          -webkit-overflow-scrolling:touch;
+          padding-bottom:2px;
+          gap:4px;
+        }
+        .top-bar-row2::-webkit-scrollbar{height:0;}
+        .ctrl-label{display:none;}
+        .btn-shift{font-size:.68rem;padding:5px 8px;}
+        .btn-nav{width:30px;height:30px;font-size:1rem;flex-shrink:0;}
+        .date-select{font-size:.72rem;padding:5px 6px;min-width:95px;flex-shrink:0;}
+        .btn-refresh{font-size:.68rem;padding:5px 8px;flex-shrink:0;}
+
+        /* page layout */
+        .page{padding:6px 8px;gap:7px;}
+        .body-row{flex-direction:column;gap:7px;}
+        .left-col,.right-col{width:100%;}
+        .right-col{flex-direction:column;}
+        .right-col>.card{width:100%;}
+
+        /* pie card on mobile — stack vertically */
+        .pie-body{flex-direction:column;align-items:center;}
+        .pie-wrap{width:140px;height:140px;}
+        .pie-right{width:100%;}
+
+        /* donut */
+        .donut-wrap{width:80px;height:80px;}
+        .donut-pct{font-size:1rem;}
+
+        /* radar — stack chart over legend */
+        .radar-body{flex-direction:column;align-items:center;}
+        .radar-wrap{width:160px;height:160px;}
+        .radar-legend{width:100%;}
+
+        /* DT table */
+        .dt-table-wrap{max-height:400px;}
+        .dt-table{font-size:.67rem;}
+        .dt-table thead th{font-size:.67rem;padding:5px 6px;}
+        .dt-table tbody td{padding:3px 5px;}
+
+        .footer{flex-direction:column;align-items:flex-start;}
+      }
+
+      /* ══════════════════════════════════════════════════════
+         RESPONSIVE — Small mobile (≤479px)
+         ══════════════════════════════════════════════════════ */
+      @media(max-width:479px){
+        .logo-box{font-size:.6rem;}
+        .pie-wrap{width:120px;height:120px;}
+        .radar-click-popup{max-width:calc(100vw - 16px);min-width:260px;}
+      }
+
+      @media(max-width:599px){
+        .radar-click-popup{max-width:calc(100vw - 24px);min-width:260px;}
+      }
     </style>
   </head>
   <body>
@@ -311,11 +465,35 @@
       <div class="top-bar-row1">
         <div class="top-bar-left">
           <div class="logo-box">
-  <img src="Logo ITH [2] No background.png" 
-     alt="ITH Logo" 
-     style="height: 50px; vertical-align: middle; margin-right: 8px;">
-  <span></span>Daily Report Production of WL 1
-</div>
+            <img src="Logo ITH [2] No background.png" alt="ITH Logo" style="height:44px;vertical-align:middle;margin-right:6px;">
+            <span></span>Daily Report Production of WL 1
+          </div>
+        </div>
+        <div class="weather-group">
+          <div class="weather-widget">
+            <span id="icon-BWE">⏳</span>
+            <div style="display:flex;flex-direction:column;line-height:1.2;">
+              <span class="weather-site">BWE</span>
+              <span class="weather-temp" id="temp-BWE">--°C</span>
+              <span class="weather-desc" id="desc-BWE">...</span>
+            </div>
+          </div>
+          <div class="weather-widget">
+            <span id="icon-CR">⏳</span>
+            <div style="display:flex;flex-direction:column;line-height:1.2;">
+              <span class="weather-site">CR</span>
+              <span class="weather-temp" id="temp-CR">--°C</span>
+              <span class="weather-desc" id="desc-CR">...</span>
+            </div>
+          </div>
+          <div class="weather-widget">
+            <span id="icon-SPD">⏳</span>
+            <div style="display:flex;flex-direction:column;line-height:1.2;">
+              <span class="weather-site">SPD</span>
+              <span class="weather-temp" id="temp-SPD">--°C</span>
+              <span class="weather-desc" id="desc-SPD">...</span>
+            </div>
+          </div>
         </div>
         <div class="auto-refresh-wrap">
           <span class="auto-refresh-label">Auto</span>
@@ -326,32 +504,6 @@
             </svg>
           </div>
           <span class="countdown-txt" id="countdownTxt">2:00</span>
-        </div>
-      </div>
-      <div class="weather-group">
-        <div class="weather-widget">
-          <span id="icon-BWE">⏳</span>
-          <div style="display:flex;flex-direction:column;line-height:1.2;">
-            <span class="weather-site">BWE</span>
-            <span class="weather-temp" id="temp-BWE">--°C</span>
-            <span class="weather-desc" id="desc-BWE">...</span>
-          </div>
-        </div>
-        <div class="weather-widget">
-          <span id="icon-CR">⏳</span>
-          <div style="display:flex;flex-direction:column;line-height:1.2;">
-            <span class="weather-site">CR</span>
-            <span class="weather-temp" id="temp-CR">--°C</span>
-            <span class="weather-desc" id="desc-CR">...</span>
-          </div>
-        </div>
-        <div class="weather-widget">
-          <span id="icon-SPD">⏳</span>
-          <div style="display:flex;flex-direction:column;line-height:1.2;">
-            <span class="weather-site">SPD</span>
-            <span class="weather-temp" id="temp-SPD">--°C</span>
-            <span class="weather-desc" id="desc-SPD">...</span>
-          </div>
         </div>
       </div>
       <div class="controls top-bar-row2">
@@ -484,7 +636,7 @@
                     <div class="productivity-box" id="productivityBox">—</div>
                   </div>
                   <div class="total-box target-card">
-                    <div class="total-label" style="font-size:.75rem">target:</div>
+                    <div class="total-label" style="font-size:.72rem">target:</div>
                     <div class="target-value" id="targetBox">115,200 BCM/Day</div>
                   </div>
                 </div>
@@ -513,7 +665,7 @@
             <div class="radar-title">⏰📝 Downtime of Equipment ⚙️🛠</div>
             <div class="radar-body">
               <div class="radar-wrap" id="radarEquipWrap"><canvas id="radarEquipChart"></canvas></div>
-              <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;gap:4px;">
+              <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;gap:3px;">
                 <div class="radar-legend" id="radarEquipLegend"></div>
                 <div class="radar-click-hint">👆 คลิกชื่อเครื่องเพื่อดู Downtime Detail</div>
                 <div class="radar-total" id="radarEquipTotal">Total: — events</div>
@@ -526,7 +678,7 @@
             <div class="radar-title">⚔️⏰ Type of Downtime ⚙️🛠</div>
             <div class="radar-body">
               <div class="radar-wrap" id="radarTypeWrap"><canvas id="radarTypeChart"></canvas></div>
-              <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;gap:4px;">
+              <div style="display:flex;flex-direction:column;flex:1;min-width:0;justify-content:space-between;gap:3px;">
                 <div class="radar-legend" id="radarTypeLegend"></div>
                 <div class="radar-click-hint">👆 คลิก Type เพื่อดู Downtime Detail</div>
                 <div class="radar-total" id="radarTypeTotal">Total: — events</div>
@@ -569,37 +721,15 @@
       function fmtDTTime(s){s=(s||"").trim();if(!s)return null;var m=s.match(/\d{4}-\d{2}-\d{2}[T ]\s*(\d{1,2}):(\d{2})/);if(m)return m[1].padStart(2,"0")+":"+m[2];m=s.match(/\d+\/\d+\/\d+[,\s]+(\d{1,2}):(\d{2})/);if(m)return m[1].padStart(2,"0")+":"+m[2];m=s.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);if(m)return m[1].padStart(2,"0")+":"+m[2];return null;}
       function hhmm2min(s){if(!s)return null;var p=s.split(":");if(p.length<2)return null;var h=parseInt(p[0],10),m=parseInt(p[1],10);if(isNaN(h)||isNaN(m))return null;return h*60+m;}
 
-      /* ══ ฟังก์ชันคำนวณชั่วโมง Downtime รวมจาก DURATION column ══ */
-      function parseDurationToMin(durStr){
-        if(!durStr)return 0;
-        var s=(durStr||"").trim();
-        if(!s)return 0;
-        var p=s.split(":");
-        if(p.length>=2){
-          var h=parseInt(p[0],10)||0;
-          var m=parseInt(p[1],10)||0;
-          return h*60+m;
-        }
-        return 0;
-      }
-      function sumDurationMin(rows){
-        return rows.reduce(function(sum,r){
-          return sum+parseDurationToMin(r[DT_COL.DURATION]||"");
-        },0);
-      }
-      function fmtMinToHHMM(totalMin){
-        if(!totalMin||totalMin<=0)return"0:00";
-        var h=Math.floor(totalMin/60);
-        var m=String(totalMin%60).padStart(2,"0");
-        return h+":"+m;
-      }
-      /* ══════════════════════════════════════════════════════ */
+      function parseDurationToMin(durStr){if(!durStr)return 0;var s=(durStr||"").trim();if(!s)return 0;var p=s.split(":");if(p.length>=2){var h=parseInt(p[0],10)||0;var m=parseInt(p[1],10)||0;return h*60+m;}return 0;}
+      function sumDurationMin(rows){return rows.reduce(function(sum,r){return sum+parseDurationToMin(r[DT_COL.DURATION]||"");},0);}
+      function fmtMinToHHMM(totalMin){if(!totalMin||totalMin<=0)return"0:00";var h=Math.floor(totalMin/60);var m=String(totalMin%60).padStart(2,"0");return h+":"+m;}
 
       function getDowntimesForHour(labelStr,labelIdx){if(!dtCurrentRows||!dtCurrentRows.length)return[];var parts=(labelStr||"").split(":");var wEndH=parseInt(parts[0],10);if(isNaN(wEndH))return[];var wEndMin=wEndH*60+(parseInt(parts[1],10)||0);var wStartMin;if(labelIdx>0&&currentBarLabels[labelIdx-1]){var prevParts=currentBarLabels[labelIdx-1].split(":");var pH=parseInt(prevParts[0],10),pm=parseInt(prevParts[1],10)||0;wStartMin=pH*60+pm;}else{wStartMin=wEndMin-60;}if(wEndMin<wStartMin)wEndMin+=1440;return dtCurrentRows.filter(function(r){var startRaw=fmtDTTime(r[DT_COL.START]||"");if(!startRaw)return false;var dtStartMin=hhmm2min(startRaw);if(dtStartMin===null)return false;if(dtStartMin<8*60&&wStartMin>=20*60){dtStartMin+=1440;}var dtEndStr=fmtDTTime(r[DT_COL.END]||"");var isOngoing=!dtEndStr;if(isOngoing){return dtStartMin<wEndMin;}var dtEndMin=hhmm2min(dtEndStr);if(dtEndMin===null)return false;if(dtEndMin<8*60&&wStartMin>=20*60){dtEndMin+=1440;}if(dtEndMin<=dtStartMin)dtEndMin+=1440;return dtStartMin<wEndMin&&dtEndMin>wStartMin;});}
       function calcOverlapMinutes(dtStartStr,dtEndStr,wStartMin,wEndMin){var dtStartMin=hhmm2min(dtStartStr);var dtEndMin=dtEndStr?hhmm2min(dtEndStr):null;if(dtStartMin===null)return 0;if(dtStartMin<8*60&&wStartMin>=20*60)dtStartMin+=1440;if(dtEndMin!==null&&dtEndMin<8*60&&wStartMin>=20*60)dtEndMin+=1440;if(dtEndMin!==null&&dtEndMin<=dtStartMin)dtEndMin+=1440;if(wEndMin<wStartMin)wEndMin+=1440;var overlapStart=Math.max(dtStartMin,wStartMin);var overlapEnd=dtEndMin!==null?Math.min(dtEndMin,wEndMin):wEndMin;return Math.max(0,overlapEnd-overlapStart);}
       function normDateG(s){s=(s||"").trim();if(!s)return"";if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;var m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m)return m[3]+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");return s;}
       function sortDTRows(rows){return rows.slice().sort(function(a,b){var aEnd=fmtDTTime(a[DT_COL.END]||""),bEnd=fmtDTTime(b[DT_COL.END]||"");if(!aEnd&&bEnd)return-1;if(aEnd&&!bEnd)return 1;var aS=a[DT_COL.START]||"",bS=b[DT_COL.START]||"";return aS<bS?-1:aS>bS?1:0;});}
-      function getChartFontSize(){var w=window.innerWidth;if(w>=2400)return 13;if(w>=1800)return 11;if(w>=1400)return 10;return 9;}
+      function getChartFontSize(){var w=window.innerWidth;if(w>=2400)return 13;if(w>=1800)return 11;if(w>=1400)return 10;if(w<=480)return 8;return 9;}
 
       var currentShift="all";
       var SHIFT_CONFIG={all:{label:"All Shift",period:"08:00 → 07:00 (+1 day)",minH:8,maxH:31},day:{label:"Shift Day",period:"08:00 → 19:00",minH:8,maxH:19},night:{label:"Shift Night",period:"20:00 → 07:00 (+1 day)",minH:20,maxH:31}};
@@ -642,10 +772,7 @@
       function initBarChart(){var ctx=document.getElementById("bcmChart").getContext("2d"),fs=getChartFontSize();bcmChart=new Chart(ctx,{type:"bar",plugins:[totalLabelPlugin,targetLinePlugin],data:{labels:[],datasets:[{label:"BCM CR",data:[],backgroundColor:"#259B24",stack:"s",borderRadius:2},{label:"BWE 1",data:[],backgroundColor:"#7b1fa2",stack:"s",borderRadius:2},{label:"BWE 2",data:[],backgroundColor:"#f48fb1",stack:"s",borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},layout:{padding:{top:10,bottom:0}},plugins:{legend:{display:false},tooltip:{enabled:false,external:showBarTooltip}},scales:{x:{stacked:true,grid:{color:"#e8eaf0"},ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:"600"},color:"#1a237e",maxRotation:0,minRotation:0,autoSkip:true,maxTicksLimit:24,padding:2}},y:{stacked:true,grid:{color:"#e8eaf0"},ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:"600"},color:"#374151",callback:function(v){return v.toLocaleString();},stepSize:1000,padding:2},beginAtZero:true,min:0,max:7000}}}});}
       document.getElementById("bcmChart").addEventListener&&document.getElementById("bcmChart").addEventListener("mouseleave",function(){hideBarTooltip();});
 
-      function initPieChart(){
-        var canvas=document.getElementById("pieChart"),ctx=canvas.getContext("2d"),fs=getChartFontSize();
-        var piePctPlugin={id:"piePct",afterDatasetDraw:function(chart){var ctx=chart.ctx;var meta=chart.getDatasetMeta(0);var total=chart.data.datasets[0].data.reduce(function(a,b){return a+(b||0);},0);if(!total)return;var placed=[];meta.data.forEach(function(arc,i){var val=chart.data.datasets[0].data[i]||0;var pct=(val/total)*100;if(pct<5)return;var angle=arc.startAngle+(arc.endAngle-arc.startAngle)/2;var ratio=pct<10?0.60:pct<20?0.68:0.74;var r=arc.outerRadius*ratio;var x=arc.x+Math.cos(angle)*r;var y=arc.y+Math.sin(angle)*r;var tooClose=placed.some(function(p){return Math.sqrt(Math.pow(p.x-x,2)+Math.pow(p.y-y,2))<20;});if(tooClose)return;placed.push({x:x,y:y});var label=pct.toFixed(1)+"%";ctx.save();ctx.font="bold "+(fs+1)+"px 'Chakra Petch',monospace";ctx.fillStyle="#fff";ctx.textAlign="center";ctx.textBaseline="middle";ctx.shadowColor="rgba(0,0,0,0.65)";ctx.shadowBlur=4;ctx.fillText(label,x,y);ctx.restore();});}};
-        pieChart=new Chart(ctx,{type:"pie",plugins:[piePctPlugin],data:{labels:["BWE 1","BWE 2","CR 1","CR 2","CR 3"],datasets:[{data:[0,0,0,0,0],backgroundColor:[C.bwe1,C.bwe2,C.cr1,C.cr2,C.cr3],borderColor:"#fff",borderWidth:2,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:"#fff",borderColor:"#dde1e8",borderWidth:1,titleColor:"#1a1f2e",bodyColor:"#374151",titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:"700"},callbacks:{label:function(c){var total=c.chart.data.datasets[0].data.reduce(function(a,b){return a+(b||0);},0);var pct=total>0?((c.parsed/total)*100).toFixed(1):"0.0";return" "+c.label+": "+c.parsed.toLocaleString()+" BCM ("+pct+"%)";}}}}}}); }
+      function initPieChart(){var canvas=document.getElementById("pieChart"),ctx=canvas.getContext("2d"),fs=getChartFontSize();var piePctPlugin={id:"piePct",afterDatasetDraw:function(chart){var ctx=chart.ctx;var meta=chart.getDatasetMeta(0);var total=chart.data.datasets[0].data.reduce(function(a,b){return a+(b||0);},0);if(!total)return;var placed=[];meta.data.forEach(function(arc,i){var val=chart.data.datasets[0].data[i]||0;var pct=(val/total)*100;if(pct<5)return;var angle=arc.startAngle+(arc.endAngle-arc.startAngle)/2;var ratio=pct<10?0.60:pct<20?0.68:0.74;var r=arc.outerRadius*ratio;var x=arc.x+Math.cos(angle)*r;var y=arc.y+Math.sin(angle)*r;var tooClose=placed.some(function(p){return Math.sqrt(Math.pow(p.x-x,2)+Math.pow(p.y-y,2))<20;});if(tooClose)return;placed.push({x:x,y:y});var label=pct.toFixed(1)+"%";ctx.save();ctx.font="bold "+(fs+1)+"px 'Chakra Petch',monospace";ctx.fillStyle="#fff";ctx.textAlign="center";ctx.textBaseline="middle";ctx.shadowColor="rgba(0,0,0,0.65)";ctx.shadowBlur=4;ctx.fillText(label,x,y);ctx.restore();});}};pieChart=new Chart(ctx,{type:"pie",plugins:[piePctPlugin],data:{labels:["BWE 1","BWE 2","CR 1","CR 2","CR 3"],datasets:[{data:[0,0,0,0,0],backgroundColor:[C.bwe1,C.bwe2,C.cr1,C.cr2,C.cr3],borderColor:"#fff",borderWidth:2,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:"#fff",borderColor:"#dde1e8",borderWidth:1,titleColor:"#1a1f2e",bodyColor:"#374151",titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:"700"},callbacks:{label:function(c){var total=c.chart.data.datasets[0].data.reduce(function(a,b){return a+(b||0);},0);var pct=total>0?((c.parsed/total)*100).toFixed(1):"0.0";return" "+c.label+": "+c.parsed.toLocaleString()+" BCM ("+pct+"%)";}}}}}}); }
 
       function initPerfChart(){var ctx=document.getElementById("perfChart").getContext("2d"),fs=getChartFontSize();perfChart=new Chart(ctx,{type:"line",data:{labels:[],datasets:[{label:"Motor Current of Line S3",data:[],borderColor:"#ef5350",backgroundColor:"rgba(239,83,80,.08)",borderWidth:2.5,pointBackgroundColor:"#ef5350",pointBorderColor:"#fff",pointBorderWidth:1.5,pointRadius:3,pointHoverRadius:5,tension:.3,fill:true}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},layout:{padding:{top:4,bottom:0}},plugins:{legend:{display:false},tooltip:{backgroundColor:"#fff",borderColor:"#ffcdd2",borderWidth:1,titleColor:"#1a1f2e",bodyColor:"#c62828",titleFont:{family:"'Chakra Petch',monospace",size:fs+1,weight:"700"},bodyFont:{family:"'Sarabun',Arial,sans-serif",size:fs+2},padding:8,callbacks:{label:function(c){return" Motor Current of Line S3: "+c.parsed.y.toLocaleString();}}}},scales:{x:{grid:{color:"#fce4ec"},ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:"600"},color:"#1a237e",maxRotation:0,minRotation:0,autoSkip:true,maxTicksLimit:24,padding:2}},y:{grid:{color:"#fce4ec"},ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:"600"},color:"#374151",callback:function(v){return v.toLocaleString();},stepSize:20,padding:2},beginAtZero:true,min:0,max:160}}}});}
 
@@ -666,7 +793,7 @@
       function updateEquipLegendActive(activeIdx){document.querySelectorAll("#radarEquipLegend .radar-legend-item").forEach(function(el,i){el.classList.toggle("active-popup",i===activeIdx);});}
       function updateTypeLegendActive(activeIdx){document.querySelectorAll("#radarTypeLegend .radar-legend-item").forEach(function(el,i){el.classList.toggle("active-popup",i===activeIdx);});}
 
-      function radarOptions(){var fs=getChartFontSize();return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{r:{beginAtZero:true,ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:"700"},color:"#37474f",backdropColor:"rgba(255,255,255,0.75)",backdropPadding:2,maxTicksLimit:4},pointLabels:{font:{family:"'Chakra Petch',monospace",size:fs+1,weight:"800"},color:"#0d47a1",padding:6},grid:{color:"rgba(0,0,0,.15)"},angleLines:{color:"rgba(0,0,0,.2)"}}}};}
+      function radarOptions(){var fs=getChartFontSize();return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{r:{beginAtZero:true,ticks:{font:{family:"'Chakra Petch',monospace",size:fs,weight:"700"},color:"#37474f",backdropColor:"rgba(255,255,255,0.75)",backdropPadding:2,maxTicksLimit:4},pointLabels:{font:{family:"'Chakra Petch',monospace",size:fs+1,weight:"800"},color:"#0d47a1",padding:5},grid:{color:"rgba(0,0,0,.15)"},angleLines:{color:"rgba(0,0,0,.2)"}}}};}
 
       function initRadarEquip(){var ctx=document.getElementById("radarEquipChart").getContext("2d");radarEquipChart=new Chart(ctx,{type:"radar",data:{labels:EQUIP_DEF.map(function(e){return e.label;}),datasets:[{label:"Downtime Count",data:new Array(EQUIP_DEF.length).fill(0),backgroundColor:"rgba(21,101,192,.13)",borderColor:"#1565c0",borderWidth:2,pointBackgroundColor:EQUIP_DEF.map(function(e){return e.color;}),pointBorderColor:"#fff",pointBorderWidth:1.5,pointRadius:4,pointHoverRadius:6}]},options:radarOptions()});document.getElementById("radarEquipChart").addEventListener("click",function(e){e.stopPropagation();if(!radarEquipChart)return;var idx=getRadarNearestIdx(radarEquipChart,e.clientX,e.clientY);if(idx>=0)toggleEquipPopup(idx,e.clientX,e.clientY);});}
       function initRadarType(){var ctx=document.getElementById("radarTypeChart").getContext("2d");radarTypeChart=new Chart(ctx,{type:"radar",data:{labels:TYPE_DEF.map(function(t){return t.label;}),datasets:[{label:"Count",data:new Array(TYPE_DEF.length).fill(0),backgroundColor:"rgba(55,71,79,.13)",borderColor:"#546e7a",borderWidth:2,pointBackgroundColor:TYPE_DEF.map(function(t){return t.color;}),pointBorderColor:"#fff",pointBorderWidth:1.5,pointRadius:4,pointHoverRadius:6}]},options:radarOptions()});document.getElementById("radarTypeChart").addEventListener("click",function(e){e.stopPropagation();if(!radarTypeChart)return;var idx=getRadarNearestIdx(radarTypeChart,e.clientX,e.clientY);if(idx>=0)toggleTypePopup(idx,e.clientX,e.clientY);});}
@@ -683,9 +810,6 @@
       function renderDTTable(filterType){dtActiveFilter=filterType||dtActiveFilter;document.querySelectorAll(".dt-filter-btn").forEach(function(btn){btn.classList.toggle("active",btn.dataset.type===dtActiveFilter);});var rows=dtCurrentRows;if(selectedMachines!==null)rows=rows.filter(function(r){return selectedMachines.has((r[DT_COL.MACHINE]||"").trim());});if(dtActiveFilter!=="ALL")rows=rows.filter(function(r){var t=(r[DT_COL.TYPE]||"").trim().toUpperCase();return t===dtActiveFilter.toUpperCase();});rows=sortDTRows(rows);var ongoingCount=rows.filter(function(r){return!fmtDTTime(r[DT_COL.END]||"");}).length;var ongoingBadge=document.getElementById("dtOngoingBadge");if(ongoingCount>0){ongoingBadge.textContent="⚠ "+ongoingCount+" Ongoing";ongoingBadge.classList.add("show");}else{ongoingBadge.classList.remove("show");}document.getElementById("dtCountBadge").textContent=rows.length+" records";var tbody=document.getElementById("dtTableBody");if(!rows.length){tbody.innerHTML='<tr><td colspan="7" class="dt-empty">No downtime records for this date'+(dtActiveFilter!=="ALL"?" / type":"")+(selectedMachines!==null?" / machine":"")+"</td></tr>";return;}tbody.innerHTML=rows.map(function(r){var machine=(r[DT_COL.MACHINE]||"").trim();var startT=fmtDTTime(r[DT_COL.START]||"");var endRaw=fmtDTTime(r[DT_COL.END]||"");var desc=(r[DT_COL.DESC]||"").trim()||"—";var typeRaw=(r[DT_COL.TYPE]||"").trim();var duration=(r[DT_COL.DURATION]||"").trim()||"—";var shiftRaw=(r[DT_COL.SHIFT]||"").trim().toLowerCase();var typeClass="type-"+typeRaw;var isOngoing=!endRaw;var rowClass=isOngoing?' class="row-no-end"':"";var shiftCell=shiftRaw==="d"?'<span class="shift-badge shift-badge-d">☀️Day</span>':shiftRaw==="n"?'<span class="shift-badge shift-badge-n">🌙Night</span>':'<span style="color:var(--muted);font-size:.65rem;">—</span>';var endCell=endRaw?'<span class="time-cell">'+escHtml(endRaw)+"</span>":'<span class="end-unknown" title="Still Running — No End Time">?</span>';return"<tr"+rowClass+'><td class="machine-cell">'+escHtml(machine)+"</td><td>"+shiftCell+'</td><td class="time-cell">'+escHtml(startT||"—")+"</td><td>"+endCell+'</td><td class="desc-cell">'+escHtml(desc)+'</td><td><span class="type-badge '+typeClass+'">'+escHtml(typeRaw||"—")+'</span></td><td class="dur-cell">'+escHtml(duration)+"</td></tr>";}).join("");}
       document.getElementById("dtFilterWrap").addEventListener("click",function(e){var btn=e.target.closest(".dt-filter-btn");if(!btn)return;renderDTTable(btn.dataset.type);});
 
-      /* ══════════════════════════════════════════════════════
-         renderRadarForDate — รวมชั่วโมง Downtime Equipment & Type
-         ══════════════════════════════════════════════════════ */
       function renderRadarForDate(wd){
         var rows=dtAllRows.filter(function(r){return normDateG(r[DT_COL.DATE]||"")===wd;});
         var shiftRows=rows;
@@ -698,15 +822,8 @@
         renderDTTable("ALL");
         closeAllRadarPopups();
 
-        /* ── Equip Radar ── */
-        var equipCounts=EQUIP_DEF.map(function(def){
-          return shiftRows.filter(function(r){return(r[DT_COL.MACHINE]||"").trim()===def.key;}).length;
-        });
-        /* คำนวณชั่วโมงรวมต่อ Equipment */
-        var equipDurMins=EQUIP_DEF.map(function(def){
-          var matched=shiftRows.filter(function(r){return(r[DT_COL.MACHINE]||"").trim()===def.key;});
-          return sumDurationMin(matched);
-        });
+        var equipCounts=EQUIP_DEF.map(function(def){return shiftRows.filter(function(r){return(r[DT_COL.MACHINE]||"").trim()===def.key;}).length;});
+        var equipDurMins=EQUIP_DEF.map(function(def){var matched=shiftRows.filter(function(r){return(r[DT_COL.MACHINE]||"").trim()===def.key;});return sumDurationMin(matched);});
 
         radarEquipChart.data.datasets[0].data=equipCounts;
         radarEquipChart.update();
@@ -717,43 +834,22 @@
             +'<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+escHtml(def.label)+'</span></div>'
             +'<div class="radar-legend-right">'
             +'<span class="radar-legend-val" style="color:'+def.color+'">'+equipCounts[i]+'</span>'
-            +'<span class="radar-legend-dur" style="font-size: 13px; font-weight: bold;" title="รวม '+durStr+' ชั่วโมง">⏱'+escHtml(durStr)+'</span>'
+            +'<span class="radar-legend-dur" style="font-size:13px;font-weight:bold;" title="รวม '+durStr+' ชั่วโมง">⏱'+escHtml(durStr)+'</span>'
             +'</div>'
             +'</div>';
         }).join("");
 
         document.getElementById("radarEquipLegend").querySelectorAll("[data-equip-idx]").forEach(function(item){
-          item.addEventListener("click",function(e){
-            e.stopPropagation();
-            var idx=parseInt(this.dataset.equipIdx,10);
-            var rect=this.getBoundingClientRect();
-            toggleEquipPopup(idx,rect.right+8,rect.top+rect.height/2);
-          });
+          item.addEventListener("click",function(e){e.stopPropagation();var idx=parseInt(this.dataset.equipIdx,10);var rect=this.getBoundingClientRect();toggleEquipPopup(idx,rect.right+8,rect.top+rect.height/2);});
         });
 
-        /* อัปเดต Total Events + กล่องชั่วโมงรวม Equipment */
         var totalEquipEvents=equipCounts.reduce(function(a,b){return a+b;},0);
         var totalEquipDurMin=equipDurMins.reduce(function(a,b){return a+b;},0);
         document.getElementById("radarEquipTotal").textContent="Total: "+totalEquipEvents+" events";
         document.getElementById("radarEquipTotalDur").textContent="⏱  "+fmtMinToHHMM(totalEquipDurMin)+" Hr.";
 
-        /* ── Type Radar ── */
-        var typeCounts=TYPE_DEF.map(function(def){
-          return shiftRows.filter(function(r){
-            var machine=(r[DT_COL.MACHINE]||"").trim();
-            if(TYPE_MACHINE_KEYS.indexOf(machine)===-1)return false;
-            return(r[DT_COL.TYPEMACHINE]||"").trim()===def.key||(!(r[DT_COL.TYPEMACHINE]||"").trim()&&(r[DT_COL.TYPE]||"").trim()===def.key);
-          }).length;
-        });
-        /* คำนวณชั่วโมงรวมต่อ Type */
-        var typeDurMins=TYPE_DEF.map(function(def){
-          var matched=shiftRows.filter(function(r){
-            var machine=(r[DT_COL.MACHINE]||"").trim();
-            if(TYPE_MACHINE_KEYS.indexOf(machine)===-1)return false;
-            return(r[DT_COL.TYPEMACHINE]||"").trim()===def.key||(!(r[DT_COL.TYPEMACHINE]||"").trim()&&(r[DT_COL.TYPE]||"").trim()===def.key);
-          });
-          return sumDurationMin(matched);
-        });
+        var typeCounts=TYPE_DEF.map(function(def){return shiftRows.filter(function(r){var machine=(r[DT_COL.MACHINE]||"").trim();if(TYPE_MACHINE_KEYS.indexOf(machine)===-1)return false;return(r[DT_COL.TYPEMACHINE]||"").trim()===def.key||(!(r[DT_COL.TYPEMACHINE]||"").trim()&&(r[DT_COL.TYPE]||"").trim()===def.key);}).length;});
+        var typeDurMins=TYPE_DEF.map(function(def){var matched=shiftRows.filter(function(r){var machine=(r[DT_COL.MACHINE]||"").trim();if(TYPE_MACHINE_KEYS.indexOf(machine)===-1)return false;return(r[DT_COL.TYPEMACHINE]||"").trim()===def.key||(!(r[DT_COL.TYPEMACHINE]||"").trim()&&(r[DT_COL.TYPE]||"").trim()===def.key);});return sumDurationMin(matched);});
 
         radarTypeChart.data.datasets[0].data=typeCounts;
         radarTypeChart.update();
@@ -764,21 +860,15 @@
             +'<div class="radar-legend-left"><div class="radar-legend-dot" style="background:'+def.color+'"></div><span>'+escHtml(def.label)+'</span></div>'
             +'<div class="radar-legend-right">'
             +'<span class="radar-legend-val" style="color:'+def.color+'">'+typeCounts[i]+'</span>'
-            +'<span class="radar-legend-dur" style="font-size: 13px; font-weight: bold;" title="รวม '+durStr+' ชั่วโมง">⏱'+escHtml(durStr)+'</span>'
+            +'<span class="radar-legend-dur" style="font-size:13px;font-weight:bold;" title="รวม '+durStr+' ชั่วโมง">⏱'+escHtml(durStr)+'</span>'
             +'</div>'
             +'</div>';
         }).join("");
 
         document.getElementById("radarTypeLegend").querySelectorAll("[data-type-idx]").forEach(function(item){
-          item.addEventListener("click",function(e){
-            e.stopPropagation();
-            var idx=parseInt(this.dataset.typeIdx,10);
-            var rect=this.getBoundingClientRect();
-            toggleTypePopup(idx,rect.right+8,rect.top+rect.height/2);
-          });
+          item.addEventListener("click",function(e){e.stopPropagation();var idx=parseInt(this.dataset.typeIdx,10);var rect=this.getBoundingClientRect();toggleTypePopup(idx,rect.right+8,rect.top+rect.height/2);});
         });
 
-        /* อัปเดต Total Events + กล่องชั่วโมงรวม Type */
         var totalTypeEvents=typeCounts.reduce(function(a,b){return a+b;},0);
         var totalTypeDurMin=typeDurMins.reduce(function(a,b){return a+b;},0);
         document.getElementById("radarTypeTotal").textContent="Total: "+totalTypeEvents+" events";
@@ -815,7 +905,7 @@
         var grand=sBWE1+sBWE2+sCR1+sCR2+sCR3;
         pieChart.data.datasets[0].data=[sBWE1,sBWE2,sCR1,sCR2,sCR3];pieChart.update();
         var pieItems=[{label:"BWE 1",val:sBWE1,color:C.bwe1},{label:"BWE 2",val:sBWE2,color:C.bwe2},{label:"CR 1",val:sCR1,color:C.cr1},{label:"CR 2",val:sCR2,color:C.cr2},{label:"CR 3",val:sCR3,color:C.cr3}];
-        document.getElementById("pieLegend").innerHTML=pieItems.map(function(p){return'<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+' <span style="color:#212121;font-size:.75rem;">BCM</span></div></div>';}).join("");
+        document.getElementById("pieLegend").innerHTML=pieItems.map(function(p){return'<div class="pie-legend-item"><div class="pie-legend-left"><div class="pie-legend-dot" style="background:'+p.color+'"></div>'+p.label+'</div><div>'+p.val.toLocaleString()+' <span style="color:#212121;font-size:.72rem;">BCM</span></div></div>';}).join("");
         document.getElementById("grandTotal").textContent=grand.toLocaleString()+" BCM";
         function parseHHMM(s){s=(s||"").trim();var m=s.match(/^(\d+):(\d{2})$/);if(!m)return 0;return parseInt(m[1])*60+parseInt(m[2]);}
         var totalMinutes=rows.reduce(function(s,r){return s+parseHHMM(r[COL.HOUR_S3]);},0);
@@ -863,7 +953,6 @@
         updateUI();
         setInterval(function(){remaining--;if(remaining<=0)doRefresh();checkDateAdvance();updateUI();},1000);
 
-        /* ── Weather ── */
         var SITES=[{id:'BWE',lat:19.70390,lon:101.28441},{id:'CR',lat:19.703246,lon:101.288260},{id:'SPD',lat:19.709486,lon:101.245291}];
         function getWeatherIcon(code){var hour=new Date().getHours();var isNight=hour>=19||hour<6;var ICONS_DAY={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};var ICONS_NIGHT={0:'🌟🌙',1:'✨🌙',2:'☁️🌙',3:'☁️',45:'🌫️',48:'🌫️',51:'🌧️',53:'🌧️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',80:'🌧️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};return isNight?(ICONS_NIGHT[code]??'🌙'):(ICONS_DAY[code]??'🌡️');}
         var WMO_THAI={0:'แจ่มใส',1:'แจ่มใส',2:'มีเมฆ',3:'มืดครึ้ม',45:'หมอก',48:'หมอก',51:'ฝนปรอย',53:'ฝนปรอย',55:'ฝนปรอย',61:'ฝนเบา',63:'ฝนปานกลาง',65:'ฝนหนัก',80:'ฝนฟ้าคะนอง',81:'ฝนหนัก',82:'ฝนหนักมาก',95:'พายุ',96:'พายุลูกเห็บ',99:'พายุรุนแรง'};
