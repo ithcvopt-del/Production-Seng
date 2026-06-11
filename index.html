@@ -938,12 +938,36 @@ const SITES = [
   { id: 'CR',  lat: 19.703246, lon: 101.288260 },  // ← ใส่พิกัด CR
   { id: 'SPD', lat: 19.709486, lon: 101.245291 },  // ← ใส่พิกัด SPD
 ];
+// ฟังก์ชันเลือกไอคอนตามเวลา (กลางวัน/กลางคืน)
+function getWeatherIcon(code) {
+  const hour = new Date().getHours();
+  const isNight = hour >= 19 || hour < 6; // 19:00 - 06:00 = กลางคืน
 
-const WMO_ICONS = {
-  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',
-  51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',
-  80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'
-};
+  const ICONS_DAY = {
+    0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
+    45:'🌫️', 48:'🌫️',
+    51:'🌦️', 53:'🌦️', 55:'🌧️',
+    61:'🌧️', 63:'🌧️', 65:'🌧️',
+    80:'🌦️', 81:'🌧️', 82:'⛈️',
+    95:'⛈️', 96:'⛈️', 99:'⛈️'
+  };
+
+  const ICONS_NIGHT = {
+    0:'🌙',   // แจ่มใส → ดวงจันทร์
+    1:'🌙',   // ส่วนใหญ่แจ่มใส → ดวงจันทร์
+    2:'🌙',  // มีเมฆบางส่วน → เมฆ+จันทร์  
+    3:'☁️',   // มืดครึ้ม → เมฆ
+    45:'🌫️', 48:'🌫️',
+    51:'🌧️', 53:'🌧️', 55:'🌧️',
+    61:'🌧️', 63:'🌧️', 65:'🌧️',
+    80:'🌧️', 81:'🌧️', 82:'⛈️',
+    95:'⛈️', 96:'⛈️', 99:'⛈️'
+  };
+
+  return isNight
+    ? (ICONS_NIGHT[code] ?? '🌙')
+    : (ICONS_DAY[code]  ?? '🌡️');
+}
 
 const WMO_THAI = {
   0:'แจ่มใส',1:'แจ่มใส',2:'มีเมฆ',3:'มืดครึ้ม',
@@ -961,7 +985,7 @@ async function fetchWeatherAll() {
       const data = await res.json();
       const { temperature_2m, weathercode } = data.current;
 
-      document.getElementById(`icon-${site.id}`).textContent = WMO_ICONS[weathercode] ?? '🌡️';
+      document.getElementById(`icon-${site.id}`).textContent = getWeatherIcon(weathercode);
       document.getElementById(`temp-${site.id}`).textContent = `${Math.round(temperature_2m)}°C`;
       document.getElementById(`desc-${site.id}`).textContent = WMO_THAI[weathercode] ?? '-';
     } catch {
