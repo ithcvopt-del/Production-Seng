@@ -867,9 +867,47 @@
         var SITES=[{id:'BWE',lat:19.70390,lon:101.28441},{id:'CR',lat:19.703246,lon:101.288260},{id:'SPD',lat:19.709486,lon:101.245291}];
         function getWeatherIcon(code){var hour=new Date().getHours();var isNight=hour>=19||hour<6;var ICONS_DAY={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};var ICONS_NIGHT={0:'🌟🌙',1:'✨🌙',2:'☁️🌙',3:'☁️',45:'🌫️',48:'🌫️',51:'🌧️',53:'🌧️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',80:'🌧️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};return isNight?(ICONS_NIGHT[code]??'🌙'):(ICONS_DAY[code]??'🌡️');}
         var WMO_THAI={0:'แจ่มใส',1:'แจ่มใส',2:'มีเมฆ',3:'มืดครึ้ม',45:'หมอก',48:'หมอก',51:'ฝนปรอย',53:'ฝนปรอย',55:'ฝนปรอย',61:'ฝนเบา',63:'ฝนปานกลาง',65:'ฝนหนัก',80:'ฝนฟ้าคะนอง',81:'ฝนหนัก',82:'ฝนหนักมาก',95:'พายุ',96:'พายุลูกเห็บ',99:'พายุรุนแรง'};
-        async function fetchWeatherAll(){for(var i=0;i<SITES.length;i++){var site=SITES[i];try{var url='https://api.open-meteo.com/v1/forecast?latitude='+site.lat+'&longitude='+site.lon+'&current=temperature_2m,weathercode&timezone=auto';var res=await fetch(url);var data=await res.json();var cur=data.current;document.getElementById('icon-'+site.id).textContent=getWeatherIcon(cur.weathercode);document.getElementById('temp-'+site.id).textContent=Math.round(cur.temperature_2m)+'°C';document.getElementById('desc-'+site.id).textContent=WMO_THAI[cur.weathercode]??'-';}catch(e){document.getElementById('desc-'+site.id).textContent='error';}}}
-        fetchWeatherAll();
-        setInterval(fetchWeatherAll,2*60*1000);
+       // เพิ่ม retry logic และ delay เริ่มต้น
+async function fetchWeatherWithRetry(site, retries = 3) {
+    for (let attempt = 0; attempt < retries; attempt++) {
+        try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 8000); // timeout 8 วิ
+            
+            const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + site.lat +
+                '&longitude=' + site.lon + '&current=temperature_2m,weathercode&timezone=auto';
+            
+            const res = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeout);
+            
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            
+            const data = await res.json();
+            const cur = data.current;
+            document.getElementById('icon-' + site.id).textContent = getWeatherIcon(cur.weathercode);
+            document.getElementById('temp-' + site.id).textContent = Math.round(cur.temperature_2m) + '°C';
+            document.getElementById('desc-' + site.id).textContent = WMO_THAI[cur.weathercode] ?? '-';
+            return; // สำเร็จแล้ว ออกได้เลย
+            
+        } catch (e) {
+            if (attempt < retries - 1) {
+                await new Promise(r => setTimeout(r, 2000 * (attempt + 1))); // รอ 2, 4 วิ แล้ว retry
+            } else {
+                document.getElementById('desc-' + site.id).textContent = 'ไม่มีสัญญาณ';
+            }
+        }
+    }
+}
+
+async function fetchWeatherAll() {
+    for (var i = 0; i < SITES.length; i++) {
+        await fetchWeatherWithRetry(SITES[i]);
+    }
+}
+
+// รอ page โหลดเสร็จก่อน 1 วิ แล้วค่อย fetch
+setTimeout(fetchWeatherAll, 1000);
+setInterval(fetchWeatherAll, 2 * 60 * 1000);
       })();
     </script>
   </body>
